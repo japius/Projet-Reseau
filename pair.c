@@ -45,12 +45,16 @@ int init_socket_client_udp(char *addr, char *port){
 	return soc;
 }
 
-void read_socket(int fd,void *buf, size_t size_buf){
+int read_socket(int fd,void *buf, size_t size_buf,struct timeval *timeout){
+	fd_set tmp;
+	FD_ZERO(&tmp);
+	FD_SET(fd,&tmp);
 	for(unsigned int count = 0;count<size_buf;){
-		printf("J'ai lu %d\n",count);
+		if(select(fd+1,&tmp,NULL,NULL,timeout)==0)
+			return 0;
 		count+=read(fd,buf+count,size_buf-count);
-		printf("Je suis apres read %d\n",count );
 	}
+	return 1;
 }
 
 int main(int argc, char const *argv[])
