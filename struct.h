@@ -6,4 +6,4 @@ struct TLV{
 	char type;
 	char length;
 	char body[];
-}
+};

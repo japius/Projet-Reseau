@@ -52,3 +52,9 @@ void read_socket(int fd,void *buf, size_t size_buf){
 		printf("Je suis apres read %d\n",count );
 	}
 }
+
+int main(int argc, char const *argv[])
+{
+	
+	return 0;
+}
