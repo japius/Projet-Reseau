@@ -1,3 +1,16 @@
+#define _GNU_SOURCE
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
+#include "net_lib.h"
+
 int init_socket_client_udp(char *addr, char *port){
 	struct addrinfo h = {0};
 	struct addrinfo *r = {0};
@@ -42,4 +55,11 @@ int read_socket(int fd,void *buf, size_t size_buf,struct timeval *timeout){
 		count+=read(fd,buf+count,size_buf-count);
 	}
 	return 1;
+}
+
+void random_on_octets(void *var, size_t octets_number){
+	srand(time(NULL));
+	char *tmp=(char*)var;
+	for(int i=0;i<octets_number;i++)
+		*(tmp+i)=(char)rand();
 }
