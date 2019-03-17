@@ -1,7 +1,9 @@
 /* Toutes les structures utiles */
 #include <sys/types.h>
-
+#ifndef STRUCT_H
+#define STRUCT_H
 #define MAX_SIZE 4096
+
 
 struct message_h{
 	char magic;
@@ -13,7 +15,8 @@ struct message_h{
 struct TLV{
 	char type;
 	char length;
-	char body[0]; //XXX
+	u_int64_t id;
+	//char body[MAX_SIZE];
 };
 
 struct neighbor{
@@ -26,3 +29,4 @@ struct ident{
 	time_t last_hello;
 	time_t last_hello_long;
 };
+#endif
