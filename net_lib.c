@@ -48,12 +48,12 @@ int init_socket_client_udp(char *addr, char *port){
 }
 
 int init_socket_client_udp_v2(){
-	int soc =socket(AF_INET6, SOCK_DGRAM,0);
+	int soc =socket(PF_INET6, SOCK_DGRAM,0);
 	return soc;
 }
 
 int init_socket_server_udp(int port){
-	int soc = socket(AF_INET6,SOCK_DGRAM,0);
+	int soc = socket(PF_INET6,SOCK_DGRAM,0);
 	if(soc<0){
 		fprintf(stderr, "Erreur lors de la création de la socket.\n");
 		return -1;
@@ -113,9 +113,9 @@ struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr){
 	return res;
 }
 
+
 void print_addr(u_int8_t *ip){
-	for(int i=0;i<7;i++){
-		printf("%x.",(ip[i]<<8)+(ip[i+1]));
-	}
-	printf("%x\n",(ip[14]<<8)+(ip[15]));
+	char buffer[50];
+	inet_ntop(AF_INET6,ip,buffer,50);
+	printf("Adress: %s\n",buffer);
 }

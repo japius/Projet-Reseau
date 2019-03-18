@@ -14,6 +14,7 @@
 #include "tlv.h"
 
 static u_int64_t id;
+static int test = 1;
 
 int main(int argc, char *argv[])
 {
@@ -21,25 +22,36 @@ int main(int argc, char *argv[])
 	/*struct TLV tlv;
 	short_tlv_hello(&tlv,sizeof(tlv),id);
 	printf("id = %lu\ntlv : type -> %d, length -> %d, id -> %lu\n",id,tlv.type,tlv.length,tlv.id);*/
-	if(argc==3){
-		int soc  = init_socket_client_udp_v2();//(argv[1],argv[2]);
+	if(argc>=3){
+		if(argc>=4){
+			test=atoi(argv[3]);
+		}
+		int soc ;
+		if(test)
+			soc = init_socket_client_udp_v2();//(argv[1],argv[2]);
+		else 
+			soc = init_socket_client_udp(argv[1],argv[2]);
+
 		if(soc<0){
 			fprintf(stderr, "Erreur à la création de la socket\n");
 			exit(0);
 		}
-		//write(soc,&id,sizeof(u_int64_t));
-		struct neighbor ngb = {0};
-		ngb.port=atoi(argv[2]);
-		inet_pton(AF_INET6,argv[1],ngb.ip);
-		print_addr(ngb.ip);
-		send_message(soc,&id,sizeof(id),ngb);
+		if(test){
+			struct neighbor ngb = {0};
+
+			ngb.port=atoi(argv[2]);
+			inet_pton(AF_INET6,argv[1],ngb.ip);
+			print_addr(ngb.ip);
+			send_message(soc,&id,sizeof(id),ngb);
+		}else{
+			write(soc,&id,sizeof(u_int64_t));
+		}
 		printf("client : client -> %lu\n",id);
 		char buf[10]={0}; 
 		struct sockaddr_in6 client;
 		socklen_t client_len = sizeof(struct sockaddr_in6);
 		recvfrom(soc,buf,3,0,&client,&client_len);
 		printf("port = %d\n",ntohs(client.sin6_port ));
-		//read_socket(soc,buf,3,NULL);
 		printf("J'ai recu %s\n",buf);
 	}else if(argc==2){
 		int soc = init_socket_server_udp(atoi(argv[1]));
