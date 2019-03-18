@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 		//write(soc,&id,sizeof(u_int64_t));
 		struct neighbor ngb = {0};
 		ngb.port=atoi(argv[2]);
-		inet_pton(AF_INET,argv[1],ngb.ip);
+		inet_pton(AF_INET6,argv[1],ngb.ip);
 		print_addr(ngb.ip);
 		send_message(soc,&id,sizeof(id),ngb);
 		printf("client : client -> %lu\n",id);

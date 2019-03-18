@@ -113,9 +113,9 @@ struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr){
 	return res;
 }
 
-void print_addr(char *ip){
-	for(int i=0;i<15;i++){
-		printf("%d.",ip[i]);
+void print_addr(u_int8_t *ip){
+	for(int i=0;i<7;i++){
+		printf("%x.",(ip[i]<<8)+(ip[i+1]));
 	}
-	printf("%d\n",ip[15]);
+	printf("%x\n",(ip[14]<<8)+(ip[15]));
 }
