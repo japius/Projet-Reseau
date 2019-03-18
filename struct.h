@@ -20,7 +20,7 @@ struct TLV{
 };
 
 struct neighbor{
-	char ip[16];
+	unsigned char ip[16];
 	int port;
 };
 

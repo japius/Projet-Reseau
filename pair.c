@@ -29,9 +29,13 @@ int main(int argc, char *argv[])
 		}
 		//write(soc,&id,sizeof(u_int64_t));
 		struct neighbor ngb = {0};
-		ngb.port=atoi(argv[2]);
-		inet_pton(AF_INET,argv[1],ngb.ip);
+		ngb.port=htons(atoi(argv[2]));
+		inet_pton(AF_INET6,argv[1],&ngb.ip);
 		print_addr(ngb.ip);
+		char buffer[20];
+		inet_ntop(AF_INET6,&(ngb.ip),buffer,20);
+		printf("Adress: %s\n",buffer);
+		//print_addr(ngb.ip);
 		send_message(soc,&id,sizeof(id),ngb);
 		printf("client : client -> %lu\n",id);
 		char buf[10]={0}; 
