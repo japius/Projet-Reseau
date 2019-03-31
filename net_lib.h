@@ -27,4 +27,4 @@ int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt);
 
 struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr);
 
-void print_addr(unsigned char *ip);
+void print_addr(u_int8_t *ip);
