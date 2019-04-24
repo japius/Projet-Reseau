@@ -4,7 +4,6 @@
 #define STRUCT_H
 #define MAX_SIZE 4096
 
-typedef struct TLV TLV;
 
 struct message_h{
 	char magic;
@@ -34,7 +33,7 @@ struct data_index{
 struct list_entry{
 	struct neighbor *sym;
 	int times_sent;
-	struct data_entry *next;
+	struct list_entry *next;
 };
 
 
@@ -42,13 +41,13 @@ struct list_entry{
 struct flood_entry{
 	struct data_index *index;
 	struct list_entry *sym_neighbors;
-	struct flood *next;
-}
+	struct flood_entry *next;
+};
 
 //La liste d'inondations 
 struct flood{
 	struct flood_entry *first;
 	struct flood_entry *last;
-}
+};
 
 #endif

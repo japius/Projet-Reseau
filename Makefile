@@ -3,7 +3,7 @@ FLAGS= -Wall
 LDLIBS=-lm 
 #a changer
 NAME=pair
-FILES = net_lib.c pair.c #$(shell find $(SRCIDR) -name '')
+FILES = net_lib.c pair.c list.c abr.c tlv.c#$(shell find $(SRCIDR) -name '')
 OBJ = $(FILES:%.c=%.o)
 
 ALL=$(NAME)
@@ -19,4 +19,4 @@ $(NAME): $(OBJ)
 #To generate the lexical analyser with lex
 #lex.yy.c:lexer.l
 clean:
-	rm -rf $(OBJ) 
+	rm -rf $(OBJ)

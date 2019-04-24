@@ -4,17 +4,16 @@
 #include "struct.h"
 //typedef int (*tlv_func)(TLV *);
 extern char *tlv_types[NB_TLV];
-extern int (*handle_tlv[NB_TLV])(TLV *);
+extern int (*handle_tlv[NB_TLV])(char *,u_int8_t,struct neighbor );
 
-int short_tlv_hello(void *buf,size_t buf_t,u_int64_t id);
-int pad1(TLV *tlv);
-int padN(TLV *tlv);
-int hello(TLV *tlv);
-int neighbour(TLV *tlv);
-int data(TLV *tlv);
-int ack(TLV *tlv);
+int pad1(char *tlv,u_int8_t length,struct neighbor key);
+int padN(char *tlv,u_int8_t length,struct neighbor key);
+int hello(char *tlv,u_int8_t length,struct neighbor key);
+int neighbour(char *tlv,u_int8_t length,struct neighbor key);
+int data(char *tlv,u_int8_t length,struct neighbor key);
+int ack(char *tlv,u_int8_t length,struct neighbor key);
 
-int goaway(TLV *tlv);
-int warning(TLV *tlv);
+int goaway(char *tlv,u_int8_t length,struct neighbor key);
+int warning(char *tlv,u_int8_t length,struct neighbor key);
 
 #endif

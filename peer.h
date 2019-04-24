@@ -2,12 +2,13 @@
 #define PEER_H
 
 #include "struct.h"
-#include "hashmap.h"
+#include "list.h"
+#include "abr.h"
 
 extern u_int64_t id;
-extern abr *potential;
-extern abr *neighbors;
-extern struct flood *data;
+extern tree *potential;
+extern tree *neighbors;
+extern struct flood *dataf;
 
 /*typedef struct peer peer;
 

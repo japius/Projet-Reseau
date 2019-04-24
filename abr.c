@@ -1,16 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "abr.h"
+#include "list.h"
+#include "struct.h"
 
 //Peut etre trier en fonction de la date de reéception du dernier hello long comme ca le plus à gauche on aura les voisins symétriques et le reste non !
 //Cimment indexer avec (ip,port), à quoi est ce que ca servirait ?
-typedef struct tree{
-  struct neighbor *key;
-  struct ident *val;
-  struct  tree *left;
-  struct tree *right;
-}tree;
-
 
 
 tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
@@ -20,6 +16,10 @@ tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
   current->left=left;
   current->right=right;
   return current;
+}
+
+tree *init_first(){
+  return init(NULL,NULL,NULL,NULL);
 }
 
 //Pour ajouter un voisin s'il n"existe pas et le mettre à jour sinon
@@ -58,19 +58,21 @@ struct ident *get_ident(tree *t,struct neighbor *key){
   return NULL;
 }
 
-short issymmetrical(struct neighbor *key){
+//A modifier
+short issymmetrical(struct ident *val){
   time_t now=time(0);
-  if(now-key->last_hello_long<120) return 1;
+  if(now-val->last_hello_long<120) return 1;
   return 0;
 }
 
 //Pour chercher tous les voisins symétriques
 //a vérifier
+
 struct list_entry *get_symmetrical(tree *t){
   if(t!=NULL){
-    if(issymmetrical(t->key)){
-      struct list_entry *sym=malloc(sizeof(list_entry));
-      sym->sym=key;
+    if(issymmetrical(t->val)){
+      struct list_entry *sym=malloc(sizeof(struct list_entry));
+      sym->sym=t->key;
       sym->times_sent=0;
       struct list_entry *sym2=get_symmetrical(t->left),*sym3=get_symmetrical(t->right);
       if(sym2){
@@ -100,20 +102,24 @@ tree *maxUnder(tree *r){
 tree * remove_neighbor(struct neighbor *key, tree *t){
   int comp=compare_n(t->key,key);
   if(comp==0){
-    if(t->left==NULL && t->right==NULL) return NULL;
+    if(t->left==NULL && t->right==NULL){
+      clean(t);
+      return NULL;
+    }
     else if(t->left==NULL){
-      t=t->right;
-      return t;
+      clean(t);
+      return t->right;
     }
     else if(t->right==NULL){
-      t=t->left;
-      return t;
+      clean(t);
+      return t->left;
     }
     tree *m=maxUnder(t->left);
-    t=remove_neighbor(m->key,t);
-    t->key=m->key;
-    t->val=m->val;
-    return t;
+    tree *res=remove_neighbor(m->key,t);
+    res->key=m->key;
+    res->val=m->val;
+    free(t);
+    return res;
   } 
   else if(comp>0){
     t->left=remove_neighbor(key,t->left);
@@ -146,16 +152,6 @@ short isBalanced(tree *abr){
   if(abr->left==NULL && abr->right==NULL) return 1;
   if(abr->left==NULL && abr->right!=NULL && (abr->right->right!=NULL || abr->right->left!=NULL)) return 0 ;
   if(abr->right==NULL && abr->left!=NULL && (abr->left->right!=NULL || abr->left->left!=NULL)) return 0 ; return isBalanced(abr->left) && isBalanced(abr->right);
-}
-
-int maximum(tree *t){
-  if(t->right==NULL) return t->val;
-  return maximum(t->right);
-}
-
-int minimum(tree *t){
-  if(t->left==NULL) return t->val;
-  return minimum(t->left);
 }
 
 short check(tree *t){

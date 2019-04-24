@@ -19,12 +19,12 @@ int main(void){
 
 	//initialisation du pair
 	id=random_on_octects(&id,sizeof(u_int64_t));
-	potential=init_potential();
-	neighbors=init_neighbors();
+	potential=init_first();
+	neighbors=init_first();
 	data=init_data();
 
 	while(1){
-		
+
 	}
 	/*Il faut:
 	-envoyer toutes les 30s des hellos long à chaque voisin

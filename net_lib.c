@@ -132,10 +132,10 @@ int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
 }
 
 //On récupère le message
-int get_message(int sock, struct sockaddr_in6 client,unsigned char req[4096]){
-	return recvfrom(sock,reply,4096,0,&client,&sizeof(client));
+/*int get_message(int sock, struct sockaddr_in6 client,unsigned char req[4096]){
+	return recvfrom(sock,req,4096,0,&client,sizeof(client));
 
-}
+}*/
 
 struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr){
 	struct neighbor res;
