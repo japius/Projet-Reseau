@@ -4,14 +4,14 @@
 #define STRUCT_H
 #define MAX_SIZE 4096
 
+typedef struct TLV TLV;
+
 struct message_h{
 	char magic;
 	char version;
 	u_int16_t body_length;
-	unsigned char body[MAX_SIZE]; //XXX
+	unsigned char body[MAX_SIZE];
 };
-
-
 //Les données pour un voisin
 struct neighbor{
 	u_int8_t ip[16];
