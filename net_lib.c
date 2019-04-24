@@ -52,6 +52,30 @@ int init_socket_client_udp_v2(){
 	return soc;
 }
 
+int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf){
+	struct addrinfo h = {0};
+	struct addrinfo *r = {0};
+	int rc = 0;
+
+	h.ai_family = AF_INET6;
+	h.ai_socktype = SOCK_DGRAM;
+	h.ai_flags = 0;
+	h.ai_protocol = 0;
+
+	rc = getaddrinfo(addr, port, &h, &r);
+	if(rc < 0){
+		fprintf(stderr, "Erreur lors de getaddrinfo\n");
+		return -1;
+	}
+
+	for(struct addrinfo *p =r; p!=NULL; p = p->ai_next){
+		printf("Je suis la ");
+		sendto(soc,buf,size_buf,0,p->ai_addr,p->ai_addrlen);
+	}
+	freeaddrinfo(r);
+	return 0;
+}
+
 int init_socket_server_udp(int port){
 	int soc = socket(PF_INET6,SOCK_DGRAM,0);
 	if(soc<0){
