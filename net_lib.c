@@ -48,7 +48,8 @@ int init_socket_client_udp(char *addr, char *port){
 }
 
 int init_socket_client_udp_v2(){
-	int soc =socket(PF_INET6, SOCK_DGRAM,0);
+	int soc =socket(PF_INET6, SOCK_DGRAM,0),val=1;
+	int rc=setsockopt(soc,IPPROTO_IPV6,IPV6_V6ONLY,&val,sizeof(val));
 	return soc;
 }
 
