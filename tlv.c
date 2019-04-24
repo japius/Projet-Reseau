@@ -4,13 +4,14 @@
 #include <string.h>
 #include "struct.h"
 #include "tlv.h"
+#include "peer.h"
 
 
 char *tlv_types[NB_TLV]={
   "pad1","padN","hello","neighbour","data","ack","goaway","warning"
 };
 
-int (*handle_tlv[NB_TLV])(TLV *)={
+int (*handle_tlv[NB_TLV])(char *,u_int8_t,struct neighbor )={
   &pad1,
   &padN,
   &hello,
@@ -35,296 +36,250 @@ char **split(int length,char *data,char delim){
 	return res;
 }
 
-TLV *tlv_init(u_int8_t type,u_int8_t length,unsigned char *body){
-	TLV *tlv=malloc(sizeof(struct TLV));
-	if(tlv==NULL){
-		perror("malloc");
-		exit(EXIT_FAILURE);
+//Fonctions pour créer les tlv avec les paramètres en argument
+short tlv_pad1(char *body,size_t bufsize){
+	if(bufsize>0){
+		*body = 0;
+		return 1;
 	}
-	tlv->type=type;
-	tlv->length=length;
-	//tlv->body= {0};
-	//tlv->body=body;
-	if(body) memcpy(&(tlv->body),&body,sizeof(body));
-	else tlv->body=NULL;
-	return tlv;
+	return 0;
 }
 
-struct message *message(char magic,char version,u_int16_t body_length,TLV ** list){
-	struct message *msg=malloc(sizeof(struct message));
-	if(msg==NULL){
-		perror("malloc");
-		exit(EXIT_FAILURE);
+short tlv_padN(char *body,size_t bufsize, u_int8_t length){
+	if(bufsize>length+1){
+		*body = 1;
+		*(body+1)=length;
+		memset(body+2,0,length);
+		return 1;
 	}
-	msg->magic=magic;
-	msg->version=version;
-	msg->body_length=body_length;
-	msg->body=list;
-	return msg;
+	return 0;
+}
+
+short tlv_short_hello(char *body,size_t bufsize, u_int64_t id){
+	if(bufsize>9){
+		*body = 2;
+		*(body+1)=8;
+		memcpy(body+2,&id,sizeof(id));
+		return 1;
+	}
+	return 0;
+}
+
+short tlv_long_hello(char *body,size_t bufsize, u_int64_t source_id,u_int64_t dest_id){
+	if(bufsize>15){
+		size_t source_size=sizeof(dest_id),dest_size=sizeof(dest_id);
+		*body = 2;
+		*(body+1)=16;
+		memcpy(body+2,&source_id,source_size);
+		memcpy((body+2+source_size),&dest_id,dest_size);
+		return 1;
+	}
+	return 0;
+}
+
+short tlv_neighbour(char *body,size_t bufsize, unsigned char ip[16],u_int16_t port){
+	if(bufsize>17){
+		size_t ip_size=sizeof(ip),port_size=sizeof(port);
+		*body = 2;
+		*(body+1)=18;
+		memcpy(body+2,&ip,ip_size);
+		memcpy(body+2+ip_size,&port_size,port_size);
+		return 1;
+	}
+	return 0;
+}
+
+short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
+	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
+	u_int8_t length=id_size+nonce_size+type_size+msg_size;
+	if(bufsize>length+1){
+		u_int32_t nonce;
+		random_on_octets(&nonce,4);
+		*body = 4;
+		*(body+1)=length;
+		memcpy(body+2,&id,id_size);
+		memcpy(body+2+id_size,&nonce,nonce_size);
+		memcpy(body+2+id_size+nonce_size,&type,type_size);
+		memcpy(body+2+id_size+nonce_size+type_size,&data,msg_size);
+		return 1;
+	}
+	return 0;
+}
+
+short tlv_ack(char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
+	size_t id_size=sizeof(id),nonce_size=sizeof(nonce);
+	u_int8_t length=id_size+nonce_size;
+	if(bufsize>length+1){
+		*body = 5;
+		*(body+1)=length;
+		memcpy(body+2,&id,id_size);
+		memcpy(body+2+id_size,&nonce,nonce_size);
+		return 1;
+	}
+	return 0;
+}
+
+short tlv_goaway(char *body,size_t bufsize, u_int8_t code,unsigned char *msg,u_int8_t msg_size){
+	size_t code_size=sizeof(code);
+	u_int8_t length=code_size+msg_size;
+	if(bufsize>length+1){
+		*body=6;
+		*(body+1)=length;
+		*(body+2)=code;
+		memcpy(body+2+code_size,&msg,msg_size);
+		return 1;
+	}
+	return 0;
 	
 }
 
-//Fonctions pour créer les tlv avec les paramètres en argument
-TLV *tlv_pad1(){
-	return tlv_init(0,NULL,NULL);
-}
-TLV *tlv_padN(u_int8_t length){
-	unsigned char *body;
-	memset(&body,0,sizeof(body));
-	return tlv_init(1,length,body);
-}
-TLV *tlv_short_hello(u_int64_t id){
-	unsigned char *body;
-	memcpy(&(body),&id,sizeof(id));
-	return tlv_init(2,8,body);
-
-}
-TLV *tlv_long_hello(u_int64_t source_id,u_int64_t dest_id){
-	unsigned char *body;
-	size_t source_size=sizeof(dest_id),dest_size=sizeof(dest_id);
-	memcpy(&(body),&source_id,source_size);
-	memcpy((body+source_size),&dest_id,dest_size);
-	return tlv_init(2,16,body);
-
-}
-
-TLV *tlv_neighbour(unsigned char ip[16],u_int16_t port){
-	unsigned char *body;
-	size_t ip_size=sizeof(ip),port_size=sizeof(port);
-	memcpy(&(body),&ip,ip_size);
-	memcpy(body+ip_size,&port_size,port_size);
-	return tlv_init(3,ip_size+port_size,body);
-}
-
-TLV *tlv_data(u_int64_t id,u_int8_t type,unsigned char *data){
-	unsigned char *body;
-	u_int32_t nonce=0;
-	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type),data_size=sizeof(data);
-	u_int8_t length=id_size+nonce_size+type_size+data_size;
-	memcpy(&(body),&id,id_size);
-	memcpy(body+id_size,&nonce,nonce_size);
-	memcpy(body+id_size+nonce_size,&type,type_size);
-	memcpy(body+id_size+nonce_size+type_size,&data,data_size);
-	return tlv_init(4,length,body);
-}
-
-TLV *tlv_ack(u_int64_t id,u_int32_t nonce){
-	unsigned char *body;
-	size_t id_size=sizeof(id),nonce_size=sizeof(nonce);
-	u_int8_t length=id_size+nonce_size;
-	memcpy(&(body),&id,id_size);
-	memcpy(body+id_size,&nonce,nonce_size);
-	return tlv_init(5,length,body);
-
-}
-
-TLV *tlv_goaway(u_int8_t code,unsigned char *msg){
-	unsigned char *body;
-	size_t code_size=sizeof(code),msg_size=sizeof(msg);
-	u_int8_t length=code_size+msg_size;
-	memcpy(&(body),&code,code_size);
-	memcpy(body+code_size,&msg,msg_size);
-	return tlv_init(6,length,body);
-
-
-}
-
-TLV *tlv_warning(unsigned char *msg){
-	unsigned char *body;
-	u_int8_t length=sizeof(msg);
-	memcpy(&(body),&msg,length);
-	return tlv_init(7,length,body);
-
+short tlv_warning(char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_size){
+	if(bufsize>msg_size+1){
+		*body=7;
+		*(body+1)=msg_size;
+		memcpy(body+2,&msg,msg_size);
+		return 1;
+	}
+	return 0;
 }
 
 //Fonctions de gestion de la réception d'un TLV
 
-int pad1(TLV *tlv){
-	return 0;
+int pad1(char * tlv,u_int8_t length,struct neighbor peer){
+	return 1;
 }
-int padN(TLV *tlv){
-	return 0;
+int padN(char * tlv,u_int8_t length,struct neighbor peer){
+	return 1;
 }
-int hello(TLV *tlv){
-	if(tlv->length==8){
 
+int hello(char *tlv,u_int8_t length,struct neighbor peer){
+	//insérer dans la table de voisins et noter la date de réception
+	//struct neighbor *key=sockaddr6_to_neighbor();
+	//struct ident *val=create_ident()
+	//récupérer le source_id et la data courante
+	time_t current=time(0);
+	struct ident *val=get_neighbor(neighbors,&peer);
+	u_int64_t source_id;
+	memcpy(&(source_id),body,8);
+	if(tlv->length==8){
+		val->last_hello=current;
+		if(!val){
+			val->id=source_id;
+			return add_entry(neighbors,&peer,val);
+		}
 	}
 	else{
-
+		u_int64_t dest_id;
+		memcpy(&dest_id,body+8,8);
+		if(dest_id==id){
+			val->last_hello=current;
+			val->last_hello_long=current;
+			if(!val){
+				val->id=source_id;
+				return add_entry(neighbors,&peer,val);
+			}
+		}
 	}
 	return 0;
 }
-int neighbour(TLV *tlv){
-	return 0;
+
+int neighbour(char * tlv,u_int8_t length,struct neighbor peer){
+	struct neighbor key;
+	memcpy(key.ip,tlv,16);
+	memcpy(key.port,tlv+16,2);
+	//inserer l'adresse contenue dans le tlv à la liste des voisins potentiels
+	return add_entry(potential,&key,NULL);
+	//return 0;
 }
 
 //On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
-int data(TLV *tlv){
-	char delim=':';
+int data(char *tlv,u_int8_t length,struct neighbor peer{
+	/*char delim=':';
 	char type=*(tlv->body+8+4);
-	char *data=tlv->body+8+4+1;
+	char *data=tlv->body+8+4+1;*/
 	if(type==0){
-		char msg=split(tlv->length-(8+4+1),data,'.');
-		if(!msg){
-			//Afficher le message
-			printf("%s\n", data);
+		struct data_index index;
+		memcpy(&index.id,tlv,8);
+		memcpy(&index.nonce,tlv+8,4);
+		//On récupère la liste des voisins à inonder associée à la donnée
+		struct *flood_entry flood=get_flood(data,&index);
+		//Si vide
+			//envoyer un acquittement
+			char body[13];
+			if(tlv_ack(body,12,index.id,index.nonce)){
+				//créer le message_h et faire un send message_h
+			}
+			else{
+				perror("tlv");
+				return 0;
+				//exit(EXIT_FAILURE);
+			}
+			if(flood){
+
+			}
+			else{
+				printf("%s\n",tlv+14);
+				//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
+				struct list_entry *symmetric=get_symmetrical(neighbors);
+				rm_entry(symmetric,&peer);
+				flood_list(flood,symmetric);
+				add_entry(data,index,flood);
+			}
+			//Afficher le message_h
+			//verifier dans la liste
+			//print_message_h
+			//send_message_h to voisins_symetric
+			//printf("%s\n", data);
 		}
-	}
-	//Juste inonder;
-	return 0;
-}
-int ack(TLV *tlv){
-	//chercher le data correspondant et recopier les champs correspondant (dernier data recu ?)
-	return 0;
-}
-
-int goaway(TLV *tlv){
-	//Marquer l'émetteur comme voisin non symétrique
-	return 0;
-}
-int warning(TLV *tlv){
-	//juste lire et passer à autre chose
-	printf("Warning: %s\n", tlv->body);
-	return 0;
-}
-
-
-int short_tlv_hello(void *buf,size_t buf_t,u_int64_t id){
-	struct TLV *tlv = (struct TLV *)buf;
-	if(buf_t<10) return 0;
-	tlv->type='2';
-	tlv->length='8';
-	//memcpy(&(tlv->id),&id,sizeof(id));
-	return 1;
-
-}
-
-
-struct message *create_message(void *buffer,size_t buf_t){
-	unsigned char *buf=(unsigned char *)buffer;
-	char magic=*buf;
-	char version=*(buf+1);
-	if(magic!='93' || version!='2') return NULL;
-	u_int16_t body_length;
-	memcpy(&(body_length),buf+2,2);
-	unsigned char *pos=buf+4,i=0;
-	TLV **list;
-	while(pos<=(buf+4+body_length)){
-		if(i<NB_TLV){
-			//On récupère la fonction du tableau à l'indice le type du TLV
-			u_int8_t type=*pos;
-			//faire un atoi plutot 
-			u_int8_t length=(type==0)?NULL:(u_int8_t)*(pos+1);
-			unsigned char *body=NULL;
-			if (type!=0) memcpy(&(body),(pos+2),length);
-			list[i]=tlv_init(type,length,body);
-			i++;
-		}
-		pos=pos+*(pos+1);
-	}
-	return message(magic,version,body_length,list);
 	
+	//verifier si id_nonce dans la liste des data
+	//Sinon l'afficher
+	//Juste inonder;
+	//flood()
+	return 1;
+}
+
+int ack(char *tlv,u_int8_t length,struct neighbor peer){
+	//sortir de la liste des personnes à inonder
+	return 0;
+}
+
+int goaway(char *tlv,u_int8_t length,struct neighbor peer){
+	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
+	return 1;
+}
+int warning(char *tlv,u_int8_t length,struct neighbor peer){
+	//juste lire et passer à autre chose
+	char buf[SIZE_MAX];
+	memcpy(buf,tlv,length);
+	tlv[length]=0; 
+	printf("Warning: %s\n", buf);
+	return 1;
 }
 
 
-//int make_tlv(tlv *)
-/*
-TLV *tlv_pad1(){
-	return tlv_init(0,NULL);
-}
 
-TLV *tlv_padN(u_int8_t length){
-	TLV tlv=tlv_init(1,length);
-	memset(&tlv.body,0,sizeof(tlv.body));
-}
+void handle_message_h(struct message_h *msg,size_t buf_t,struct neighbor rcpt){
+	//struct message_h *msg=obtain_message_h(body,buf_t);
+	//mettre un null à la fin de la liste de tlv, ou stocker la taille quelque part
+	//Dans quel cas il faut créer un objet msg?
+	int i=0,pos=0;
+	u_int16_t body_length=ntohs(msg->body_length)
+	while(pos<msg->body_length){
+		char *tlv;
+		u_int8_t type=(u_int8_t)msg->body[pos];
+		u_int8_t length=(u_int8_t)(type==0)?0:(u_int8_t)msg->body[pos+1];
+		if(type>=0 && type<NB_TLV){
+			memcpy(&tlv,pos+2,length);
+			if(handle_tlv[type](tlv,length,rcpt)){
 
-TLV *short_tlv_hello(u_int64_t id){
-	TLV tlv=tlv_init(2,8);
-	memcpy(&(tlv.body),&id,sizeof(id));
-	return tlv;
-}
-
-TLV *long_tlv_hello(u_int64_t source_id,u_int64_t dest_id){
-	size_t source_size=sizeof(dest_id),dest_size=sizeof(dest_id);
-	TLV tlv=tlv_init(2,16);
-	memcpy(&(tlv.body),&source_id,source_size);
-	memcpy(&(tlv.body+source_size-1),&dest_id,dest_size);
-	return tlv;
-}
-
-TLV *neighbour(unsigned char[16] ip,u_int16_t port){
-	size_t ip_size=sizeof(ip),port_size=sizeof(port);
-	TLV tlv=tlv_init(3,18);
-	memcpy(&(tlv.body),&ip,ip_size);
-	memcpy(&(tlv.body+ip_size-1),&port_size,port_size);
-	return tlv;
-}
-
-TLV *data(u_int64_t id,u_int8_t type,unsigned char *data){
-	u_int32_t nonce=0;
-	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type),data_size=sizeof(data);
-	u_int8_t length=id_size+nonce_size+type_size+data_size;
-	TLV *tlv=tlv_init(4,length);
-	memcpy(&(tlv.body),&id,id_size);
-	memcpy(&(tlv.body+id_size-1),&nonce,nonce_size);
-	memcpy(&(tlv.body+id_size+nonce_size-1),&type,type_size);
-	memcpy(&(tlv.body+id_size+nonce_size+type_size-2),&data,data_size);
-	return tlv;
-}
-
-TLV *ack(u_int64_t id,u_int32_t nonce){
-	size_t id_size=sizeof(id),nonce_size=sizeof(nonce);
-	TLV *tlv=tlv_init(5,12);
-	memcpy(&(tlv.body),&id,id_size);
-	memcpy(&(tlv.body+id_size-1),&nonce,nonce_size);
-}
-
-TLV *goaway(u_int8_t code,unsigned char *msg){
-	size_t code_size=sizeof(code),msg_size=sizeof(msg);
-	u_int8_t length=code_size+msg_size;
-	TLV *tlv=tlv_init(6,length);
-	memcpy(&(tlv.body),&code,code_size);
-	memcpy(&(tlv.body+code_size-1),&msg,msg_size);
-	return tlv;
-
-}
-
-TLV *warning(unsigned char *msg){
-	u_int8_t length=sizeof(msg);
-	TLV *tlv=tlv_init(7,length);
-	memcpy(&(tlv.body),&msg,length);
-}
-
-
-TLV *init_tlv(u_int8_t type,u_int8_t length){
-	TLV *tlv=malloc(sizeof(struct TLV));
-	if(tlv==NULL){
-		perror("malloc");
-		exit(EXIT_FAILURE);
+			}
+			else{
+				//perror("tlv")
+			}
+		}
+		pos+=length;
 	}
-	tlv->type=type;
-	tlv->length=length;
-	tlv->body=NULL;
-
 }
 
-TLV *init_tlv(u_int8_t type,u_int8_t length,char *body){
-	TLV *tlv=malloc(sizeof(struct TLV));
-	if(tlv==NULL){
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	tlv->type=type;
-	tlv->length=length;
-	memcpy(&(tlv->body),&body,length);
-	return tlv;
 
-}
-
-//Fonctions pour séparer les différents élements d'un tlv reçu
-TLV *pad1(unsigned char *tlv){
-	return tlv_pad1();
-}
-TLV *padN(unsigned char *tlv){
-	return tlv_padN(*(tlv+8))
-}*/
