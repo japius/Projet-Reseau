@@ -6,12 +6,11 @@
 
 typedef struct TLV TLV;
 
-struct message{
+struct message_h{
 	char magic;
 	char version;
 	u_int16_t body_length;
-	TLV **body;
-	//unsigned char body[MAX_SIZE]; //XXX
+	unsigned char body[MAX_SIZE]; //XXX
 };
 
 struct TLV{

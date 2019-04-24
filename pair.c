@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
@@ -11,7 +12,7 @@
 #include <unistd.h>
 #include "struct.h"
 #include "net_lib.h"
-#include "tlv.h"
+//#include "tlv.h"
 
 static u_int64_t id;
 static int test = 0;
@@ -39,57 +40,58 @@ int main(int argc, char *argv[])
 		}
 		if(test==1){
 			struct neighbor ngb = {0};
-
 			ngb.port=atoi(argv[2]);
 			inet_pton(AF_INET6,argv[1],ngb.ip);
 			print_addr(ngb.ip);
 			send_message(soc,&id,sizeof(id),ngb);
-		}else if(test==2){
-			//send_first_message(soc,argv[1],argv[2],"hey",3);
-		}else{
-			//write(soc,&id,sizeof(u_int64_t));
 		}
-		/*printf("client : client -> %lu\n",id);
-		char buf[10]={0}; 
-		struct sockaddr_in6 client;
-		socklen_t client_len = sizeof(struct sockaddr_in6);
-		int t = recvfrom(soc,buf,4,0,&client,&client_len);
-		printf("port = %d\n",ntohs(client.sin6_port ));
-		printf("J'ai recu %s, %d\n",buf,t);*/
 		msg.magic = 93;
 		msg.version = 2;
-		msg.body_length  = sizeof(struct TLV);
-		msg.body_length = htonl(msg.body_length);
-		short_tlv_hello(msg.body,400,id);
+		msg.body_length  = 10;
+		msg.body_length = htons(msg.body_length);
+		msg.body[0]=2;
+		msg.body[1]=8;
+		memcpy((msg.body)+2,&id,8);
+		print_msg(msg);
 		printf("Icic\n");
+
+		int soc2 = init_socket_client_udp_v2();
 		if(test){
-			send_first_message(soc,argv[1],argv[2],&msg,sizeof(struct message_h));
+			send_first_message(soc,argv[1],argv[2],&msg,4+ntohs(msg.body_length));
 		}else{
-			write(soc,&msg,sizeof(msg));
+			write(soc,&msg,4+ntohs(msg.body_length));
 		}	
 
 		struct message_h mmm;
 		struct sockaddr_in6 client;
 		socklen_t client_len = sizeof(struct sockaddr_in6);
-		printf("hey");
 		int t = recvfrom(soc,&mmm,sizeof(struct message_h),0,&client,&client_len);
-		printf("J'ai recu un msg taille %d",t);
+		print_msg(mmm);
+		printf("J'ai recu un msg taille %d\n",t);
+		struct neighbor truc = sockaddr6_to_neighbor(client);
+		send_message(soc2,&msg,4+ntohs(msg.body_length),truc);
+		recvfrom(soc2,&mmm,sizeof(struct message_h),0,&client,&client_len);
+		print_msg(mmm);
 	}else if(argc==2){
+
 		int soc = init_socket_server_udp(atoi(argv[1]));
 		if(soc<0){
 			fprintf(stderr, "Erreur à la création de la socket\n");
 			exit(0);
 		}
+
 		u_int64_t id_pair;
 		struct sockaddr_in6 client;
 		socklen_t client_len = sizeof(struct sockaddr_in6);
+
 		while(1){
-			recvfrom(soc,&id_pair,sizeof(id_pair),0,&client,&client_len);
+			int rc = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 			//read_socket(soc,&id_pair,sizeof(id_pair),NULL);
-			printf("server : server -> %lu\nserver : client -> %lu\n",id,id_pair);
 			struct neighbor truc = sockaddr6_to_neighbor(client);
-			printf("port = %d\n",truc.port );
-			printf("send message = %d",send_message(soc,"hey",3,truc));
+			printf("port = %d\n",truc.port);
+			msg.body[10] = 0;
+			print_msg(msg);
+			printf("send message = %d",send_message(soc,&msg,4+ntohs(msg.body_length),truc));
 		}
 	}
 	return 0;

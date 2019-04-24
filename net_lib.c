@@ -60,7 +60,7 @@ int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf
 
 	h.ai_family = AF_INET6;
 	h.ai_socktype = SOCK_DGRAM;
-	h.ai_flags = 0;
+	h.ai_flags = AI_V4MAPPED|AI_ALL;
 	h.ai_protocol = 0;
 
 	rc = getaddrinfo(addr, port, &h, &r);
@@ -70,8 +70,9 @@ int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf
 	}
 
 	for(struct addrinfo *p =r; p!=NULL; p = p->ai_next){
-		printf("Je suis la ");
-		sendto(soc,buf,size_buf,0,p->ai_addr,p->ai_addrlen);
+		int blop = sendto(soc,buf,size_buf,0,p->ai_addr,p->ai_addrlen);
+		perror("trucouille");
+		printf("retour de sendto = %d\n",blop );
 	}
 	freeaddrinfo(r);
 	return 0;
@@ -133,6 +134,7 @@ int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
 struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr){
 	struct neighbor res;
 	res.port = ntohs(saddr.sin6_port);
+	print_addr(saddr.sin6_addr.s6_addr);
 	memcpy(res.ip,saddr.sin6_addr.s6_addr,16);
 	print_addr(res.ip);
 	return res;
@@ -143,4 +145,22 @@ void print_addr(u_int8_t *ip){
 	char buffer[50];
 	inet_ntop(AF_INET6,ip,buffer,50);
 	printf("Adress: %s\n",buffer);
+}
+
+
+int print_tlv(unsigned char *buf){
+	if(buf[0] == 0){
+		printf("\t tlv 1, size 1\n");
+		return 1;
+	}
+	printf("\t tlv %d, size %d\n",buf[0],buf[1]);
+	return buf[1];
+}
+
+void print_msg(struct message_h msg){
+	int l = ntohs(msg.body_length);
+	printf("magic = %d, version = %d, length = %d\n data :\n",msg.magic, msg.version, l);
+	for(int i=0;i<l;)
+		i+=print_tlv(msg.body+i)+2;
+	printf("\n");
 }
