@@ -7,7 +7,7 @@ FILES = net_lib.c pair.c list.c abr.c tlv.c#$(shell find $(SRCIDR) -name '')
 OBJ = $(FILES:%.c=%.o)
 
 ALL=$(NAME)
-all:$(ALL) clean
+all:$(ALL)
 
 %.o: %.c
 	$(CC) $(FLAGS) -c $? $(LDLIBS) -o $@

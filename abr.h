@@ -3,15 +3,17 @@
 #include <time.h>
 #include "struct.h"
 
+#ifndef ABR_H
+#define ABR_H
 
-typedef struct tree tree;
-
-struct tree{
+typedef struct tree{
   struct neighbor *key;
   struct ident *val;
   struct  tree *left;
   struct tree *right;
-};
+}tree;
+
+
 
 
 tree *init_first();
@@ -32,4 +34,4 @@ void clean(tree *t);
 
 void print_tree(tree *abr);
 
-
+#endif

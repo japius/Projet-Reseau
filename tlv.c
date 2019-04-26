@@ -84,7 +84,7 @@ short tlv_long_hello(char *body,size_t bufsize, u_int64_t source_id,u_int64_t de
 
 short tlv_neighbour(char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
 	if(bufsize>17){
-		size_t ip_size=sizeof(ip),port_size=sizeof(port);
+		size_t ip_size=16,port_size=sizeof(port);
 		*body = 2;
 		*(body+1)=18;
 		memcpy(body+2,&ip,ip_size);
@@ -163,21 +163,21 @@ int hello(char *tlv,u_int8_t length,struct neighbor peer){
 	//struct ident *val=create_ident()
 	//récupérer le source_id et la data courante
 	time_t current=time(0);
-	struct ident *val;
+	struct ident val;
 	u_int64_t source_id,dest_id;
 	memcpy(&(source_id),tlv,8);
-	val->id=source_id;
-	val->last_hello=current;
+	val.id=source_id;
+	val.last_hello=current;
 	if(length==16){
 		memcpy(&dest_id,tlv+8,8);
 		if(dest_id==id){
-			val->last_hello_long=current;
-			neighbors=add_neighbor(neighbors,&peer,val);
+			val.last_hello_long=current;
+			neighbors=add_neighbor(neighbors,&peer,&val);
 			return 1;
 		}
 		return 1;
 	}
-	neighbors=add_neighbor(neighbors,&peer,val);
+	neighbors=add_neighbor(neighbors,&peer,&val);
 	return 1;
 }
 
@@ -273,8 +273,8 @@ void handle_message_h(struct message_h *msg,size_t buf_t,struct neighbor rcpt){
 	//Dans quel cas il faut créer un objet msg?
 	int pos=0;
 	u_int16_t body_length=ntohs(msg->body_length);
+	char tlv[MAX_SIZE];
 	while(pos<body_length){
-		char *tlv;
 		u_int8_t type=(u_int8_t)msg->body[pos];
 		u_int8_t length=(u_int8_t)(type==0)?0:(u_int8_t)msg->body[pos+1];
 		if(type>=0 && type<NB_TLV){
