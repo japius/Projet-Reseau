@@ -68,8 +68,10 @@ int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf
 		fprintf(stderr, "Erreur lors de getaddrinfo\n");
 		return -1;
 	}
+	printf("je suis la : %d\n",soc);
 
 	for(struct addrinfo *p =r; p!=NULL; p = p->ai_next){
+		printf("iciiiiiii\n");
 		int blop = sendto(soc,buf,size_buf,0,p->ai_addr,p->ai_addrlen);
 		perror("trucouille");
 		printf("retour de sendto = %d\n",blop );

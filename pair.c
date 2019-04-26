@@ -38,13 +38,13 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "Erreur à la création de la socket\n");
 			exit(0);
 		}
-		if(test==1){
+		/*if(test){
 			struct neighbor ngb = {0};
 			ngb.port=atoi(argv[2]);
 			inet_pton(AF_INET6,argv[1],ngb.ip);
 			print_addr(ngb.ip);
 			send_message(soc,&id,sizeof(id),ngb);
-		}
+		}*/
 		msg.magic = 93;
 		msg.version = 2;
 		msg.body_length  = 10;
