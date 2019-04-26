@@ -15,7 +15,7 @@ struct list_entry *add_node(struct list_entry *entry,struct list_entry *node){
 }
 struct list_entry *rm_node(struct list_entry *entry,struct neighbor *peer){
 	//if(compare_n(entry->list))
-	if(compare(entry->sym,peer)==0){
+	if(compare_d(entry->sym,peer)==0){
 		struct list_entry *tmp=entry,*res=entry->next;
 		free(tmp->sym);
 		free(tmp);

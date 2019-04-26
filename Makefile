@@ -6,7 +6,7 @@ NAME=pair
 FILES = net_lib.c pair.c list.c abr.c tlv.c#$(shell find $(SRCIDR) -name '')
 OBJ = $(FILES:%.c=%.o)
 
-ALL=$(NAME)
+ALL=$(NAME) clean
 all:$(ALL)
 
 %.o: %.c

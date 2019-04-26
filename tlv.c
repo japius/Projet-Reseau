@@ -6,8 +6,8 @@
 #include <arpa/inet.h>
 #include "struct.h"
 #include "abr.h"
-#include "tlv.h"
 #include "peer.h"
+#include "tlv.h"
 #include "list.h"
 #include "net_lib.h"
 

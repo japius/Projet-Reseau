@@ -11,8 +11,8 @@
 #include <unistd.h>
 #include "struct.h"
 #include "net_lib.h"
-#include "tlv.h"
 #include "peer.h"
+#include "tlv.h"
 
 
 int main(void){
