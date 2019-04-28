@@ -54,9 +54,11 @@ int main(int argc, char *argv[])
 		memcpy((msg.body)+2,&id,8);
 		print_msg(msg);
 		printf("Icic\n");
-
 		int soc2 = init_socket_client_udp_v2();
 		if(test){
+			char test[7]="bonbon";
+			//printf(test);
+			//send_first_message(soc,argv[1],argv[2],test,7);
 			send_first_message(soc,argv[1],argv[2],&msg,4+ntohs(msg.body_length));
 		}else{
 			write(soc,&msg,4+ntohs(msg.body_length));

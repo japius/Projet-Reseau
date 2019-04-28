@@ -1,10 +1,10 @@
+#ifndef ABR_H
+#define ABR_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "struct.h"
-
-#ifndef ABR_H
-#define ABR_H
 
 typedef struct tree{
   struct neighbor *key;

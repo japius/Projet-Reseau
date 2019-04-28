@@ -12,7 +12,7 @@ struct flood *init_data();
 
 struct flood_entry *get_flood(struct flood *,struct data_index *data);
 
-void add_entry(struct flood *flood, struct data_index *data,struct list_entry *entry);
+void add_entry(struct flood *flood, struct data_index *data,char *msg,struct list_entry *entry);
 
 void rm_entry(struct flood *flood,struct flood_entry *entry);
 

@@ -41,6 +41,11 @@ int nb_tlv(){
 	return res;
 }*/
 
+
+//Fonction pour créer le message qu'on veut
+
+//Fonction pour envoyer un certain message
+
 //Fonctions pour créer les tlv avec les paramètres en argument
 short tlv_pad1(char *body,size_t bufsize){
 	if(bufsize>0){
@@ -193,7 +198,7 @@ int neighbour(char * tlv,u_int8_t length,struct neighbor peer){
 
 //On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
 int data(char *tlv,u_int8_t length,struct neighbor peer){
-	if(*tlv==0){
+	if(*(tlv+13)==0){
 		//afficher le message
 	}
 	struct data_index index;
@@ -220,7 +225,13 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
 		struct list_entry *symmetric=get_symmetrical(neighbors);
 		remove_node(symmetric,&peer);
-		add_entry(dataf,&index,symmetric);
+		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
+		//rajouter caractère de fin de ligne ? +1 pour type 4
+		char msg[length+2];
+		msg[0]=4;
+		msg[1]=length;
+		memcpy(msg+2,tlv,length);
+		add_entry(dataf,&index,msg,symmetric);
 		//Peut etre ajouter seulement si pas déja dans la liste à inonder ?
 	}
 	//Afficher le message_h

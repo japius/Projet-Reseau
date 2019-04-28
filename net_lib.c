@@ -48,8 +48,12 @@ int init_socket_client_udp(char *addr, char *port){
 }
 
 int init_socket_client_udp_v2(){
-	int soc =socket(PF_INET6, SOCK_DGRAM,0),val=1;
+	int soc =socket(PF_INET6, SOCK_DGRAM,0),val=0;
 	int rc=setsockopt(soc,IPPROTO_IPV6,IPV6_V6ONLY,&val,sizeof(val));
+	if(rc<0){
+		perror("setsockopt");
+		exit(EXIT_FAILURE);
+	}
 	return soc;
 }
 
@@ -57,13 +61,13 @@ int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf
 	struct addrinfo h = {0};
 	struct addrinfo *r = {0};
 	int rc = 0;
-
 	h.ai_family = AF_INET6;
 	h.ai_socktype = SOCK_DGRAM;
 	h.ai_flags = AI_V4MAPPED|AI_ALL;
 	h.ai_protocol = 0;
 
 	rc = getaddrinfo(addr, port, &h, &r);
+
 	if(rc < 0){
 		fprintf(stderr, "Erreur lors de getaddrinfo\n");
 		return -1;
@@ -146,6 +150,15 @@ struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr){
 	memcpy(res.ip,saddr.sin6_addr.s6_addr,16);
 	print_addr(res.ip);
 	return res;
+}
+
+struct sockaddr_in6 neighbor_to_sockaddr6(struct neighbor neighbor){
+	struct sockaddr_in6 sin6={0};
+	sin6.sin6_family = AF_INET6;
+	sin6.sin6_port = htons(neighbor.port);
+	//apparemment pas besoin de pton
+	memmove(&sin6.sin6_addr,neighbor.ip,16);
+	return sin6;
 }
 
 

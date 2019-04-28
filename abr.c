@@ -94,6 +94,18 @@ struct list_entry *get_symmetrical(tree *t){
   return NULL;
 }
 
+//Le nombre de voisins
+int number_of_neighbors(tree *t){
+  if(t==NULL) return 0;
+  return 1+number_of_neighbors(t->left)+number_of_neighbors(t->right);
+}
+
+//Le nombre de voisins symétriques
+int numer_of_symmetrical(tree *t){
+  struct list entry *list=get_symmetrical(t);
+  return length(list);
+}
+
 //Renvoie un pointeur vers le maximum du sous arbre de racine r
 tree *maxUnder(tree *r){
   if(r==NULL || r->right==NULL) return r;

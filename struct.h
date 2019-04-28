@@ -40,6 +40,8 @@ struct list_entry{
 //Un noeud de la liste d'inondations, soit un couple (Id,Nonce) et une liste de voisins à inonder
 struct flood_entry{
 	struct data_index *index;
+	//A revoir, ptet autre chose que MAX_SIZE
+	char *data;
 	struct list_entry *sym_neighbors;
 	struct flood_entry *next;
 };

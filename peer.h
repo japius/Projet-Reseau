@@ -5,6 +5,8 @@
 #include "list.h"
 #include "abr.h"
 
+#define JCH 1212
+
 extern u_int64_t id;
 extern tree *potential;
 extern tree *neighbors;
