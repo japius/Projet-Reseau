@@ -18,15 +18,15 @@ struct neighbor{
 };
 
 struct ident{
-	u_int64_t ID;
-	time_t last_hello;
-	time_t last_hello_long;
+	u_int64_t id;
+	int last_hello;
+	int last_hello_long;
 };
 
 
 //Les données pour la liste de données récentes
 struct data_index{
-	u_int64_t ID;
+	u_int64_t id;
 	u_int32_t nonce;
 };
 

@@ -26,6 +26,7 @@ tree *init_first(){
 
 //Pour ajouter un voisin s'il n"existe pas et le mettre à jour sinon
 tree *add_neighbor(tree *t,struct neighbor *key,struct ident *val){
+  print_tree(t);
   if(t==NULL) return init(key,val,NULL,NULL);
   int comp=compare_n(t->key,key);
   if(comp>0){
@@ -177,20 +178,27 @@ short check(tree *t){
 
 
 void print_key(struct neighbor *key){
+  printf("IP : %u  ",key->ip);
+  printf("Port : %u",key->port);
 }
 
 void print_val(struct ident *val){
-
+    printf("Id : %u",val->id);
+    printf("Last hello : %u",val->last_hello);
+    printf("Last long hello : %u",val->last_hello_long);
 }
 
 void print_tree(tree *abr){
   if(abr!=NULL){
-    print_tree(abr->left);
+    print_tree(abr->left); 
+    printf("| ");
     print_key(abr->key);
     print_val(abr->val);
+    printf("| ");
     //printf("| %d",abr->val); 
     print_tree(abr->right);
   }
+  else printf("null");
 }
 
 

@@ -2,6 +2,7 @@
 #include "peer.h"
 #include "list.h"
 #include "abr.h"
+#include <time.h>
 
 
 /*void flood_message(struct flood_entry flood){
@@ -54,6 +55,12 @@ int compare_n(struct neighbor *key1,struct neighbor *key2){
 	if(key1->port < key2->port) return -1;
 	if(key1->port > key2->port) return 1;
 	return 0;
+}
+
+int get_seconds(){
+	struct timespec tmspc = {0};
+	int tmp=clock_gettime(CLOCK_MONOTONIC,&tmspc);
+	return tmspc.tv_sec;
 }
 
 //Peut etre récupérer l'interface de JUlius apres un recevfrom et enovyer au groupe de multicast
