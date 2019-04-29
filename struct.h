@@ -62,6 +62,6 @@ struct submessages{
 	int actual_length;
 	int length_received;
 	char submessages[512];
-}
+};
 
 #endif
