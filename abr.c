@@ -15,9 +15,9 @@
 tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
   tree *current=malloc(sizeof(tree));
   current->val=malloc(sizeof(struct ident));
-  memmove(current->val,val,sizeof(struct ident));
+  if(val)memmove(current->val,val,sizeof(struct ident));
   current->key=malloc(sizeof(struct neighbor));
-  memmove(current->key,key,sizeof(struct neighbor));
+  if(key)memmove(current->key,key,sizeof(struct neighbor));
   current->left=left;
   current->right=right;
   return current;
@@ -27,30 +27,37 @@ tree *init_first(){
   return init(NULL,NULL,NULL,NULL);
 }
 
+short add_neighbor(tree *NEIGHBORS,struct neighbor *key,struct ident *val){
+  if(NEIGHBORS==NULL){
+    NEIGHBORS=init(key,val,NULL,NULL);
+    return 1;
+  }
+  return add_neighbor_aux(NEIGHBORS,key,val);
+}
+
 //Pour ajouter un voisin s'il n"existe pas et le mettre à jour sinon
-tree *add_neighbor(tree *t,struct neighbor *key,struct ident *val){
-  print_tree(t);
-  if(t==NULL) return init(key,val,NULL,NULL);
+short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
+  //if(t==NULL) return init(key,val,NULL,NULL);
   int comp=compare_n(t->key,key);
   if(comp>0){
     if(t->left==NULL){
       t->left=init(key,val,NULL,NULL);
-      return t;
+      return 1;
     }
-    t->left=add_neighbor(t->left,key,val);
-    return t;
+    t->left=add_neighbor_aux(t->left,key,val);
+    return 1;
   }
   else if(comp<0){
     if(t->right==NULL){
       t->right=init(key,val,NULL,NULL);
-      return t;
+      return 1;
     }
-    t->right=add_neighbor(t->right,key,val);
-    return t;
+    t->right=add_neighbor_aux(t->right,key,val);
+    return 1;
   }    
   t->val->last_hello=val->last_hello;
   t->val->last_hello_long=val->last_hello_long;
-  return t;
+  return 1;
 }
 
 //Pour chercher un certain voisin
@@ -117,7 +124,15 @@ tree *maxUnder(tree *r){
   return maxUnder(r->right);
 }
 
-tree * remove_neighbor(struct neighbor *key, tree *t){
+short remove_neighbor(struct neighbor *key, tree *t){
+  if(t){
+      t=remove_neighbor_aux(key,t);
+      return 1;
+  }
+  return 1;
+}
+
+tree * remove_neighbor_aux(struct neighbor *key, tree *t){
   int comp=compare_n(t->key,key);
   if(comp==0){
     if(t->left==NULL && t->right==NULL){
@@ -133,17 +148,17 @@ tree * remove_neighbor(struct neighbor *key, tree *t){
       return t->left;
     }
     tree *m=maxUnder(t->left);
-    tree *res=remove_neighbor(m->key,t);
+    tree *res=remove_neighbor_aux(m->key,t);
     res->key=m->key;
     res->val=m->val;
     free(t);
     return res;
   } 
-  else if(comp>0){
-    t->left=remove_neighbor(key,t->left);
+  if(comp>0){
+    t->left=remove_neighbor_aux(key,t->left);
     return t;
   }
-  t->right=remove_neighbor(key,t->right);
+  t->right=remove_neighbor_aux(key,t->right);
   return t;
 }
 
@@ -181,23 +196,24 @@ short check(tree *t){
 
 
 void print_key(struct neighbor *key){
-  printf("IP : %u  ",key->ip);
-  printf("Port : %u",key->port);
+  printf("IP : ");
+  print_addr(key->ip);
+  printf(" Port : %u ",key->port);
 }
 
 void print_val(struct ident *val){
     printf("Id : %u",val->id);
-    printf("Last hello : %u",val->last_hello);
-    printf("Last long hello : %u",val->last_hello_long);
+    printf("Last hello : %u ",val->last_hello);
+    printf("Last long hello : %u ",val->last_hello_long);
 }
 
 void print_tree(tree *abr){
   if(abr!=NULL){
     print_tree(abr->left); 
-    printf("| ");
+    printf("\n| ");
     print_key(abr->key);
     print_val(abr->val);
-    printf("| ");
+    printf("| \n");
     //printf("| %d",abr->val); 
     print_tree(abr->right);
   }

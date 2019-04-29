@@ -21,9 +21,9 @@ int main(int argc, char *argv[]){
 	//u_int64_t ID;
 	//initialisation du pair
 	random_on_octets(&ID,sizeof(u_int64_t));
-	POTENTIAL=init_first();
+	/*POTENTIAL=init_first();
 	NEIGHBORS=init_first();
-	DATAF=init_data();
+	DATAF=init_data();*/
 	int soc = init_socket_client_udp_v2();
 	int nb;
 	if(argc==3)
