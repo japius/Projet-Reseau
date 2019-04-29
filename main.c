@@ -42,7 +42,9 @@ int main(int argc, char *argv[]){
 		socklen_t client_len = sizeof(struct sockaddr_in6);
 		int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 		struct neighbor tmp = sockaddr6_to_neighbor(client);
+		print_msg(msg);
 		handle_message_h(soc,&msg,size_msg,tmp);
+
 	}
 	/*Il faut:
 	-envoyer toutes les 30s des hellos long à chaque voisin
