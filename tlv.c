@@ -11,6 +11,7 @@
 #include "list.h"
 #include "net_lib.h"
 #include "peer.h"
+#include "util.h"
 
 
 
@@ -57,11 +58,11 @@ short tlv_padN(char *body,size_t bufsize, u_int8_t length){
 	return 0;
 }
 
-short tlv_short_hello(char *body,size_t bufsize, u_int64_t ID){
+short tlv_short_hello(char *body,size_t bufsize, u_int64_t id){
 	if(bufsize>9){
 		*body = 2;
 		*(body+1)=8;
-		memcpy(body+2,&ID,sizeof(ID));
+		memcpy(body+2,&id,sizeof(id));
 		return 1;
 	}
 	return 0;
@@ -91,15 +92,15 @@ short tlv_neighbour(char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
 	return 0;
 }
 
-short tlv_data(char *body,size_t bufsize, u_int64_t ID,u_int8_t type,unsigned char *data,u_int8_t msg_size){
+short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
-	size_t id_size=sizeof(ID),nonce_size=sizeof(nonce),type_size=sizeof(type);
+	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
 	u_int8_t length=id_size+nonce_size+type_size+msg_size;
 	if(bufsize>length+1){
 		random_on_octets(&nonce,4);
 		*body = 4;
 		*(body+1)=length;
-		memcpy(body+2,&ID,id_size);
+		memcpy(body+2,&id,id_size);
 		memcpy(body+2+id_size,&nonce,nonce_size);
 		memcpy(body+2+id_size+nonce_size,&type,type_size);
 		memcpy(body+2+id_size+nonce_size+type_size,&data,msg_size);
@@ -108,13 +109,13 @@ short tlv_data(char *body,size_t bufsize, u_int64_t ID,u_int8_t type,unsigned ch
 	return 0;
 }
 
-short tlv_ack(char *body,size_t bufsize, u_int64_t ID,u_int32_t nonce){
-	size_t id_size=sizeof(ID),nonce_size=sizeof(nonce);
+short tlv_ack(char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
+	size_t id_size=sizeof(id),nonce_size=sizeof(nonce);
 	u_int8_t length=id_size+nonce_size;
 	if(bufsize>length+1){
 		*body = 5;
 		*(body+1)=length;
-		memcpy(body+2,&ID,id_size);
+		memcpy(body+2,&id,id_size);
 		memcpy(body+2+id_size,&nonce,nonce_size);
 		return 1;
 	}
@@ -159,11 +160,12 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//struct neighbor *key=sockaddr6_to_neighbor();
 	//struct ident *val=create_ident()
 	//récupérer le source_id et la data courante
-	time_t current=time(0);
+	unsigned int current=get_seconds();
+	//printf(current);
 	struct ident val;
 	u_int64_t source_id,dest_id;
 	memcpy(&(source_id),tlv,8);
-	val.ID=source_id;
+	val.id=source_id;
 	val.last_hello=current;
 	if(length==16){
 		memcpy(&dest_id,tlv+8,8);
@@ -199,14 +201,14 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//en vrai peut etre que juste un char * serait suffisant, vu qu'on a le numero de l'octet , suffit de faire un memset à partir de cet octet
 	//taille du sous message: tlv.length-13 (ID sur 8 octets+ nonce sur 4 +type ) -9(4 nonce+ 1 type+ 2 +2)
 	struct data_index index;
-	memcpy(&index.ID,tlv,8);
+	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
 	//On récupère la liste des voisins à inonder associée à la donnée
 	struct flood_entry *flood=get_flood(DATAF,&index);
 	//Si vide
 	//envoyer un acquittement
 	char body[13];
-	if(tlv_ack(body,12,index.ID,index.nonce)){
+	if(tlv_ack(body,12,index.id,index.nonce)){
 		//créer le message_h et faire un send message_h
 		struct message_h msg;
 		msg.magic=93;
@@ -257,7 +259,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//sortir de la liste des personnes à inonder
 	struct data_index index;
-	memcpy(&index.ID,tlv,8);
+	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
 	struct flood_entry *flood=get_flood(DATAF,&index);
 	if(flood){
@@ -290,6 +292,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 	//Dans quel cas il faut créer un objet msg?
 	int pos=0;
 	u_int16_t body_length=ntohs(msg->body_length);
+	printf("%d\n",body_length);
 	print_msg(*msg);
 	char tlv[MAX_SIZE];
 	while(pos<body_length){

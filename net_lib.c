@@ -177,7 +177,7 @@ struct sockaddr_in6 neighbor_to_sockaddr6(struct neighbor neighbor){
 void print_addr(u_int8_t *ip){
 	char buffer[50];
 	inet_ntop(AF_INET6,ip,buffer,50);
-	printf("Adress: %s\n",buffer);
+	printf("Address: %s\n",buffer);
 }
 
 
