@@ -17,7 +17,7 @@ char *tlv_types[NB_TLV]={
   "pad1","padN","hello","neighbour","data","ack","goaway","warning"
 };
 
-int (*handle_tlv[NB_TLV])(char *,u_int8_t,struct neighbor )={
+int (*handle_tlv[NB_TLV])(int soc,char *,u_int8_t,struct neighbor )={
   &pad1,
   &padN,
   &hello,
@@ -146,14 +146,14 @@ short tlv_warning(char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_siz
 
 //Fonctions de gestion de la réception d'un TLV
 
-int pad1(char * tlv,u_int8_t length,struct neighbor peer){
+int pad1(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
 int padN(char * tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
 
-int hello(char *tlv,u_int8_t length,struct neighbor peer){
+int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//insérer dans la table de voisins et noter la date de réception
 	//struct neighbor *key=sockaddr6_to_neighbor();
 	//struct ident *val=create_ident()
@@ -177,7 +177,7 @@ int hello(char *tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
 
-int neighbour(char * tlv,u_int8_t length,struct neighbor peer){
+int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	struct neighbor key;
 	memcpy(&key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
@@ -188,7 +188,7 @@ int neighbour(char * tlv,u_int8_t length,struct neighbor peer){
 }
 
 //On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
-int data(char *tlv,u_int8_t length,struct neighbor peer){
+int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//si le type est 220, le truc de Alexandre et tristan, on sait que c'est un sous message, 
 	//On crée une liste pour les messages, et chacun est un tableau de char *, on vérifie s'il est deja dans la liste, on le rajoute dans le tableau, sinon on crée un nouveau noeud,
 	//type:220, nonce du message global sur 4 octets, type de la donnée sur un octet,taille du message en octet N sur 2 octet, position du messsage sur un octet, 
@@ -207,6 +207,12 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 	char body[13];
 	if(tlv_ack(body,12,index.ID,index.nonce)){
 		//créer le message_h et faire un send message_h
+		struct message_h msg;
+		msg.magic=93;
+		msg.version=2;
+		msg.body_length=14;
+		memcpy(msg.body,body,12);
+		send_message(soc,&msg,18,peer);
 	}
 	else{
 		perror("tlv");
@@ -217,7 +223,6 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 
 	}
 	else{
-		printf("%s\n",tlv+14);
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
 		struct list_entry *symmetric=get_symmetrical(NEIGHBORS);
 		symmetric=remove_node(symmetric,&peer);
@@ -232,6 +237,7 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 	}
 	if(*(tlv+13)==0){
 		//afficher le message
+		write(1,tlv+14,length-13);
 	}
 	//Afficher le message_h
 	//verifier dans la liste
@@ -261,12 +267,12 @@ int ack(char *tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
 
-int goaway(char *tlv,u_int8_t length,struct neighbor peer){
+int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
 	NEIGHBORS=remove_neighbor(&peer,NEIGHBORS);
 	return 1;
 }
-int warning(char *tlv,u_int8_t length,struct neighbor peer){
+int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//juste lire et passer à autre chose
 	char buf[MAX_SIZE];
 	memcpy(buf,tlv,length);
@@ -277,7 +283,7 @@ int warning(char *tlv,u_int8_t length,struct neighbor peer){
 
 
 
-void handle_message_h(struct message_h *msg,size_t buf_t,struct neighbor rcpt){
+void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor rcpt){
 	//struct message_h *msg=obtain_message_h(body,buf_t);
 	//mettre un null à la fin de la liste de tlv, ou stocker la taille quelque part
 	//Dans quel cas il faut créer un objet msg?
@@ -289,7 +295,7 @@ void handle_message_h(struct message_h *msg,size_t buf_t,struct neighbor rcpt){
 		u_int8_t length=(u_int8_t)(type==0)?0:(u_int8_t)msg->body[pos+1];
 		if(type>=0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
-			if(handle_tlv[type](tlv,length,rcpt)){
+			if(handle_tlv[type](soc,tlv,length,rcpt)){
 
 			}
 			else{
