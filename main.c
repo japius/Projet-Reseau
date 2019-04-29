@@ -25,7 +25,11 @@ int main(int argc, char *argv[]){
 	NEIGHBORS=init_first();
 	DATAF=init_data();
 	int soc = init_socket_client_udp_v2();
-	int nb = send_first_message(soc,argv[1],argv[2]);
+	int nb;
+	if(argc==3)
+		nb = send_first_message(soc,argv[1],argv[2]);
+	else
+		nb = send_first_message(soc,"jch.irif.fr","1212");
 	printf("J'ai envoye hello a %d adresse(s)\n", nb);
 
 	struct message_h msg;
