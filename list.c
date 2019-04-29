@@ -1,6 +1,7 @@
 #include "list.h"
 #include "struct.h"
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "util.h"
 
