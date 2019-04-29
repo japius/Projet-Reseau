@@ -45,6 +45,17 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 	times_sent++;
 }
 
+int compare_n(struct neighbor key1,struct neighbor key2){
+	for(int i = 0;i<16;i++){
+		if(key1.ip[i] < key2.ip[i]) return -1;
+		if(key1.ip[i] > key2.ip[i]) return 1;
+	}
+
+	if(key1.port < key2.port) return -1;
+	if(key1.port > key2.port) return 1;
+	return 0;
+}
+
 //Peut etre récupérer l'interface de JUlius apres un recevfrom et enovyer au groupe de multicast
 void discover_neighbors(){
 

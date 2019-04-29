@@ -102,7 +102,7 @@ int number_of_neighbors(tree *t){
 
 //Le nombre de voisins symétriques
 int numer_of_symmetrical(tree *t){
-  struct list entry *list=get_symmetrical(t);
+  struct list_entry *list=get_symmetrical(t);
   return length(list);
 }
 
