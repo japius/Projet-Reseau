@@ -20,10 +20,10 @@
 int main(int argc, char *argv[]){
 
 	//initialisation du pair
-	id=random_on_octects(&id,sizeof(u_int64_t));
-	potential=init_first();
-	neighbors=init_first();
-	data=init_data();
+	ID=random_on_octects(&ID,sizeof(u_int64_t));
+	POTENTIAL=init_first();
+	NEIGHBORS=init_first();
+	DATAF=init_data();
 
 	int soc = init_socket_client_udp_v2();
 	int nb = send_first_message(soc,argv[1],argv[2]);

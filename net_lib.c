@@ -74,7 +74,7 @@ int send_first_message(int soc, char *addr, char *port){
 	msg.body_length = htons(msg.body_length);
 	msg.body[0]=2;
 	msg.body[1]=8;
-	memcpy((msg.body)+2,&id,8);
+	memcpy((msg.body)+2,&ID,8);
 
 	rc = getaddrinfo(addr, port, &h, &r);
 

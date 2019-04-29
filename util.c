@@ -17,7 +17,7 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 	-sinon:
 	-tirer un nombre aleatoire entre 2 times sent-1 et +1
 	-faire +1 sur times sent
-	-envoyer un data qui contient data, id nonce 
+	-envoyer un data qui contient data, ID nonce 
 	*/
 	if(list->times_sent==5){
 		//Send go_away;
@@ -26,7 +26,7 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 		//Supprimer de la liste des voisins
 		tlv_goaway(tlv2,28,2,goaway,26);
 		//ici le sendto
-		neighbors=remove_neighbour(list->sym,neighbors);
+		NEIGHBORS=remove_neighbour(list->sym,NEIGHBORS);
 	}
 	char *body;
 	int wait;

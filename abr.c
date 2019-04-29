@@ -4,6 +4,7 @@
 #include "struct.h"
 #include "list.h"
 #include "abr.h"
+#include "peer.h"
 
 
 //Peut etre trier en fonction de la date de reéception du dernier hello long comme ca le plus à gauche on aura les voisins symétriques et le reste non !

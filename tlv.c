@@ -55,11 +55,11 @@ short tlv_padN(char *body,size_t bufsize, u_int8_t length){
 	return 0;
 }
 
-short tlv_short_hello(char *body,size_t bufsize, u_int64_t id){
+short tlv_short_hello(char *body,size_t bufsize, u_int64_t ID){
 	if(bufsize>9){
 		*body = 2;
 		*(body+1)=8;
-		memcpy(body+2,&id,sizeof(id));
+		memcpy(body+2,&ID,sizeof(ID));
 		return 1;
 	}
 	return 0;
@@ -89,15 +89,15 @@ short tlv_neighbour(char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
 	return 0;
 }
 
-short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
+short tlv_data(char *body,size_t bufsize, u_int64_t ID,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
-	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
+	size_t id_size=sizeof(ID),nonce_size=sizeof(nonce),type_size=sizeof(type);
 	u_int8_t length=id_size+nonce_size+type_size+msg_size;
 	if(bufsize>length+1){
 		random_on_octets(&nonce,4);
 		*body = 4;
 		*(body+1)=length;
-		memcpy(body+2,&id,id_size);
+		memcpy(body+2,&ID,id_size);
 		memcpy(body+2+id_size,&nonce,nonce_size);
 		memcpy(body+2+id_size+nonce_size,&type,type_size);
 		memcpy(body+2+id_size+nonce_size+type_size,&data,msg_size);
@@ -106,13 +106,13 @@ short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned ch
 	return 0;
 }
 
-short tlv_ack(char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
-	size_t id_size=sizeof(id),nonce_size=sizeof(nonce);
+short tlv_ack(char *body,size_t bufsize, u_int64_t ID,u_int32_t nonce){
+	size_t id_size=sizeof(ID),nonce_size=sizeof(nonce);
 	u_int8_t length=id_size+nonce_size;
 	if(bufsize>length+1){
 		*body = 5;
 		*(body+1)=length;
-		memcpy(body+2,&id,id_size);
+		memcpy(body+2,&ID,id_size);
 		memcpy(body+2+id_size,&nonce,nonce_size);
 		return 1;
 	}
@@ -173,18 +173,18 @@ int hello(char *tlv,u_int8_t length,struct neighbor peer){
 	struct ident val;
 	u_int64_t source_id,dest_id;
 	memcpy(&(source_id),tlv,8);
-	val.id=source_id;
+	val.ID=source_id;
 	val.last_hello=current;
 	if(length==16){
 		memcpy(&dest_id,tlv+8,8);
-		if(dest_id==id){
+		if(dest_id==ID){
 			val.last_hello_long=current;
-			neighbors=add_neighbor(neighbors,&peer,&val);
+			NEIGHBORS=add_neighbor(NEIGHBORS,&peer,&val);
 			return 1;
 		}
 		return 1;
 	}
-	neighbors=add_neighbor(neighbors,&peer,&val);
+	NEIGHBORS=add_neighbor(NEIGHBORS,&peer,&val);
 	return 1;
 }
 
@@ -193,7 +193,7 @@ int neighbour(char * tlv,u_int8_t length,struct neighbor peer){
 	memcpy(&key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
 	//inserer l'adresse contenue dans le tlv à la liste des voisins potentiels
-	potential=add_neighbor(potential,&key,NULL);
+	POTENTIAL=add_neighbor(POTENTIAL,&key,NULL);
 	return 1;
 	//return 0;
 }
@@ -203,20 +203,20 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 	//si le type est 220, le truc de Alexandre et tristan, on sait que c'est un sous message, 
 	//On crée une liste pour les messages, et chacun est un tableau de char *, on vérifie s'il est deja dans la liste, on le rajoute dans le tableau, sinon on crée un nouveau noeud,
 	//type:220, nonce du message global sur 4 octets, type de la donnée sur un octet,taille du message en octet N sur 2 octet, position du messsage sur un octet, 
-	//ptet une hashmap ouais, id le nonce vu qu'il est unique, on devra tjrs juste récupérer le message à l'ordre truc, quand on le recoit on doit augmenter le compteur de nombre de messages restants et si on atteint la taille du t
+	//ptet une hashmap ouais, ID le nonce vu qu'il est unique, on devra tjrs juste récupérer le message à l'ordre truc, quand on le recoit on doit augmenter le compteur de nombre de messages restants et si on atteint la taille du t
 	//map.get(nonce)[indice]=le nouveau message, ou on met a jour le nombre ?, ah la valeur va etre le tableau de messages et le nombre de messages lus
 	//jeter les messages incomplets depuis trop longtemps aussi, stocker date de début de réception du message, si plus de 2/5 minutes, erreur et suppression
 	//en vrai peut etre que juste un char * serait suffisant, vu qu'on a le numero de l'octet , suffit de faire un memset à partir de cet octet
-	//taille du sous message: tlv.length-13 (id sur 8 octets+ nonce sur 4 +type ) -9(4 nonce+ 1 type+ 2 +2)
+	//taille du sous message: tlv.length-13 (ID sur 8 octets+ nonce sur 4 +type ) -9(4 nonce+ 1 type+ 2 +2)
 	struct data_index index;
-	memcpy(&index.id,tlv,8);
+	memcpy(&index.ID,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
 	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get_flood(dataf,&index);
+	struct flood_entry *flood=get_flood(DATAF,&index);
 	//Si vide
 	//envoyer un acquittement
 	char body[13];
-	if(tlv_ack(body,12,index.id,index.nonce)){
+	if(tlv_ack(body,12,index.ID,index.nonce)){
 		//créer le message_h et faire un send message_h
 	}
 	else{
@@ -230,7 +230,7 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 	else{
 		printf("%s\n",tlv+14);
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
-		struct list_entry *symmetric=get_symmetrical(neighbors);
+		struct list_entry *symmetric=get_symmetrical(NEIGHBORS);
 		remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4
@@ -238,7 +238,7 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 		msg[0]=4;
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
-		add_entry(dataf,&index,msg,symmetric);
+		add_entry(DATAF,&index,msg,symmetric);
 		//Peut etre ajouter seulement si pas déja dans la liste à inonder ?
 	}
 	if(*(tlv+13)==0){
@@ -261,9 +261,9 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 int ack(char *tlv,u_int8_t length,struct neighbor peer){
 	//sortir de la liste des personnes à inonder
 	struct data_index index;
-	memcpy(&index.id,tlv,8);
+	memcpy(&index.ID,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
-	struct flood_entry *flood=get_flood(dataf,&index);
+	struct flood_entry *flood=get_flood(DATAF,&index);
 	if(flood){
 		flood->sym_neighbors=remove_node(flood->sym_neighbors,&peer);
 		return 1;
@@ -274,7 +274,7 @@ int ack(char *tlv,u_int8_t length,struct neighbor peer){
 
 int goaway(char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
-	neighbors=remove_neighbor(&peer,neighbors);
+	NEIGHBORS=remove_neighbor(&peer,NEIGHBORS);
 	return 1;
 }
 int warning(char *tlv,u_int8_t length,struct neighbor peer){
