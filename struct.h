@@ -52,4 +52,16 @@ struct flood{
 	struct flood_entry *last;
 };
 
+
+//pour la fragmentation des données, il faudra une hashmap ?
+//un hashcode pour le nonce
+
+//jeter si trop longtemps, voir comment faire
+//faire une fonction pour écrire de grand messages
+struct submessages{
+	int actual_length;
+	int length_received;
+	char submessages[512];
+}
+
 #endif

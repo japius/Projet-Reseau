@@ -31,16 +31,6 @@ int nb_tlv(){
   return sizeof(tlv_types)/sizeof(tlv_types[0]);
 }
 
-/*char **split(int length,char *data,char delim){
-	char *res[2];
-	res[0]=memchr(data,delim,length);
-	if(data==NULL) return NULL;
-	memset(&res[1],0,sizeof(res[1]));
-	printf("Taille: %d",res[0]-data);
-	memcpy(&(res[1]),&data,res[0]-data);
-	return res;
-}*/
-
 
 //Fonction pour créer le message qu'on veut
 
@@ -153,6 +143,18 @@ short tlv_warning(char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_siz
 	return 0;
 }
 
+int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
+	struct sockaddr_in6 server;
+	//server.sin6_len = sizeof(server);
+	server.sin6_family = AF_INET6;
+	server.sin6_flowinfo = 0;
+	server.sin6_port = htons(rcpt.port);
+	struct in6_addr tmp;
+	memcpy(&tmp,&(rcpt.ip),16);
+	server.sin6_addr = tmp;
+	return sendto(fd,buf,taille,0,(struct sockaddr*)&server,sizeof(server));
+}
+
 //Fonctions de gestion de la réception d'un TLV
 
 int pad1(char * tlv,u_int8_t length,struct neighbor peer){
@@ -198,9 +200,14 @@ int neighbour(char * tlv,u_int8_t length,struct neighbor peer){
 
 //On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
 int data(char *tlv,u_int8_t length,struct neighbor peer){
-	if(*(tlv+13)==0){
-		//afficher le message
-	}
+	//si le type est 220, le truc de Alexandre et tristan, on sait que c'est un sous message, 
+	//On crée une liste pour les messages, et chacun est un tableau de char *, on vérifie s'il est deja dans la liste, on le rajoute dans le tableau, sinon on crée un nouveau noeud,
+	//type:220, nonce du message global sur 4 octets, type de la donnée sur un octet,taille du message en octet N sur 2 octet, position du messsage sur un octet, 
+	//ptet une hashmap ouais, id le nonce vu qu'il est unique, on devra tjrs juste récupérer le message à l'ordre truc, quand on le recoit on doit augmenter le compteur de nombre de messages restants et si on atteint la taille du t
+	//map.get(nonce)[indice]=le nouveau message, ou on met a jour le nombre ?, ah la valeur va etre le tableau de messages et le nombre de messages lus
+	//jeter les messages incomplets depuis trop longtemps aussi, stocker date de début de réception du message, si plus de 2/5 minutes, erreur et suppression
+	//en vrai peut etre que juste un char * serait suffisant, vu qu'on a le numero de l'octet , suffit de faire un memset à partir de cet octet
+	//taille du sous message: tlv.length-13 (id sur 8 octets+ nonce sur 4 +type ) -9(4 nonce+ 1 type+ 2 +2)
 	struct data_index index;
 	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
@@ -233,6 +240,9 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 		memcpy(msg+2,tlv,length);
 		add_entry(dataf,&index,msg,symmetric);
 		//Peut etre ajouter seulement si pas déja dans la liste à inonder ?
+	}
+	if(*(tlv+13)==0){
+		//afficher le message
 	}
 	//Afficher le message_h
 	//verifier dans la liste
