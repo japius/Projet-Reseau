@@ -7,9 +7,7 @@
 #include "abr.h"
 #include "peer.h"
 #include "util.h"
-
-//Peut etre trier en fonction de la date de reéception du dernier hello long comme ca le plus à gauche on aura les voisins symétriques et le reste non !
-//Cimment indexer avec (ip,port), à quoi est ce que ca servirait ?
+#include "net_lib.h"
 
 
 tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
@@ -23,9 +21,30 @@ tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
   return current;
 }
 
-tree *init_first(){
-  return init(NULL,NULL,NULL,NULL);
+short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
+  //if(t==NULL) return init(key,val,NULL,NULL);
+  int comp=compare_n(t->key,key);
+  if(comp>0){
+    if(t->left==NULL){
+      t->left=init(key,val,NULL,NULL);
+      return 1;
+    }
+    return add_neighbor_aux(t->left,key,val);
+    return 1;
+  }
+  else if(comp<0){
+    if(t->right==NULL){
+      t->right=init(key,val,NULL,NULL);
+      return 1;
+    }
+    return add_neighbor_aux(t->right,key,val);
+    return 1;
+  }    
+  t->val->last_hello=val->last_hello;
+  t->val->last_hello_long=val->last_hello_long;
+  return 1;
 }
+
 
 short add_neighbor(tree *NEIGHBORS,struct neighbor *key,struct ident *val){
   if(NEIGHBORS==NULL){
@@ -36,29 +55,7 @@ short add_neighbor(tree *NEIGHBORS,struct neighbor *key,struct ident *val){
 }
 
 //Pour ajouter un voisin s'il n"existe pas et le mettre à jour sinon
-short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
-  //if(t==NULL) return init(key,val,NULL,NULL);
-  int comp=compare_n(t->key,key);
-  if(comp>0){
-    if(t->left==NULL){
-      t->left=init(key,val,NULL,NULL);
-      return 1;
-    }
-    t->left=add_neighbor_aux(t->left,key,val);
-    return 1;
-  }
-  else if(comp<0){
-    if(t->right==NULL){
-      t->right=init(key,val,NULL,NULL);
-      return 1;
-    }
-    t->right=add_neighbor_aux(t->right,key,val);
-    return 1;
-  }    
-  t->val->last_hello=val->last_hello;
-  t->val->last_hello_long=val->last_hello_long;
-  return 1;
-}
+
 
 //Pour chercher un certain voisin
 struct ident *get_ident(tree *t,struct neighbor *key){
@@ -73,21 +70,52 @@ struct ident *get_ident(tree *t,struct neighbor *key){
 
 //A modifier
 short issymmetrical(struct ident *val){
-  time_t now=time(0);
+  int now=get_seconds();
   if(now-val->last_hello_long<120) return 1;
   return 0;
 }
 
 //Pour chercher tous les voisins symétriques
-//a vérifier
+struct list_entry *get_symmetrical(tree *t){
+
+    if(t!=NULL){
+        if(issymmetrical(t->val)){
+          if(t->left==NULL && t->right==NULL) return init_list_entry(t->key,0,NULL);
+          if(t->left==NULL) return init_list_entry(t->key,0,get_symmetrical(t->right));
+          if(t->right==NULL) return init_list_entry(t->key,0,get_symmetrical(t->left));
+          struct list_entry *entry=init_list_entry(t->key,0,get_symmetrical(t->left));
+          //return add_node(get_symmetrical(t->right),get_last(t->left));
+          get_last(entry)->next=get_symmetrical(t->right);
+          return entry;
+        }
+    }
+    return NULL;;
+}
+
+
+/*struct list_entry *get_symmetrical(tree *t){
+  if(t!=NULL){
+      struct list_entry *entry=NULL;
+      get_sym_aux(entry,tree);
+      return entry;
+  }
+  return NULL;
+}
+void get_sym_aux(struct list_entry *entry,tree *t){
+    if(issymmetrical(t->val)){
+      if(entry==NULL){
+        entry=init_list_entry(t->key,0,NULL);
+        get_sym_aux(entry->next,)
+      else entry->next=init_list_entry(t->key,0,NULL);
+    }
+}
 
 struct list_entry *get_symmetrical(tree *t){
   if(t!=NULL){
     if(issymmetrical(t->val)){
-      struct list_entry *sym=malloc(sizeof(struct list_entry));
-      sym->sym=t->key;
-      sym->times_sent=0;
+      struct list_entry *sym=init_list_entry(t->key,0,NULL)
       struct list_entry *sym2=get_symmetrical(t->left),*sym3=get_symmetrical(t->right);
+
       if(sym2){
         sym2->next=sym;
         if(sym3){
@@ -104,7 +132,7 @@ struct list_entry *get_symmetrical(tree *t){
     }
   }
   return NULL;
-}
+}*/
 
 //Le nombre de voisins
 int number_of_neighbors(tree *t){
@@ -122,14 +150,6 @@ int number_of_symmetrical(tree *t){
 tree *maxUnder(tree *r){
   if(r==NULL || r->right==NULL) return r;
   return maxUnder(r->right);
-}
-
-short remove_neighbor(struct neighbor *key, tree *t){
-  if(t){
-      t=remove_neighbor_aux(key,t);
-      return 1;
-  }
-  return 1;
 }
 
 tree * remove_neighbor_aux(struct neighbor *key, tree *t){
@@ -162,6 +182,15 @@ tree * remove_neighbor_aux(struct neighbor *key, tree *t){
   return t;
 }
 
+short remove_neighbor(struct neighbor *key, tree *t){
+  if(t){
+      t=remove_neighbor_aux(key,t);
+      return 1;
+  }
+  return 1;
+}
+
+
 
 void clean(tree *t){
   if(t->left!=NULL) clean(t->left);
@@ -170,6 +199,9 @@ void clean(tree *t){
   free(t->val);
   free(t);  
 }
+
+
+/*Pourquoi pas ?*/
 
 int max(int x,int y){
   return (x<=y)?y:x;
@@ -194,6 +226,7 @@ short check(tree *t){
 }
 
 
+/*Affichage*/
 
 void print_key(struct neighbor *key){
   printf("IP : ");

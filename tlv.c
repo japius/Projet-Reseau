@@ -156,10 +156,6 @@ int padN(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 }
 
 int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
-	//insérer dans la table de voisins et noter la date de réception
-	//struct neighbor *key=sockaddr6_to_neighbor();
-	//struct ident *val=create_ident()
-	//récupérer le source_id et la data courante
 	unsigned int current=get_seconds();
 	printf("ici1\n");
 	struct ident val;
