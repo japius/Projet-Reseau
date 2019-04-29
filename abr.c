@@ -170,7 +170,7 @@ short isBalanced(tree *abr){
 
 short check(tree *t){
   if(t==NULL) return 1;
-  if((t->left!=NULL && compare_n(t->key,t->left->val)<0) || (t->right!=NULL && compare_n(t->val,t->right->val)>0)) return 0;
+  if((t->left!=NULL && compare_n(t->key,t->left->key)<0) || (t->right!=NULL && compare_n(t->key,t->right->key)>0)) return 0;
   return check(t->left) && check(t->right);
 }
 

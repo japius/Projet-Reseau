@@ -6,10 +6,11 @@
 #include <arpa/inet.h>
 #include "struct.h"
 #include "abr.h"
-#include "peer.h"
 #include "tlv.h"
 #include "list.h"
 #include "net_lib.h"
+#include "peer.h"
+
 
 
 char *tlv_types[NB_TLV]={
@@ -219,7 +220,7 @@ int data(char *tlv,u_int8_t length,struct neighbor peer){
 		printf("%s\n",tlv+14);
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
 		struct list_entry *symmetric=get_symmetrical(NEIGHBORS);
-		remove_node(symmetric,&peer);
+		symmetric=remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4
 		char msg[length+2];

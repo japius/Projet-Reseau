@@ -14,7 +14,7 @@ struct list_entry *add_node(struct list_entry *entry,struct list_entry *node){
 	}
 	return entry;	
 }
-struct list_entry *rm_node(struct list_entry *entry,struct neighbor *peer){
+struct list_entry *remove_node(struct list_entry *entry,struct neighbor *peer){
 	//if(compare_n(entry->list))
 	if(compare_n(entry->sym,peer)==0){
 		struct list_entry *tmp=entry,*res=entry->next;
@@ -22,7 +22,7 @@ struct list_entry *rm_node(struct list_entry *entry,struct neighbor *peer){
 		free(tmp);
 		return res;
 	}
-	entry->next=rm_node(entry->next,peer);
+	entry->next=remove_node(entry->next,peer);
 	return entry;
 }
 
@@ -36,7 +36,7 @@ struct flood_entry *get_flood_aux(struct flood_entry *entry,struct data_index *d
 
 struct flood_entry *get_flood(struct flood *flood,struct data_index *data){
 	if(flood){
-		return(flood->first,data);
+		return get_flood_aux(flood->first,data);
 	}
 	return NULL;
 }
@@ -54,7 +54,7 @@ void free_list(struct list_entry *entry){
 
 struct flood_entry *init_fe(struct data_index *data_index,char *msg,struct list_entry *entry,struct flood_entry *next){
 	struct flood_entry *current=malloc(sizeof(struct flood_entry));
-	current->index==data_index;
+	current->index=data_index;
 	current->sym_neighbors=entry;
 	current->data=msg;
 	current->next=next;
@@ -80,9 +80,9 @@ struct flood *init_data(){
 	return init_flood(NULL,NULL);
 }
 
-void add_entry(struct flood *flood, struct data_index *data,char *msg,struct list_entry *entry){
+void add_entry(struct flood *flood,struct data_index *data,char *msg,struct list_entry *entry){
 	if(entry){
-		struct flood *f=init_fe(data,msg,entry,flood->first);
+		struct flood_entry *f=init_fe(data,msg,entry,flood->first);
 		flood->first=f;
 	}
 

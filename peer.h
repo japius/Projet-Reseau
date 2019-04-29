@@ -7,10 +7,10 @@
 
 #define JCH 1212
 
-extern u_int64_t ID;
-extern tree *POTENTIAL;
-extern tree *NEIGHBORS;
-extern struct flood *DATAF;
+u_int64_t ID;
+tree *POTENTIAL;
+tree *NEIGHBORS;
+struct flood *DATAF;
 
 /*typedef struct peer peer;
 

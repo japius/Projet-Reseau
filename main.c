@@ -18,9 +18,9 @@
 
 
 int main(int argc, char *argv[]){
-
+	//u_int64_t ID;
 	//initialisation du pair
-	ID=random_on_octects(&ID,sizeof(u_int64_t));
+	random_on_octets(&ID,sizeof(u_int64_t));
 	POTENTIAL=init_first();
 	NEIGHBORS=init_first();
 	DATAF=init_data();
