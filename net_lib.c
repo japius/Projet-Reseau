@@ -12,6 +12,7 @@
 #include <string.h>
 #include "net_lib.h"
 #include "struct.h"
+#include "peer.h"
 
 int init_socket_client_udp(char *addr, char *port){
 	struct addrinfo h = {0};
@@ -57,7 +58,7 @@ int init_socket_client_udp_v2(){
 	return soc;
 }
 
-int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf){
+int send_first_message(int soc, char *addr, char *port){
 	struct addrinfo h = {0};
 	struct addrinfo *r = {0};
 	int rc = 0;
@@ -66,22 +67,30 @@ int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf
 	h.ai_flags = AI_V4MAPPED|AI_ALL;
 	h.ai_protocol = 0;
 
+	struct message_h msg = {0};
+	msg.magic = 93;
+	msg.version = 2;
+	msg.body_length  = 10;
+	msg.body_length = htons(msg.body_length);
+	msg.body[0]=2;
+	msg.body[1]=8;
+	memcpy((msg.body)+2,&id,8);
+
 	rc = getaddrinfo(addr, port, &h, &r);
 
 	if(rc < 0){
 		fprintf(stderr, "Erreur lors de getaddrinfo\n");
 		return -1;
 	}
-	printf("je suis la : %d\n",soc);
 
+	int nb=0;
 	for(struct addrinfo *p =r; p!=NULL; p = p->ai_next){
-		printf("iciiiiiii\n");
-		int blop = sendto(soc,buf,size_buf,0,p->ai_addr,p->ai_addrlen);
-		perror("trucouille");
-		printf("retour de sendto = %d\n",blop );
+		int blop = sendto(soc,&msg,14,0,p->ai_addr,p->ai_addrlen);
+		if(blop>0) nb++;
 	}
+
 	freeaddrinfo(r);
-	return 0;
+	return nb;
 }
 
 int init_socket_server_udp(int port){

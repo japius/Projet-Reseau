@@ -13,15 +13,21 @@
 #include "net_lib.h"
 #include "peer.h"
 #include "tlv.h"
+#include "abr.h"
+#include "list.h"
 
 
-int main(void){
+int main(int argc, char *argv[]){
 
 	//initialisation du pair
 	id=random_on_octects(&id,sizeof(u_int64_t));
 	potential=init_first();
 	neighbors=init_first();
 	data=init_data();
+
+	int soc = init_socket_client_udp_v2();
+	int nb = send_first_message(soc,argv[1],argv[2]);
+	printf("J'ai envoye hello a %d adresse(s)\n", nb);
 
 	while(1){
 

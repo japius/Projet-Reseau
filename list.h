@@ -1,10 +1,13 @@
+#ifndef LIST_H
+#define LIST_H
+
 #include "struct.h"
 
 struct list_entry *add_node(struct list_entry *,struct list_entry *);
 
 struct list_entry *remove_node(struct list_entry *,struct neighbor *);
 
-struct flood_entry *init_fe(struct data_index *,struct list_entry *,struct flood_entry *);
+struct flood_entry *init_fe(struct data_index *,char *,struct list_entry *,struct flood_entry *);
 
 struct flood *init_flood(struct flood_entry *,struct flood_entry *);
 
@@ -20,3 +23,4 @@ void free_flood(struct flood *flood);
 
 void free_list(struct list_entry *entry);
 
+#endif

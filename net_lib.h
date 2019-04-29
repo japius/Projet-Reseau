@@ -31,6 +31,6 @@ struct sockaddr_in6 neighbor_to_sockaddr6(struct neighbor);
 
 void print_addr(u_int8_t *ip);
 
-int send_first_message(int soc, char *addr, char *port,void *buf,size_t size_buf);
+int send_first_message(int soc, char *addr, char *port);
 
 void print_msg(struct message_h msg);
