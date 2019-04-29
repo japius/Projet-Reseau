@@ -7,7 +7,6 @@
 #include "peer.h"
 #include "util.h"
 
-
 //Peut etre trier en fonction de la date de reéception du dernier hello long comme ca le plus à gauche on aura les voisins symétriques et le reste non !
 //Cimment indexer avec (ip,port), à quoi est ce que ca servirait ?
 

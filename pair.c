@@ -14,16 +14,16 @@
 #include "net_lib.h"
 //#include "tlv.h"
 
-static u_int64_t id;
+static u_int64_t ID;
 static int test = 0;
 struct message_h msg;
 
 int main(int argc, char *argv[])
 {
-	random_on_octets(&id,sizeof(u_int64_t));
+	random_on_octets(&ID,sizeof(u_int64_t));
 	/*struct TLV tlv;
-	short_tlv_hello(&tlv,sizeof(tlv),id);
-	printf("id = %lu\ntlv : type -> %d, length -> %d, id -> %lu\n",id,tlv.type,tlv.length,tlv.id);*/
+	short_tlv_hello(&tlv,sizeof(tlv),ID);
+	printf("ID = %lu\ntlv : type -> %d, length -> %d, ID -> %lu\n",ID,tlv.type,tlv.length,tlv.ID);*/
 	if(argc>=3){
 		if(argc>=4){
 			test=atoi(argv[3]);
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 			ngb.port=atoi(argv[2]);
 			inet_pton(AF_INET6,argv[1],ngb.ip);
 			print_addr(ngb.ip);
-			send_message(soc,&id,sizeof(id),ngb);
+			send_message(soc,&ID,sizeof(ID),ngb);
 		}*/
 		msg.magic = 93;
 		msg.version = 2;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 		msg.body_length = htons(msg.body_length);
 		msg.body[0]=2;
 		msg.body[1]=8;
-		memcpy((msg.body)+2,&id,8);
+		memcpy((msg.body)+2,&ID,8);
 		print_msg(msg);
 		printf("Icic\n");
 		int soc2 = init_socket_client_udp_v2();

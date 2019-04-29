@@ -12,12 +12,12 @@
 }
 
 void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_entry list){
-	/* On doit =
-	-si times_sent=5, envoyer un go_away
-	-sinon:
-	-tirer un nombre aleatoire entre 2 times sent-1 et +1
-	-faire +1 sur times sent
-	-envoyer un data qui contient data, id nonce 
+	// On doit =
+	//-si times_sent=5, envoyer un go_away
+	//-sinon:
+	//-tirer un nombre aleatoire entre 2 times sent-1 et +1
+	//-faire +1 sur times sent
+	//-envoyer un data qui contient data, ID nonce 
 	
 	if(list->times_sent==5){
 		//Send go_away;
@@ -26,7 +26,7 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 		//Supprimer de la liste des voisins
 		tlv_goaway(tlv2,28,2,goaway,26);
 		//ici le sendto
-		neighbors=remove_neighbour(list->sym,neighbors);
+		NEIGHBORS=remove_neighbour(list->sym,NEIGHBORS);
 	}
 	char *body;
 	int wait;
@@ -39,7 +39,7 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 		exit(EXIT_FAILURE);
 	}
 	//send le tlv après wait secondes;
-	struct sockaddr_in6=neighbor_to_sockaddr6(*list->sym);
+	//struct sockaddr_in6=neighbor_to_sockaddr6(*list->sym);
 	int body_length=tlv[1],msg_length=body_length+4;
 	//create_message, sendto
 	times_sent++;
@@ -47,12 +47,12 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 
 int compare_n(struct neighbor *key1,struct neighbor *key2){
 	for(int i = 0;i<16;i++){
-		if(key1.ip[i] < key2.ip[i]) return -1;
-		if(key1.ip[i] > key2.ip[i]) return 1;
+		if(key1->ip[i] < key2->ip[i]) return -1;
+		if(key1->ip[i] > key2->ip[i]) return 1;
 	}
 
-	if(key1.port < key2.port) return -1;
-	if(key1.port > key2.port) return 1;
+	if(key1->port < key2->port) return -1;
+	if(key1->port > key2->port) return 1;
 	return 0;
 }
 
@@ -62,7 +62,7 @@ void discover_neighbors(){
 }
 
 //MULTICAST
-void hello_multicast_local(){
+/*void hello_multicast_local(){
 	int rc=0;
 	int sock=socket(AF_INET6,SOCK_DGRAM,0);
 	if(sock<0){
@@ -90,10 +90,10 @@ void hello_multicast_local(){
 			perror("MUTLICAST_HOPS");
 			exit(EXIT_FAILURE)
 	}
-	/*if(setsockopt(sock,IPPROTO_IPV6,IPV6_JOIN_GROUP,&mreq,sizeof(mreq))<0){
+	if(setsockopt(sock,IPPROTO_IPV6,IPV6_JOIN_GROUP,&mreq,sizeof(mreq))<0){
 			perror("JOIN_GROUP");
 			exit(EXIT_FAILURE)
-	}*/
+	}
 	struct sockaddr_in6 sin6;
 	sin6.sin6_family=AF_INET6;
 	sin6.sin6_port=htons(1212);
@@ -102,13 +102,13 @@ void hello_multicast_local(){
 	//donc s'abonner au groupe de multicast
 	sin6.sin6_scope_id=if_nametoindex("eth0");
 	//send un hello court à cette interface
-	/*rc = sendto(sock, req, req_len, 0, (struct sockaddr *)&sin6, client_len);
+	rc = sendto(sock, req, req_len, 0, (struct sockaddr *)&sin6, client_len);
 					if(rc < 0) {
 						perror("sendto");
 						exit(EXIT_FAILURE);
-	}*/
+	}
 
-}
+}*/
 
 
 //LOL, IL TROLLE JULIUS

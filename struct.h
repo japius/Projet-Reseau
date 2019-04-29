@@ -18,7 +18,7 @@ struct neighbor{
 };
 
 struct ident{
-	u_int64_t id;
+	u_int64_t ID;
 	time_t last_hello;
 	time_t last_hello_long;
 };
@@ -26,7 +26,7 @@ struct ident{
 
 //Les données pour la liste de données récentes
 struct data_index{
-	u_int64_t id;
+	u_int64_t ID;
 	u_int32_t nonce;
 };
 
@@ -37,7 +37,7 @@ struct list_entry{
 };
 
 
-//Un noeud de la liste d'inondations, soit un couple (Id,Nonce) et une liste de voisins à inonder
+//Un noeud de la liste d'inondations, soit un couple (ID,Nonce) et une liste de voisins à inonder
 struct flood_entry{
 	struct data_index *index;
 	//A revoir, ptet autre chose que MAX_SIZE

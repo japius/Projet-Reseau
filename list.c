@@ -5,7 +5,7 @@
 #include "util.h"
 
 int compare_d(struct data_index *data,struct data_index *data2){
-	return !(data->id==data2->id && data->nonce==data2->nonce);
+	return !(data->ID==data2->ID && data->nonce==data2->nonce);
 }
 struct list_entry *add_node(struct list_entry *entry,struct list_entry *node){
 	if(node){
