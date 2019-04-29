@@ -2,7 +2,7 @@ CC=gcc
 FLAGS= -Wall
 LDLIBS=-lm 
 #a changer
-NAME=pair
+NAME=main
 FILES = net_lib.c list.c abr.c util.c tlv.c main.c#$(shell find $(SRCIDR) -name '')
 OBJ = $(FILES:%.c=%.o)
 

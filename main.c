@@ -28,8 +28,17 @@ int main(int argc, char *argv[]){
 	int nb = send_first_message(soc,argv[1],argv[2]);
 	printf("J'ai envoye hello a %d adresse(s)\n", nb);
 
-	while(1){
+	struct message_h msg;
+	struct sockaddr_in6 client;
+	socklen_t client_len;
 
+	while(1){
+		//---- gere les réceptions de messages
+		// XXX select a ajouter
+		socklen_t client_len = sizeof(struct sockaddr_in6);
+		int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
+		struct neighbor tmp = sockaddr6_to_neighbor(client);
+		handle_message_h(soc,&msg,size_msg,tmp);
 	}
 	/*Il faut:
 	-envoyer toutes les 30s des hellos long à chaque voisin
