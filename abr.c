@@ -4,6 +4,8 @@
 #include "struct.h"
 #include "list.h"
 #include "abr.h"
+#include "peer.h"
+#include "util.h"
 
 
 //Peut etre trier en fonction de la date de reéception du dernier hello long comme ca le plus à gauche on aura les voisins symétriques et le reste non !
@@ -101,7 +103,7 @@ int number_of_neighbors(tree *t){
 }
 
 //Le nombre de voisins symétriques
-int numer_of_symmetrical(tree *t){
+int number_of_symmetrical(tree *t){
   struct list_entry *list=get_symmetrical(t);
   return length(list);
 }

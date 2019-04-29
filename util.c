@@ -4,7 +4,7 @@
 #include "abr.h"
 
 
-void flood_message(struct flood_entry flood){
+/*void flood_message(struct flood_entry flood){
 	//faire un fork pour leur envoyer en même temps ? ou select c'est suffisant ?
 	for(struct list_entry list=flood.sym_neighbors;!list;list=list.next){
 		flood_message_to_neighbour(flood.data_index,flood.data,list);
@@ -18,7 +18,7 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 	-tirer un nombre aleatoire entre 2 times sent-1 et +1
 	-faire +1 sur times sent
 	-envoyer un data qui contient data, id nonce 
-	*/
+	
 	if(list->times_sent==5){
 		//Send go_away;
 		char goaway[26]="Wesh, t'es où ? Bref,bye";
@@ -43,9 +43,9 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 	int body_length=tlv[1],msg_length=body_length+4;
 	//create_message, sendto
 	times_sent++;
-}
+}*/
 
-int compare_n(struct neighbor key1,struct neighbor key2){
+int compare_n(struct neighbor *key1,struct neighbor *key2){
 	for(int i = 0;i<16;i++){
 		if(key1.ip[i] < key2.ip[i]) return -1;
 		if(key1.ip[i] > key2.ip[i]) return 1;

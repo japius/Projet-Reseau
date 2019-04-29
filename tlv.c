@@ -143,18 +143,6 @@ short tlv_warning(char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_siz
 	return 0;
 }
 
-int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
-	struct sockaddr_in6 server;
-	//server.sin6_len = sizeof(server);
-	server.sin6_family = AF_INET6;
-	server.sin6_flowinfo = 0;
-	server.sin6_port = htons(rcpt.port);
-	struct in6_addr tmp;
-	memcpy(&tmp,&(rcpt.ip),16);
-	server.sin6_addr = tmp;
-	return sendto(fd,buf,taille,0,(struct sockaddr*)&server,sizeof(server));
-}
-
 //Fonctions de gestion de la réception d'un TLV
 
 int pad1(char * tlv,u_int8_t length,struct neighbor peer){

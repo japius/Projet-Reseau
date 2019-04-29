@@ -2,6 +2,7 @@
 #include "struct.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "util.h"
 
 int compare_d(struct data_index *data,struct data_index *data2){
 	return !(data->id==data2->id && data->nonce==data2->nonce);
@@ -15,7 +16,7 @@ struct list_entry *add_node(struct list_entry *entry,struct list_entry *node){
 }
 struct list_entry *rm_node(struct list_entry *entry,struct neighbor *peer){
 	//if(compare_n(entry->list))
-	if(compare_d(entry->sym,peer)==0){
+	if(compare_n(entry->sym,peer)==0){
 		struct list_entry *tmp=entry,*res=entry->next;
 		free(tmp->sym);
 		free(tmp);
@@ -38,6 +39,11 @@ struct flood_entry *get_flood(struct flood *flood,struct data_index *data){
 		return(flood->first,data);
 	}
 	return NULL;
+}
+
+int length(struct list_entry *list){
+	if(list==NULL) return 0;
+	return length(list->next);
 }
 
 void free_list(struct list_entry *entry){
