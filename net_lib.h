@@ -36,4 +36,6 @@ void print_addr(u_int8_t *ip);
 int send_first_message(int soc, char *addr, char *port);
 
 void print_msg(struct message_h msg);
+
+int print_tlv(unsigned char *buf);
 #endif

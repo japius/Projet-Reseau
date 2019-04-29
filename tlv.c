@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include "struct.h"
 #include "abr.h"
 #include "tlv.h"
@@ -149,7 +150,7 @@ short tlv_warning(char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_siz
 int pad1(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
-int padN(char * tlv,u_int8_t length,struct neighbor peer){
+int padN(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
 
@@ -253,7 +254,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
 
-int ack(char *tlv,u_int8_t length,struct neighbor peer){
+int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//sortir de la liste des personnes à inonder
 	struct data_index index;
 	memcpy(&index.ID,tlv,8);
@@ -289,6 +290,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 	//Dans quel cas il faut créer un objet msg?
 	int pos=0;
 	u_int16_t body_length=ntohs(msg->body_length);
+	print_msg(*msg);
 	char tlv[MAX_SIZE];
 	while(pos<body_length){
 		u_int8_t type=(u_int8_t)msg->body[pos];
