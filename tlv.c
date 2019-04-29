@@ -262,9 +262,10 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
-	remove_neighbor(&peer,NEIGHBORS);
-	return 1;
+	return remove_neighbor(&peer,NEIGHBORS);
 }
+
+
 int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//juste lire et passer à autre chose
 	char buf[MAX_SIZE];
