@@ -296,9 +296,13 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 	print_msg(*msg);
 	char tlv[MAX_SIZE];
 	while(pos<body_length){
+		printf("je suis ici");
 		u_int8_t type=(u_int8_t)msg->body[pos];
 		u_int8_t length=(u_int8_t)(type==0)?0:(u_int8_t)msg->body[pos+1];
+		printf("je suis la");
+		printf("  %d",type);
 		if(type>=0 && type<NB_TLV){
+
 			memcpy(tlv,&msg->body[pos+2],length);
 			if(handle_tlv[type](soc,tlv,length,rcpt)){
 
