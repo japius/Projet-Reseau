@@ -1,6 +1,6 @@
 #ifndef TLV_H
 #define TLV_H
-#define NB_TLV 9
+#define NB_TLV 8
 #include "struct.h"
 //typedef int (*tlv_func)(TLV *);
 extern char *tlv_types[NB_TLV];
