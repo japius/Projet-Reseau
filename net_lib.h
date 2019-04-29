@@ -1,3 +1,5 @@
+#ifndef NET_LIB_H
+#define NET_LIB_H
 #include "struct.h"
 /*
 renvoie une socket qui se connect au port 'port' de l'adresse 'addr'
@@ -34,3 +36,4 @@ void print_addr(u_int8_t *ip);
 int send_first_message(int soc, char *addr, char *port);
 
 void print_msg(struct message_h msg);
+#endif
