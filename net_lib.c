@@ -158,9 +158,9 @@ int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
 struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr){
 	struct neighbor res;
 	res.port = ntohs(saddr.sin6_port);
-	print_addr(saddr.sin6_addr.s6_addr);
+	//print_addr(saddr.sin6_addr.s6_addr);
 	memcpy(res.ip,saddr.sin6_addr.s6_addr,16);
-	print_addr(res.ip);
+	//print_addr(res.ip);
 	return res;
 }
 

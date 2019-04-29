@@ -13,8 +13,10 @@
 
 tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
   tree *current=malloc(sizeof(tree));
-  current->val=val;
-  current->key=key;
+  current->val=malloc(sizeof(struct ident));
+  memmove(current->val,val,sizeof(struct ident));
+  current->key=malloc(sizeof(struct neighbor));
+  memmove(current->key,key,sizeof(struct neighbor));
   current->left=left;
   current->right=right;
   return current;

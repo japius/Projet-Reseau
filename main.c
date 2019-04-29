@@ -25,7 +25,11 @@ int main(int argc, char *argv[]){
 	NEIGHBORS=init_first();
 	DATAF=init_data();
 	int soc = init_socket_client_udp_v2();
-	int nb = send_first_message(soc,argv[1],argv[2]);
+	int nb;
+	if(argc==3)
+		nb = send_first_message(soc,argv[1],argv[2]);
+	else
+		nb = send_first_message(soc,"jch.irif.fr","1212");
 	printf("J'ai envoye hello a %d adresse(s)\n", nb);
 
 	struct message_h msg;
@@ -38,7 +42,9 @@ int main(int argc, char *argv[]){
 		socklen_t client_len = sizeof(struct sockaddr_in6);
 		int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 		struct neighbor tmp = sockaddr6_to_neighbor(client);
+		print_msg(msg);
 		handle_message_h(soc,&msg,size_msg,tmp);
+
 	}
 	/*Il faut:
 	-envoyer toutes les 30s des hellos long à chaque voisin

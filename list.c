@@ -54,7 +54,8 @@ void free_list(struct list_entry *entry){
 
 struct flood_entry *init_fe(struct data_index *data_index,char *msg,struct list_entry *entry,struct flood_entry *next){
 	struct flood_entry *current=malloc(sizeof(struct flood_entry));
-	current->index=data_index;
+	current->index=malloc(sizeof(struct data_index));
+	memmove(current->index,data_index,sizeof(struct data_index));
 	current->sym_neighbors=entry;
 	current->data=msg;
 	current->next=next;
