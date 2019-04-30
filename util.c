@@ -3,16 +3,10 @@
 #include "list.h"
 #include "abr.h"
 #include <time.h>
+#include "tlv.h"
+#include "net_lib.h"
 
-
-/*void flood_message(struct flood_entry flood){
-	//faire un fork pour leur envoyer en même temps ? ou select c'est suffisant ?
-	for(struct list_entry list=flood.sym_neighbors;!list;list=list.next){
-		flood_message_to_neighbour(flood.data_index,flood.data,list);
-	}
-}
-
-void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_entry list){
+void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_index index, char *tlv,struct list_entry *list){
 	// On doit =
 	//-si times_sent=5, envoyer un go_away
 	//-sinon:
@@ -25,9 +19,15 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 		char goaway[26]="Wesh, t'es où ? Bref,bye";
 		char tlv2[26+3];
 		//Supprimer de la liste des voisins
-		tlv_goaway(tlv2,28,2,goaway,26);
+		int tmp=tlv_goaway(tlv2,28,2,goaway,25);
+		struct message_h msg;
+		msg.magic=93;
+		msg.version=2;
+		msg.body_length=tmp;
+		send_message(soc,&msg,tmp+4,*list->sym);
 		//ici le sendto
-		NEIGHBORS=remove_neighbour(list->sym,NEIGHBORS);
+		remove_neighbor(list->sym,NEIGHBORS);
+		remove_neighbor_from_flood(flood,list->sym);
 	}
 	char *body;
 	int wait;
@@ -44,7 +44,17 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 	int body_length=tlv[1],msg_length=body_length+4;
 	//create_message, sendto
 	times_sent++;
-}*/
+}
+
+
+void flood_message(int soc,struct flood_entry *flood){
+	//faire un fork pour leur envoyer en même temps ? ou select c'est suffisant ?
+	for(struct list_entry *list=flood->sym_neighbors;!list;list=list->next){
+		flood_message_to_neighbour(flood,flood->index,flood->data,list);
+	}
+}
+
+
 
 int compare_d(struct data_index *data,struct data_index *data2){
 	return !(data->id==data2->id && data->nonce==data2->nonce);
@@ -71,6 +81,8 @@ int get_seconds(){
 void discover_neighbors(){
 
 }
+
+
 
 //MULTICAST
 /*void hello_multicast_local(){

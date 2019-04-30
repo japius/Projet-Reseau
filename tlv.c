@@ -45,7 +45,7 @@ short tlv_pad1(char *body,size_t bufsize){
 		*body = 0;
 		return 1;
 	}
-	return 0;
+	return -1;
 }
 
 short tlv_padN(char *body,size_t bufsize, u_int8_t length){
@@ -53,9 +53,9 @@ short tlv_padN(char *body,size_t bufsize, u_int8_t length){
 		*body = 1;
 		*(body+1)=length;
 		memset(body+2,0,length);
-		return 1;
+		return length+2;
 	}
-	return 0;
+	return -1;
 }
 
 short tlv_short_hello(char *body,size_t bufsize, u_int64_t id){
@@ -63,9 +63,9 @@ short tlv_short_hello(char *body,size_t bufsize, u_int64_t id){
 		*body = 2;
 		*(body+1)=8;
 		memcpy(body+2,&id,sizeof(id));
-		return 1;
+		return 10;
 	}
-	return 0;
+	return -1;
 }
 
 short tlv_long_hello(char *body,size_t bufsize, u_int64_t source_id,u_int64_t dest_id){
@@ -75,9 +75,9 @@ short tlv_long_hello(char *body,size_t bufsize, u_int64_t source_id,u_int64_t de
 		*(body+1)=16;
 		memcpy(body+2,&source_id,source_size);
 		memcpy((body+2+source_size),&dest_id,dest_size);
-		return 1;
+		return 18;
 	}
-	return 0;
+	return -1;
 }
 
 short tlv_neighbour(char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
@@ -87,13 +87,14 @@ short tlv_neighbour(char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
 		*(body+1)=18;
 		memcpy(body+2,&ip,ip_size);
 		memcpy(body+2+ip_size,&port_size,port_size);
-		return 1;
+		return 16;
 	}
-	return 0;
+	return -1;
 }
 
 short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
+	random_on_octets(&nonce,32)
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
 	u_int8_t length=id_size+nonce_size+type_size+msg_size;
 	if(bufsize>length+1){
@@ -104,9 +105,9 @@ short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned ch
 		memcpy(body+2+id_size,&nonce,nonce_size);
 		memcpy(body+2+id_size+nonce_size,&type,type_size);
 		memcpy(body+2+id_size+nonce_size+type_size,&data,msg_size);
-		return 1;
+		return msg_size+15;
 	}
-	return 0;
+	return -1;
 }
 
 short tlv_ack(char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
