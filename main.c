@@ -27,11 +27,14 @@ int main(int argc, char *argv[]){
 	/*POTENTIAL=init_first();
 	NEIGHBORS=init_first();
 	DATAF=init_data();*/
+
 	int soc = init_socket_client_udp_v2();
-	struct sockaddr_in6 tmp = {0};
-	tmp.sin6_family = PF_INET6;
-	tmp.sin6_port = htons(PORT);
-	bind(soc,&tmp,sizeof(tmp));
+	if(argc==2){
+		struct sockaddr_in6 tmp = {0};
+		tmp.sin6_family = PF_INET6;
+		tmp.sin6_port = htons(PORT);
+		bind(soc,&tmp,sizeof(tmp));
+	}
 
 	int nb;
 	/*if(argc==3)
