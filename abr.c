@@ -30,15 +30,13 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
       return 1;
     }
     return add_neighbor_aux(t->left,key,val);
-    return 1;
   }
-  else if(comp<0){
+  if(comp<0){
     if(t->right==NULL){
       t->right=init(key,val,NULL,NULL);
       return 1;
     }
     return add_neighbor_aux(t->right,key,val);
-    return 1;
   }    
   t->val->last_hello=val->last_hello;
   t->val->last_hello_long=val->last_hello_long;

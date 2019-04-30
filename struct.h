@@ -31,6 +31,11 @@ struct data_index{
 	u_int32_t nonce;
 };
 
+struct neighbor_and_wait{
+	struct neighbor *neighbor;
+	int wait_time;
+}
+;
 //pour la fragmentation des données, il faudra une hashmap ?
 //un hashcode pour le nonce
 

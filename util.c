@@ -5,6 +5,32 @@
 #include <time.h>
 #include "tlv.h"
 #include "net_lib.h"
+#include <math.h>
+
+/*int rand_a_b(int a,int b){
+	return rand()%(b-a) +a;
+}
+
+int compare_w(const void *a, const void *b){
+	struct neighbor_and_wait nw=(struct neighbor_and_wait)a,nw2=(struct neighbor_and_wait)b;
+	return nw.wait_time-nw2.wait_time;
+}
+
+
+struct neighbor_and_wait[] get_wait_time(struct list_entry *list, int length){
+	struct neighbor_and_wait nw[length];
+	struct list_entry *tmp=list;
+	for(int i=0;i<length;i++){
+		struct neighbor_and_wait id;
+		id->neighbor=p->sym;
+		id->wait_time=rand_a_b((int)pow(2.0,p->times_sent-1),(int)pow(2.0,p->times_sent));
+		nw[i]=id;
+		p=list->next;
+	}
+	qsort(nw,length,sizeof(struct neighbor_and_wait,compare_w));
+
+}*/
+
 
 void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_index *index, char *tlv,struct list_entry *list){
 	// On doit =
@@ -30,7 +56,7 @@ void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_in
 		remove_neighbor_from_flood(flood,list->sym);
 	}
 	char *body;
-	int wait;
+	
 	//wait=rand(pow(2,times_sent-1),pow(2,times_sent));
 	// a revoir
 	//htons ?
@@ -44,6 +70,7 @@ void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_in
 
 void flood_message(int soc,struct flood_entry *flood){
 	//faire un fork pour leur envoyer en même temps ? ou select c'est suffisant ?
+	//get_wait_time(flood->sym_neighbors,length(flood->sym_neighbors));
 	for(struct list_entry *list=flood->sym_neighbors;!list;list=list->next){
 		flood_message_to_neighbour(soc,flood,flood->index,flood->data,list);
 	}
