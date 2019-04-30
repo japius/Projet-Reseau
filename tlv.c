@@ -94,7 +94,7 @@ short tlv_neighbour(unsigned char *body,size_t bufsize, u_int8_t ip[16],u_int16_
 
 short tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
-	random_on_octets(&nonce,32);
+	random_on_octets(&nonce,sizeof(u_int32_t));
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
 	u_int8_t length=id_size+nonce_size+type_size+msg_size;
 	if(bufsize>length+1){
@@ -158,7 +158,6 @@ int padN(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 
 int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	unsigned int current=get_seconds();
-	printf("ici1\n");
 	struct ident val;
 	u_int64_t source_id,dest_id;
 	memcpy(&(source_id),tlv,8);
@@ -291,7 +290,6 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 		u_int8_t length=(u_int8_t)msg->body[pos+1];
 		if(type>0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
-			printf("iciii\n");
 			if(handle_tlv[type](soc,tlv,length,rcpt)){
 
 			}

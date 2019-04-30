@@ -16,22 +16,32 @@
 #include "abr.h"
 #include "list.h"
 #include "util.h"
+#define PORT 8080
 
 
 int main(int argc, char *argv[]){
 	//u_int64_t ID;
 	//initialisation du pair
 	random_on_octets(&ID,sizeof(u_int64_t));
+	srand(time(NULL));
 	/*POTENTIAL=init_first();
 	NEIGHBORS=init_first();
 	DATAF=init_data();*/
+
 	int soc = init_socket_client_udp_v2();
+	if(argc==2){
+		struct sockaddr_in6 tmp = {0};
+		tmp.sin6_family = PF_INET6;
+		tmp.sin6_port = htons(PORT);
+		bind(soc,&tmp,sizeof(tmp));
+	}
+
 	int nb;
-	if(argc==3)
+	/*if(argc==3)
 		nb = send_first_message(soc,argv[1],argv[2]);
 	else
 		nb = send_first_message(soc,"jch.irif.fr","1212");
-	printf("J'ai envoye hello a %d adresse(s)\n", nb);
+	printf("J'ai envoye hello a %d adresse(s)\n", nb);*/
 
 	struct message_h msg;
 	struct sockaddr_in6 client;
@@ -42,6 +52,15 @@ int main(int argc, char *argv[]){
 	while(1){
 		//---- gere les réceptions de messages
 		// XXX select a ajouter
+		if(!NEIGHBORS){
+			printf("Aucun voisins a disposition\n");
+			if(argc==3)
+				nb = send_first_message(soc,argv[1],argv[2]);
+			else
+				nb = send_first_message(soc,"jch.irif.fr","1212");
+			printf("J'ai envoye hello a %d adresse(s)\n", nb);
+		}
+
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);
 		FD_SET(0,&fd_ens);
@@ -56,14 +75,14 @@ int main(int argc, char *argv[]){
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(0,&fd_ens)){
-				char buf[PMTU-15];
+				unsigned char buf[PMTU-15];
 				int tmp=read(0,buf,PMTU-15);
 				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
 				if(tmp>0){
 					msg.magic=93;
 					msg.version=2;
 					msg.body_length=tmp;
-					send_to_everyone(soc,&soc,tmp+4,NEIGHBORS);
+					printf("envoie a %d\n",send_to_everyone(soc,&soc,tmp+4,NEIGHBORS));
 				}
 			}
 		}
