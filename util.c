@@ -46,6 +46,10 @@ void flood_message_to_neighbour(struct data_index index, char *tlv,struct list_e
 	times_sent++;
 }*/
 
+int compare_d(struct data_index *data,struct data_index *data2){
+	return !(data->id==data2->id && data->nonce==data2->nonce);
+}
+
 int compare_n(struct neighbor *key1,struct neighbor *key2){
 	for(int i = 0;i<16;i++){
 		if(key1->ip[i] < key2->ip[i]) return -1;
@@ -55,6 +59,10 @@ int compare_n(struct neighbor *key1,struct neighbor *key2){
 	if(key1->port < key2->port) return -1;
 	if(key1->port > key2->port) return 1;
 	return 0;
+}
+
+int max(int x,int y){
+  return (x<=y)?y:x;
 }
 
 int get_seconds(){

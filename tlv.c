@@ -156,10 +156,6 @@ int padN(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 }
 
 int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
-	//insérer dans la table de voisins et noter la date de réception
-	//struct neighbor *key=sockaddr6_to_neighbor();
-	//struct ident *val=create_ident()
-	//récupérer le source_id et la data courante
 	unsigned int current=get_seconds();
 	printf("ici1\n");
 	struct ident val;
@@ -171,12 +167,15 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		memcpy(&dest_id,tlv+8,8);
 		if(dest_id==ID){
 			val.last_hello_long=current;
-			NEIGHBORS=add_neighbor(NEIGHBORS,&peer,&val);
+			add_neighbor(NEIGHBORS,&peer,&val);
+			printf("Nouveau voisin : \n");
+			print_tree(NEIGHBORS);
 			return 1;
 		}
 		return 1;
 	}
-	NEIGHBORS=add_neighbor(NEIGHBORS,&peer,&val);
+	add_neighbor(NEIGHBORS,&peer,&val);
+	print_tree(NEIGHBORS);
 	return 1;
 }
 
@@ -185,14 +184,13 @@ int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	memcpy(&key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
 	//inserer l'adresse contenue dans le tlv à la liste des voisins potentiels
-	POTENTIAL=add_neighbor(POTENTIAL,&key,NULL);
+	printf("Voisin potentiel : \n");
+	add_neighbor(POTENTIAL,&key,NULL);
 	return 1;
 	//return 0;
 }
 
-//On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
-int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
-	//si le type est 220, le truc de Alexandre et tristan, on sait que c'est un sous message, 
+//si le type est 220, le truc de Alexandre et tristan, on sait que c'est un sous message, 
 	//On crée une liste pour les messages, et chacun est un tableau de char *, on vérifie s'il est deja dans la liste, on le rajoute dans le tableau, sinon on crée un nouveau noeud,
 	//type:220, nonce du message global sur 4 octets, type de la donnée sur un octet,taille du message en octet N sur 2 octet, position du messsage sur un octet, 
 	//ptet une hashmap ouais, ID le nonce vu qu'il est unique, on devra tjrs juste récupérer le message à l'ordre truc, quand on le recoit on doit augmenter le compteur de nombre de messages restants et si on atteint la taille du t
@@ -200,12 +198,11 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//jeter les messages incomplets depuis trop longtemps aussi, stocker date de début de réception du message, si plus de 2/5 minutes, erreur et suppression
 	//en vrai peut etre que juste un char * serait suffisant, vu qu'on a le numero de l'octet , suffit de faire un memset à partir de cet octet
 	//taille du sous message: tlv.length-13 (ID sur 8 octets+ nonce sur 4 +type ) -9(4 nonce+ 1 type+ 2 +2)
+//On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
+int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	struct data_index index;
 	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
-	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get_flood(DATAF,&index);
-	//Si vide
 	//envoyer un acquittement
 	char body[13];
 	if(tlv_ack(body,12,index.id,index.nonce)){
@@ -222,8 +219,13 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		return 0;
 		//exit(EXIT_FAILURE);
 	}
+	//On récupère la liste des voisins à inonder associée à la donnée
+	struct flood_entry *flood=get_flood(DATAF,&index);
+	//Si non vide
 	if(flood){
-
+			//retirer l'émetteur de la liste de voisins à inonder
+		remove_neighbor_from_flood(flood,&peer);
+		//inonder
 	}
 	else{
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
@@ -236,23 +238,11 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
 		add_entry(DATAF,&index,msg,symmetric);
-		//Peut etre ajouter seulement si pas déja dans la liste à inonder ?
 	}
 	if(*(tlv+13)==0){
 		//afficher le message
 		write(1,tlv+14,length-13);
 	}
-	//Afficher le message_h
-	//verifier dans la liste
-	//print_message_h
-	//send_message_h to voisins_symetric
-	//printf("%s\n", data);
-
-	//verifier si id_nonce dans la liste des data
-	//Sinon l'afficher
-	//Juste inonder;
-	//flood()
-	//faire des free et des cleans ici
 	return 1;
 }
 
@@ -263,7 +253,7 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	memcpy(&index.nonce,tlv+8,4);
 	struct flood_entry *flood=get_flood(DATAF,&index);
 	if(flood){
-		flood->sym_neighbors=remove_node(flood->sym_neighbors,&peer);
+		remove_neighbor_from_flood(flood,&peer);
 		return 1;
 	}
 	//pas sur
@@ -272,9 +262,10 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
-	NEIGHBORS=remove_neighbor(&peer,NEIGHBORS);
-	return 1;
+	return remove_neighbor(&peer,NEIGHBORS);
 }
+
+
 int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//juste lire et passer à autre chose
 	char buf[MAX_SIZE];
@@ -287,9 +278,6 @@ int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 
 void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor rcpt){
-	//struct message_h *msg=obtain_message_h(body,buf_t);
-	//mettre un null à la fin de la liste de tlv, ou stocker la taille quelque part
-	//Dans quel cas il faut créer un objet msg?
 	int pos=0;
 	u_int16_t body_length=ntohs(msg->body_length);
 	char tlv[MAX_SIZE];

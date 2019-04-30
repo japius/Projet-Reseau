@@ -3,6 +3,7 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 #define MAX_SIZE 4096
+#define PMTU 1280
 
 
 struct message_h{
@@ -29,29 +30,6 @@ struct data_index{
 	u_int64_t id;
 	u_int32_t nonce;
 };
-
-struct list_entry{
-	struct neighbor *sym;
-	int times_sent;
-	struct list_entry *next;
-};
-
-
-//Un noeud de la liste d'inondations, soit un couple (ID,Nonce) et une liste de voisins à inonder
-struct flood_entry{
-	struct data_index *index;
-	//A revoir, ptet autre chose que MAX_SIZE
-	char *data;
-	struct list_entry *sym_neighbors;
-	struct flood_entry *next;
-};
-
-//La liste d'inondations 
-struct flood{
-	struct flood_entry *first;
-	struct flood_entry *last;
-};
-
 
 //pour la fragmentation des données, il faudra une hashmap ?
 //un hashcode pour le nonce

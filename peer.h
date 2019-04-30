@@ -11,6 +11,7 @@ u_int64_t ID;
 tree *POTENTIAL;
 tree *NEIGHBORS;
 struct flood *DATAF;
+int NEXTTIME;
 
 /*typedef struct peer peer;
 

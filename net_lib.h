@@ -1,6 +1,7 @@
 #ifndef NET_LIB_H
 #define NET_LIB_H
 #include "struct.h"
+#include "abr.h"
 /*
 renvoie une socket qui se connect au port 'port' de l'adresse 'addr'
 erreurs :
@@ -32,6 +33,8 @@ struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr);
 struct sockaddr_in6 neighbor_to_sockaddr6(struct neighbor);
 
 void print_addr(u_int8_t *ip);
+
+int send_to_everyone(int fd, void *buf, size_t length, tree *);
 
 int send_first_message(int soc, char *addr, char *port);
 
