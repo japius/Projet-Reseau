@@ -203,9 +203,6 @@ void clean(tree *t){
 
 /*Pourquoi pas ?*/
 
-int max(int x,int y){
-  return (x<=y)?y:x;
-}
 
 int depth(tree *abr){
   if(abr==NULL) return -1;

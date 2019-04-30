@@ -11,44 +11,8 @@
 #include <unistd.h>
 #include <string.h>
 #include "net_lib.h"
-#include "struct.h"
 #include "peer.h"
 
-
-
-int init_socket_client_udp(char *addr, char *port){
-	struct addrinfo h = {0};
-	struct addrinfo *r = {0};
-	int rc = 0;
-
-	h.ai_family = AF_UNSPEC;
-	h.ai_socktype = SOCK_DGRAM;
-	h.ai_flags = 0;
-	h.ai_protocol = 0;
-
-	rc = getaddrinfo(addr, port, &h, &r);
-	if(rc < 0){
-		fprintf(stderr, "Erreur lors de getaddrinfo\n");
-		return -1;
-	}
-
-	int soc = -1;
-	rc=-1;
-	for(struct addrinfo *p =r; p!=NULL; p = p->ai_next){
-		soc = socket(p->ai_family, p->ai_socktype,p->ai_protocol);
-		if(soc>=0){
-			rc = connect(soc,p->ai_addr,p->ai_addrlen);
-			if(rc >= 0) break;
-				close(soc);
-		}
-	}
-	freeaddrinfo(r);
-	if(rc < 0 ){
-		fprintf(stderr, "Ne se connecte à aucune addresse de addrinfo\n");
-		return -2;
-	}
-	return soc;
-}
 
 int init_socket_client_udp_v2(){
 	int soc =socket(PF_INET6, SOCK_DGRAM,0),val=0;
@@ -95,28 +59,6 @@ int send_first_message(int soc, char *addr, char *port){
 	return nb;
 }
 
-int init_socket_server_udp(int port){
-	int soc = socket(PF_INET6,SOCK_DGRAM,0);
-	if(soc<0){
-		fprintf(stderr, "Erreur lors de la création de la socket.\n");
-		return -1;
-	}
-
-	struct sockaddr_in6 tmp = {0};
-	tmp.sin6_family = AF_INET6;
-	tmp.sin6_port = htons(port);
-	int val=0;
-	if(setsockopt(soc,SOL_SOCKET,SO_REUSEADDR | SO_REUSEPORT, &val, sizeof(val))<0){
-		fprintf(stderr, "Erreur numéro %d à setsockopt\n",val);
-	}
-
-	if(bind(soc,&tmp,sizeof(struct sockaddr_in6))<0){
-		fprintf(stderr, "Erreur lors du bind\n");
-		return -2;
-	}
-	return soc;
-}
-
 int read_socket(int fd,void *buf, size_t size_buf,struct timeval *timeout){
 	fd_set tmp;
 	FD_ZERO(&tmp);
@@ -146,6 +88,14 @@ int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
 	memcpy(&tmp,&(rcpt.ip),16);
 	server.sin6_addr = tmp;
 	return sendto(fd,buf,taille,0,(struct sockaddr*)&server,sizeof(server));
+}
+
+int send_to_everyone(int fd, void *buf, size_t length, tree *people){
+	if(!people) return 0;
+	int res = (send_message(fd,buf,length,*(people->key))>0)?1:0;
+	res += send_to_everyone(fd,buf,length,people->left);
+	res += send_to_everyone(fd,buf,length,people->right);
+	return res;
 }
 
 //On récupère le message

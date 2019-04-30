@@ -40,7 +40,7 @@ int nb_tlv(){
 //Fonction pour envoyer un certain message
 
 //Fonctions pour créer les tlv avec les paramètres en argument
-short tlv_pad1(char *body,size_t bufsize){
+short tlv_pad1(unsigned char *body,size_t bufsize){
 	if(bufsize>0){
 		*body = 0;
 		return 1;
@@ -48,7 +48,7 @@ short tlv_pad1(char *body,size_t bufsize){
 	return -1;
 }
 
-short tlv_padN(char *body,size_t bufsize, u_int8_t length){
+short tlv_padN(unsigned char *body,size_t bufsize, u_int8_t length){
 	if(bufsize>length+1){
 		*body = 1;
 		*(body+1)=length;
@@ -58,7 +58,7 @@ short tlv_padN(char *body,size_t bufsize, u_int8_t length){
 	return -1;
 }
 
-short tlv_short_hello(char *body,size_t bufsize, u_int64_t id){
+short tlv_short_hello(unsigned char *body,size_t bufsize, u_int64_t id){
 	if(bufsize>9){
 		*body = 2;
 		*(body+1)=8;
@@ -68,7 +68,7 @@ short tlv_short_hello(char *body,size_t bufsize, u_int64_t id){
 	return -1;
 }
 
-short tlv_long_hello(char *body,size_t bufsize, u_int64_t source_id,u_int64_t dest_id){
+short tlv_long_hello(unsigned char *body,size_t bufsize, u_int64_t source_id,u_int64_t dest_id){
 	if(bufsize>15){
 		size_t source_size=sizeof(dest_id),dest_size=sizeof(dest_id);
 		*body = 2;
@@ -80,7 +80,7 @@ short tlv_long_hello(char *body,size_t bufsize, u_int64_t source_id,u_int64_t de
 	return -1;
 }
 
-short tlv_neighbour(char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
+short tlv_neighbour(unsigned char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
 	if(bufsize>17){
 		size_t ip_size=16,port_size=sizeof(port);
 		*body = 2;
@@ -92,9 +92,9 @@ short tlv_neighbour(char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
 	return -1;
 }
 
-short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
+short tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
-	random_on_octets(&nonce,32)
+	random_on_octets(&nonce,32);
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
 	u_int8_t length=id_size+nonce_size+type_size+msg_size;
 	if(bufsize>length+1){
@@ -110,7 +110,7 @@ short tlv_data(char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned ch
 	return -1;
 }
 
-short tlv_ack(char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
+short tlv_ack(unsigned char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce);
 	u_int8_t length=id_size+nonce_size;
 	if(bufsize>length+1){
@@ -123,7 +123,7 @@ short tlv_ack(char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
 	return 0;
 }
 
-short tlv_goaway(char *body,size_t bufsize, u_int8_t code,unsigned char *msg,u_int8_t msg_size){
+short tlv_goaway(unsigned char *body,size_t bufsize, u_int8_t code,unsigned char *msg,u_int8_t msg_size){
 	size_t code_size=sizeof(code);
 	u_int8_t length=code_size+msg_size;
 	if(bufsize>length+1){
@@ -137,7 +137,7 @@ short tlv_goaway(char *body,size_t bufsize, u_int8_t code,unsigned char *msg,u_i
 	
 }
 
-short tlv_warning(char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_size){
+short tlv_warning(unsigned char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_size){
 	if(bufsize>msg_size+1){
 		*body=7;
 		*(body+1)=msg_size;
@@ -205,7 +205,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
 	//envoyer un acquittement
-	char body[13];
+	unsigned char body[13];
 	if(tlv_ack(body,12,index.id,index.nonce)){
 		//créer le message_h et faire un send message_h
 		struct message_h msg;

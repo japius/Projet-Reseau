@@ -15,6 +15,7 @@
 #include "tlv.h"
 #include "abr.h"
 #include "list.h"
+#include "util.h"
 
 
 int main(int argc, char *argv[]){
@@ -35,15 +36,37 @@ int main(int argc, char *argv[]){
 	struct message_h msg;
 	struct sockaddr_in6 client;
 	socklen_t client_len;
+	fd_set fd_ens;
+	NEXTTIME = get_seconds()+30;
 
 	while(1){
 		//---- gere les réceptions de messages
 		// XXX select a ajouter
-		socklen_t client_len = sizeof(struct sockaddr_in6);
-		int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
-		struct neighbor tmp = sockaddr6_to_neighbor(client);
-		print_msg(msg);
-		handle_message_h(soc,&msg,size_msg,tmp);
+		FD_ZERO(&fd_ens);
+		FD_SET(soc,&fd_ens);
+		FD_SET(0,&fd_ens);
+		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
+		NEXTTIME = get_seconds()+30;
+		if(select(soc+1,&fd_ens,NULL,NULL,&timeout)){
+			if(FD_ISSET(soc,&fd_ens)){
+				socklen_t client_len = sizeof(struct sockaddr_in6);	
+				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
+				struct neighbor ngb = sockaddr6_to_neighbor(client);
+				print_msg(msg);
+				handle_message_h(soc,&msg,size_msg,ngb);
+			}
+			if(FD_ISSET(0,&fd_ens)){
+				char buf[PMTU-15];
+				int tmp=read(0,buf,PMTU-15);
+				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
+				if(tmp>0){
+					msg.magic=93;
+					msg.version=2;
+					msg.body_length=tmp;
+					send_to_everyone(soc,&soc,tmp+4,NEIGHBORS);
+				}
+			}
+		}
 
 	}
 	/*Il faut:

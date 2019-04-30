@@ -3,7 +3,7 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 #define MAX_SIZE 4096
-#define PTMU 1280;
+#define PMTU 1280
 
 
 struct message_h{

@@ -6,7 +6,7 @@
 #include "tlv.h"
 #include "net_lib.h"
 
-void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_index index, char *tlv,struct list_entry *list){
+void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_index *index, char *tlv,struct list_entry *list){
 	// On doit =
 	//-si times_sent=5, envoyer un go_away
 	//-sinon:
@@ -34,23 +34,18 @@ void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_in
 	//wait=rand(pow(2,times_sent-1),pow(2,times_sent));
 	// a revoir
 	//htons ?
-
-	if(rc==0){
-		perror("data");
-		exit(EXIT_FAILURE);
-	}
 	//send le tlv après wait secondes;
 	//struct sockaddr_in6=neighbor_to_sockaddr6(*list->sym);
 	int body_length=tlv[1],msg_length=body_length+4;
 	//create_message, sendto
-	times_sent++;
+	list->times_sent++;
 }
 
 
 void flood_message(int soc,struct flood_entry *flood){
 	//faire un fork pour leur envoyer en même temps ? ou select c'est suffisant ?
 	for(struct list_entry *list=flood->sym_neighbors;!list;list=list->next){
-		flood_message_to_neighbour(flood,flood->index,flood->data,list);
+		flood_message_to_neighbour(soc,flood,flood->index,flood->data,list);
 	}
 }
 
@@ -69,6 +64,10 @@ int compare_n(struct neighbor *key1,struct neighbor *key2){
 	if(key1->port < key2->port) return -1;
 	if(key1->port > key2->port) return 1;
 	return 0;
+}
+
+int max(int x,int y){
+  return (x<=y)?y:x;
 }
 
 int get_seconds(){

@@ -14,5 +14,6 @@ void discover_neighbors();
 
 int get_seconds();
 
+int max(int x,int y);
 
 #endif
