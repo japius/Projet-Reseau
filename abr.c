@@ -12,9 +12,19 @@
 
 tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
   tree *current=malloc(sizeof(tree));
+  if(!current) return NULL;
   current->val=malloc(sizeof(struct ident));
+  if(!current->val){
+    free(current);
+    return NULL;
+  }
   if(val)memmove(current->val,val,sizeof(struct ident));
   current->key=malloc(sizeof(struct neighbor));
+  if(!current->key){
+    free(current->val);
+    free(current);
+    return NULL;
+  }
   if(key)memmove(current->key,key,sizeof(struct neighbor));
   current->left=left;
   current->right=right;
@@ -49,7 +59,8 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
 short add_neighbor(tree *NEIGHBORS,struct neighbor *key,struct ident *val){
   if(NEIGHBORS==NULL){
     NEIGHBORS=init(key,val,NULL,NULL);
-    return 1;
+    //printf("Je modifie le NEIGHBORS %p\n",NEIGHBORS);
+    return NEIGHBORS != 0;
   }
   return add_neighbor_aux(NEIGHBORS,key,val);
 }
@@ -237,17 +248,20 @@ void print_val(struct ident *val){
     printf("Last long hello : %u ",val->last_hello_long);
 }
 
-void print_tree(tree *abr){
-  if(abr!=NULL){
-    print_tree(abr->left); 
-    printf("\n| ");
-    print_key(abr->key);
-    print_val(abr->val);
-    printf("| \n");
-    //printf("| %d",abr->val); 
-    print_tree(abr->right);
+void print_tree_aux(tree *abr,int tmp){
+  char vide[40] = {'\t'};
+  if(abr==NULL) {
+    write(1,vide,tmp);
+    printf("null\n");
+    return;
   }
-  else printf("null");
+  print_tree_aux(abr->left,tmp+1);
+  write(1,vide,tmp);
+  print_addr(abr->key->ip);
+  print_tree_aux(abr->right,tmp+1);
 }
 
-
+void print_tree(tree *abr){
+  printf("affichage de l'arbre\n");
+  print_tree_aux(abr,0);
+}

@@ -72,7 +72,6 @@ int read_socket(int fd,void *buf, size_t size_buf,struct timeval *timeout){
 }
 
 void random_on_octets(void *var, size_t octets_number){
-	srand(time(NULL));
 	char *tmp=(char*)var;
 	for(int i=0;i<octets_number;i++)
 		*(tmp+i)=(char)rand();
