@@ -161,7 +161,7 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//struct ident *val=create_ident()
 	//récupérer le source_id et la data courante
 	unsigned int current=get_seconds();
-	//printf(current);
+	printf("ici1\n");
 	struct ident val;
 	u_int64_t source_id,dest_id;
 	memcpy(&(source_id),tlv,8);
@@ -292,14 +292,17 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 	//Dans quel cas il faut créer un objet msg?
 	int pos=0;
 	u_int16_t body_length=ntohs(msg->body_length);
-	printf("%d\n",body_length);
-	print_msg(*msg);
 	char tlv[MAX_SIZE];
 	while(pos<body_length){
 		u_int8_t type=(u_int8_t)msg->body[pos];
-		u_int8_t length=(u_int8_t)(type==0)?0:(u_int8_t)msg->body[pos+1];
-		if(type>=0 && type<NB_TLV){
+		if(type==0){
+			pos++;
+			continue;
+		}
+		u_int8_t length=(u_int8_t)msg->body[pos+1];
+		if(type>0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
+			printf("iciii\n");
 			if(handle_tlv[type](soc,tlv,length,rcpt)){
 
 			}
@@ -307,7 +310,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 				//perror("tlv")
 			}
 		}
-		pos+=length;
+		pos+=length+2;
 	}
 }
 
