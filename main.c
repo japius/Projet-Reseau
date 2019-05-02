@@ -19,6 +19,7 @@
 #define PORT 8080
 
 
+//pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
 	//u_int64_t ID;
 	//initialisation du pair
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]){
 	int soc = init_socket_client_udp_v2();
 	if(argc==2){
 		struct sockaddr_in6 tmp = {0};
-		tmp.sin6_family = PF_INET6;
+		tmp.sin6_family = AF_INET6;
 		tmp.sin6_port = htons(PORT);
 		bind(soc,&tmp,sizeof(tmp));
 	}
@@ -75,8 +76,10 @@ int main(int argc, char *argv[]){
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(0,&fd_ens)){
-				unsigned char buf[PMTU-15];
-				int tmp=read(0,buf,PMTU-15);
+				//if faut retirer les 15 octets d'infos sur le data
+				//et 48 octets pour l'entete IPV6 et la charge du datagramme udp
+				unsigned char buf[PMTU-63];
+				int tmp=read(0,buf,PMTU-63);
 				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
 				if(tmp>0){
 					msg.magic=93;

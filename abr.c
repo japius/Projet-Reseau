@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
 #include "struct.h"
-#include "list.h"
+#include "genlist.h"
 #include "abr.h"
 #include "peer.h"
 #include "util.h"
@@ -191,12 +192,9 @@ tree * remove_neighbor_aux(struct neighbor *key, tree *t){
   return t;
 }
 
-short remove_neighbor(struct neighbor *key, tree *t){
-  if(t){
-      t=remove_neighbor_aux(key,t);
+short remove_neighbor(struct neighbor *key){
+      NEIGHBORS=remove_neighbor_aux(key,NEIGHBORS);
       return 1;
-  }
-  return 1;
 }
 
 

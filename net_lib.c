@@ -89,6 +89,25 @@ int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
 	return sendto(fd,buf,taille,0,(struct sockaddr*)&server,sizeof(server));
 }
 
+/*int send_message(int fd,void *buf,size_t taille,struct neighbor rcpt){
+	struct sockaddr_in6 server;
+	//server.sin6_len = sizeof(server);
+	server.sin6_family = AF_INET6;
+	server.sin6_flowinfo = 0;
+	server.sin6_port = htons(rcpt.port);
+	struct in6_addr tmp;
+	memcpy(&tmp,&(rcpt.ip),16);
+	server.sin6_addr = tmp;
+	struct iovec iov[taille];
+	//mettrre le message et la longeur totale dans la 1ere case
+	//mettre un tlv par case restante et sa longueur
+	struct msghdr msg;
+	msg.msg_name=&server;
+	msg.msg_namelen=sizeof(server);
+	msg.msg_iov=iov;
+	msg.msg_iovlen=taille;
+	return sendmsg(fd,msg,0)
+}*/
 int send_to_everyone(int fd, void *buf, size_t length, tree *people){
 	if(!people) return 0;
 	int res = (send_message(fd,buf,length,*(people->key))>0)?1:0;

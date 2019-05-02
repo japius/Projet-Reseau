@@ -16,4 +16,6 @@ int get_seconds();
 
 int max(int x,int y);
 
+int min(int x,int y);
+
 #endif

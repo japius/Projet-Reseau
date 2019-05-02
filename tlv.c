@@ -262,7 +262,7 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
-	return remove_neighbor(&peer,NEIGHBORS);
+	return remove_neighbor(&peer);
 }
 
 
@@ -279,6 +279,7 @@ int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor rcpt){
 	int pos=0;
+	if(msg->magic!=93 || msg->version!=2) return ;
 	u_int16_t body_length=ntohs(msg->body_length);
 	char tlv[MAX_SIZE];
 	while(pos<body_length){
@@ -288,6 +289,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 			continue;
 		}
 		u_int8_t length=(u_int8_t)msg->body[pos+1];
+		if(length>buf_t-pos) return;
 		if(type>0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
 			if(handle_tlv[type](soc,tlv,length,rcpt)){

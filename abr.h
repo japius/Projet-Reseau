@@ -29,7 +29,7 @@ short issymmetrical(struct ident *val);
 
 struct list_entry *get_symmetrical(tree *t);
 
-short  remove_neighbor(struct neighbor *key, tree *t);
+short  remove_neighbor(struct neighbor *key);
 
 void clean(tree *t);
 
