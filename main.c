@@ -16,7 +16,7 @@
 #include "abr.h"
 #include "list.h"
 #include "util.h"
-#define PORT 8080
+#define PORT 1212
 
 
 int main(int argc, char *argv[]){
@@ -47,7 +47,8 @@ int main(int argc, char *argv[]){
 	struct sockaddr_in6 client;
 	socklen_t client_len;
 	fd_set fd_ens;
-	NEXTTIME = get_seconds()+30;
+	int NEXTHELLO = get_seconds()+30;
+	NEXTTIME=NEXTHELLO;
 
 	while(1){
 		//---- gere les réceptions de messages
@@ -64,8 +65,8 @@ int main(int argc, char *argv[]){
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);
 		FD_SET(0,&fd_ens);
+		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
 		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
-		NEXTTIME = get_seconds()+30;
 		if(select(soc+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
@@ -75,16 +76,22 @@ int main(int argc, char *argv[]){
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(0,&fd_ens)){
-				unsigned char buf[PMTU-15];
-				int tmp=read(0,buf,PMTU-15);
+				unsigned char buf[PMTU-14];
+				int tmp=read(0,buf,PMTU-14)-1;
 				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
 				if(tmp>0){
 					msg.magic=93;
 					msg.version=2;
-					msg.body_length=tmp;
-					printf("envoie a %d\n",send_to_everyone(soc,&soc,tmp+4,NEIGHBORS));
+					msg.body_length=htons(tmp);
+					int nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
+					printf("Envoie data a %d \n", nb);
 				}
 			}
+		}
+		if(get_seconds()>=NEXTHELLO){
+			int nb = send_hello_everyone(soc,NEIGHBORS);
+			printf("Envoie hello a %d \n", nb);
+			NEXTHELLO=get_seconds()+30;
 		}
 
 	}

@@ -55,11 +55,20 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
   return 1;
 }
 
+short add_potential(struct neighbor *key,struct ident *val){
+  if(POTENTIAL==NULL){
+    POTENTIAL=init(key,val,NULL,NULL);
+    printf("Je modifie le NEIGHBORS %p\n",POTENTIAL);
+    return POTENTIAL != 0;
+  }
+  return add_neighbor_aux(POTENTIAL,key,val);
+}
 
-short add_neighbor(tree *NEIGHBORS,struct neighbor *key,struct ident *val){
+
+short add_neighbor(struct neighbor *key,struct ident *val){
   if(NEIGHBORS==NULL){
     NEIGHBORS=init(key,val,NULL,NULL);
-    //printf("Je modifie le NEIGHBORS %p\n",NEIGHBORS);
+    printf("Je modifie le NEIGHBORS %p\n",NEIGHBORS);
     return NEIGHBORS != 0;
   }
   return add_neighbor_aux(NEIGHBORS,key,val);

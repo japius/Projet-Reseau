@@ -51,6 +51,7 @@ int send_first_message(int soc, char *addr, char *port){
 
 	int nb=0;
 	for(struct addrinfo *p =r; p!=NULL; p = p->ai_next){
+		print_addr(p->ai_addr);
 		int blop = sendto(soc,&msg,14,0,p->ai_addr,p->ai_addrlen);
 		if(blop>0) nb++;
 	}
@@ -78,14 +79,7 @@ void random_on_octets(void *var, size_t octets_number){
 }
 
 int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
-	struct sockaddr_in6 server;
-	//server.sin6_len = sizeof(server);
-	server.sin6_family = AF_INET6;
-	server.sin6_flowinfo = 0;
-	server.sin6_port = htons(rcpt.port);
-	struct in6_addr tmp;
-	memcpy(&tmp,&(rcpt.ip),16);
-	server.sin6_addr = tmp;
+	struct sockaddr_in6 server = neighbor_to_sockaddr6(rcpt);
 	return sendto(fd,buf,taille,0,(struct sockaddr*)&server,sizeof(server));
 }
 
@@ -94,6 +88,19 @@ int send_to_everyone(int fd, void *buf, size_t length, tree *people){
 	int res = (send_message(fd,buf,length,*(people->key))>0)?1:0;
 	res += send_to_everyone(fd,buf,length,people->left);
 	res += send_to_everyone(fd,buf,length,people->right);
+	return res;
+}
+
+int send_hello_everyone(int fd, tree *people){
+	if(!people) return 0;
+	struct message_h msg;
+	msg.magic=93;
+	msg.version=2;
+	int tmp = tlv_long_hello(msg.body,MAX_SIZE,ID,people->val->id);
+	msg.body_length=htons(tmp);
+	int res = (send_message(fd,&msg,tmp+4,*(people->key))>0)?1:0;
+	res += send_hello_everyone(fd,people->left);
+	res += send_hello_everyone(fd,people->right);
 	return res;
 }
 
@@ -144,4 +151,11 @@ void print_msg(struct message_h msg){
 	for(int i=0;i<l;)
 		i+=print_tlv(msg.body+i)+2;
 	printf("\n");
+}
+
+void print_sockaddr(struct sockaddr_in6 tmp){
+	printf("sin6_family = %d\n sin6_port = %d\nsin6_flowinfo = %d\n",tmp.sin6_family,tmp.sin6_port,tmp.sin6_flowinfo);
+	write(1,"sin6_addr = ",12);
+	print_addr(tmp.sin6_addr.s6_addr);
+	printf("sin6_scope_id = %d\n",tmp.sin6_scope_id);
 }
