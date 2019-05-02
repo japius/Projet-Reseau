@@ -33,6 +33,8 @@ struct list *get_symmetrical(tree *t);
 
 short  remove_neighbor(struct neighbor *key);
 
+short  remove_potential(struct neighbor *key);
+
 void clean(tree *t);
 
 void print_tree(tree *abr);

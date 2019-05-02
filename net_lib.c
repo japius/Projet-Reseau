@@ -13,7 +13,7 @@
 #include "net_lib.h"
 #include "peer.h"
 #include "genlist.h"
-
+#include "tlv.h"
 
 int init_socket_client_udp_v2(){
 	int soc =socket(PF_INET6, SOCK_DGRAM,0),val=0;
@@ -48,7 +48,6 @@ int send_first_message(int soc, char *addr, char *port){
 
 	int nb=0;
 	for(struct addrinfo *p =r; p!=NULL; p = p->ai_next){
-		print_addr(p->ai_addr);
 		int blop = sendto(soc,&msg,14,0,p->ai_addr,p->ai_addrlen);
 		if(blop>0) nb++;
 	}
@@ -122,7 +121,7 @@ int send_hello_everyone(int fd, tree *people){
 
 int send_symetrical_everyone(int fd, tree *people){
 	struct list *sym= get_symmetrical(NEIGHBORS);
-	if(sym==NULL) return;
+	if(sym==NULL) return -1;
 	struct message_h msg = {0};
 	msg.magic=93;
 	msg.version=2; 
@@ -188,6 +187,12 @@ void print_addr(u_int8_t *ip){
 	char buffer[50];
 	inet_ntop(AF_INET6,ip,buffer,50);
 	printf("Address: %s\n",buffer);
+}
+
+void print_addr2(u_int8_t *ip){
+	char buffer[50];
+	inet_ntop(AF_INET6,ip,buffer,50);
+	printf("%s",buffer);
 }
 
 

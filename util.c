@@ -34,23 +34,6 @@ void handle_inactive(int soc,struct flood_entry *flood,struct neighbor  *sym){
 }
 
 
-/*struct neighbor_and_wait[] get_wait_time(struct flood_entry *flood,struct list *list, int *length){
-	struct neighbor_and_wait nw[length];
-	struct list *tmp=list;
-	for(int i=0;i<length;i++){
-		if(p->times_sent==5){
-			handle_inactive()
-		}
-		struct neighbor_and_wait id;
-		id->neighbor=p->sym;
-		id->wait_time=get_seconds()+rand_a_b((int)pow(2.0,p->times_sent-1),(int)pow(2.0,p->times_sent));
-		nw[i]=id;
-		p=list->next;
-	}
-	qsort(nw,length,sizeof(struct neighbor_and_wait,compare_w));
-
-}*/
-
 int wait_time(int times_sent){
 	return get_seconds()+rand_a_b((int)pow(2.0,times_sent-1),(int)pow(2.0,times_sent));
 }
