@@ -26,7 +26,7 @@ void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_in
 		msg.body_length=tmp;
 		send_message(soc,&msg,tmp+4,*list->sym);
 		//ici le sendto
-		remove_neighbor(list->sym,NEIGHBORS);
+		remove_neighbor(list->sym);
 		remove_neighbor_from_flood(flood,list->sym);
 	}
 	char *body;

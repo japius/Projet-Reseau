@@ -15,7 +15,7 @@ struct message_h{
 //Les données pour un voisin
 struct neighbor{
 	u_int8_t ip[16];
-	int port;
+	u_int16_t port;
 };
 
 struct ident{

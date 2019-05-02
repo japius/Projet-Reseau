@@ -85,7 +85,8 @@ int tlv_neighbour(unsigned char *body,size_t bufsize, struct neighbor ngb){
 		*body = 3;
 		*(body+1)=18;
 		memcpy(body+2,&ngb.ip,sizeof(ngb.ip));
-		memcpy(body+2+sizeof(ngb.ip),&ngb.port,sizeof(ngb.port));
+		u_int16_t port = htons(ngb.port);
+		memcpy(body+2+sizeof(ngb.ip),&port,sizeof(ngb.port));
 		return 20;
 	}
 	return -1;
@@ -168,20 +169,24 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 			val.last_hello_long=current;
 			add_neighbor(&peer,&val);
 			printf("Nouveau voisin : \n");
-			print_tree(NEIGHBORS);
+			//print_tree(NEIGHBORS);
 			return 1;
 		}
 		return 1;
 	}
 	add_neighbor(&peer,&val);
-	print_tree(NEIGHBORS);
+	//print_tree(NEIGHBORS);
 	return 1;
 }
 
+static int count =0;
 int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
+	count++;
+	printf("//////Je suis a %d neighbours //////\n",count );
 	struct neighbor key;
-	memcpy(&key.ip,tlv,16);
+	memcpy(key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
+	key.port=ntohs(key.port);
 	//inserer l'adresse contenue dans le tlv à la liste des voisins potentiels
 	printf("Voisin potentiel : \n");
 	add_potential(&key,NULL);
@@ -261,7 +266,7 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
-	return remove_neighbor(&peer,NEIGHBORS);
+	return remove_neighbor(&peer);
 }
 
 

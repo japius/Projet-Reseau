@@ -31,19 +31,20 @@ int main(int argc, char *argv[]){
 	DATAF=init_data();*/
 
 	int soc = init_socket_client_udp_v2();
-	if(argc==2){
+	if(argc==2||argc==4){
 		struct sockaddr_in6 tmp = {0};
 		tmp.sin6_family = PF_INET6;
-		tmp.sin6_port = htons(PORT);
+		tmp.sin6_port = htons(atoi(argv[1]));
 		bind(soc,&tmp,sizeof(tmp));
 	}
 
 	int nb;
-	/*if(argc==3)
+	if(argc==3)
 		nb = send_first_message(soc,argv[1],argv[2]);
+	else if(argc==4)
+		nb = send_first_message(soc,argv[2],argv[3]);
 	else
 		nb = send_first_message(soc,"jch.irif.fr","1212");
-	printf("J'ai envoye hello a %d adresse(s)\n", nb);*/
 
 	struct message_h msg;
 	struct sockaddr_in6 client;
@@ -55,19 +56,19 @@ int main(int argc, char *argv[]){
 	while(1){
 		//---- gere les réceptions de messages
 		// XXX select a ajouter
-		if(!NEIGHBORS){
+		/*if(!NEIGHBORS){
 			printf("Aucun voisins a disposition\n");
 			if(argc==3)
 				nb = send_first_message(soc,argv[1],argv[2]);
-			else
+			else;
 				nb = send_first_message(soc,"jch.irif.fr","1212");
-		}
+		}*/
 
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);
 		FD_SET(0,&fd_ens);
 		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
-		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
+		struct timeval timeout = {20,0};//{(max(0,NEXTTIME-get_seconds())),0};
 		if(select(soc+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
@@ -92,20 +93,28 @@ int main(int argc, char *argv[]){
 		}
 		if(get_seconds()>=NEXTHELLO){
 			nb = send_hello_everyone(soc,NEIGHBORS);
+			//printf("Hello long %d\n",nb );
 			nb=send_symetrical_everyone(soc,NEIGHBORS);
+			//printf("Neighbor %d\n",nb);
 			NEXTHELLO=get_seconds()+TIMEHELLO;
 			if(NB_SYMETRICAL<=MIN_SYM){
 				nb = send_shorthello_everyone(soc,POTENTIAL);
-				printf("Envoie hello court à %d\n",nb);
+				printf("Hello court %d\n",nb);
+				printf("--------POTENTIAL ----------\n");
 				print_tree(POTENTIAL);
+				printf("-----------------------------\n");
 			}
 		}
+
+		printf("--------NEIGHBORS ----------\n");
+		print_tree(NEIGHBORS);
+		printf("-----------------------------\n");
 
 	}
 	/*Il faut:
 	++-envoyer toutes les 30s des hellos long à chaque voisin
 	+-envoyer souvent des tlv neighbour aux voisins pour les informer de ses voisins symétriques
-	-si moins de 8 symétriques envoyer un hello court à 1 ou plusieurs potentiels
+	+-si moins de 8 symétriques envoyer un hello court à 1 ou plusieurs potentiels
 	-envoyer goaway puis suppression, si pas de message depuis 2 min
 	-si un voisin pas de hello long depuis 2 min, marqué comme non symétrique
 	-traiter la réception de tlv

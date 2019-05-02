@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
 #include "struct.h"
 #include "list.h"
 #include "abr.h"
@@ -37,19 +38,18 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
   if(comp>0){
     if(t->left==NULL){
       t->left=init(key,val,NULL,NULL);
-      return 1;
+      return t->left != NULL;
     }
     return add_neighbor_aux(t->left,key,val);
-    return 1;
   }
   else if(comp<0){
     if(t->right==NULL){
       t->right=init(key,val,NULL,NULL);
-      return 1;
+      return t->right != NULL;
     }
     return add_neighbor_aux(t->right,key,val);
-    return 1;
-  }    
+  }
+  printf("On me donne un potentiel existant\n");
   t->val->last_hello=val->last_hello;
   t->val->last_hello_long=val->last_hello_long;
   return 1;
@@ -58,7 +58,6 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
 short add_potential(struct neighbor *key,struct ident *val){
   if(POTENTIAL==NULL){
     POTENTIAL=init(key,val,NULL,NULL);
-    printf("Je modifie le NEIGHBORS %p\n",POTENTIAL);
     return POTENTIAL != 0;
   }
   return add_neighbor_aux(POTENTIAL,key,val);
@@ -68,7 +67,6 @@ short add_potential(struct neighbor *key,struct ident *val){
 short add_neighbor(struct neighbor *key,struct ident *val){
   if(NEIGHBORS==NULL){
     NEIGHBORS=init(key,val,NULL,NULL);
-    printf("Je modifie le NEIGHBORS %p\n",NEIGHBORS);
     return NEIGHBORS != 0;
   }
   return add_neighbor_aux(NEIGHBORS,key,val);
@@ -172,28 +170,34 @@ tree *maxUnder(tree *r){
   return maxUnder(r->right);
 }
 
+static tree *remove_min(tree *t){
+  if(!t->left->left){
+    tree *l=t->left->left;
+    tree *r=t->left->right;
+    t->left->left=r;
+    return l;
+  }
+  return remove_min(t->left);
+}
+
 tree * remove_neighbor_aux(struct neighbor *key, tree *t){
   int comp=compare_n(t->key,key);
   if(comp==0){
-    if(t->left==NULL && t->right==NULL){
-      clean(t);
-      return NULL;
-    }
-    else if(t->left==NULL){
-      clean(t);
-      return t->right;
-    }
-    else if(t->right==NULL){
-      clean(t);
-      return t->left;
-    }
-    tree *m=maxUnder(t->left);
-    tree *res=remove_neighbor_aux(m->key,t);
-    res->key=m->key;
-    res->val=m->val;
+    tree *l = t->left;
+    tree *r = t->right;
+    free(t->val);
+    free(t->key);
     free(t);
-    return res;
-  } 
+    if(!r) return l;
+    if(!r->left){
+      r->left=l;
+      return r;
+    }
+    tree *tmp=remove_min(r);
+    tmp->right=r;
+    tmp->left=l;
+    return tmp;
+  }
   if(comp>0){
     t->left=remove_neighbor_aux(key,t->left);
     return t;
@@ -202,13 +206,20 @@ tree * remove_neighbor_aux(struct neighbor *key, tree *t){
   return t;
 }
 
-short remove_neighbor(struct neighbor *key, tree *t){
-  if(t){
-      t=remove_neighbor_aux(key,t);
-      return 1;
+short remove_neighbor(struct neighbor *key){
+  if(NEIGHBORS){
+      NEIGHBORS=remove_neighbor_aux(key,NEIGHBORS);
   }
   return 1;
 }
+
+short remove_potential(struct neighbor *key){
+  if(POTENTIAL){
+      POTENTIAL=remove_neighbor_aux(key,POTENTIAL);
+  }
+  return 1;
+}
+
 
 
 
@@ -219,7 +230,6 @@ void clean(tree *t){
   free(t->val);
   free(t);  
 }
-
 
 /*Pourquoi pas ?*/
 
@@ -252,13 +262,13 @@ void print_key(struct neighbor *key){
 }
 
 void print_val(struct ident *val){
-    printf("Id : %u",val->id);
+    printf("Id : %lu",val->id);
     printf("Last hello : %u ",val->last_hello);
     printf("Last long hello : %u ",val->last_hello_long);
 }
 
 void print_tree_aux(tree *abr,int tmp){
-  char vide[40] = {'\t'};
+  char vide[40] = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
   if(abr==NULL) {
     write(1,vide,tmp);
     printf("null\n");
@@ -266,11 +276,11 @@ void print_tree_aux(tree *abr,int tmp){
   }
   print_tree_aux(abr->left,tmp+1);
   write(1,vide,tmp);
-  print_addr(abr->key->ip);
+  print_addr2(abr->key->ip);
+  printf(" -- %d\n",abr->key->port);
   print_tree_aux(abr->right,tmp+1);
 }
 
 void print_tree(tree *abr){
-  printf("affichage de l'arbre\n");
   print_tree_aux(abr,0);
 }
