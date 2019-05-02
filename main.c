@@ -17,6 +17,8 @@
 #include "list.h"
 #include "util.h"
 #define PORT 1212
+#define TIMEHELLO 10
+#define MIN_SYM 10
 
 
 int main(int argc, char *argv[]){
@@ -59,7 +61,6 @@ int main(int argc, char *argv[]){
 				nb = send_first_message(soc,argv[1],argv[2]);
 			else
 				nb = send_first_message(soc,"jch.irif.fr","1212");
-			printf("J'ai envoye hello a %d adresse(s)\n", nb);
 		}
 
 		FD_ZERO(&fd_ens);
@@ -72,6 +73,7 @@ int main(int argc, char *argv[]){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
 				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 				struct neighbor ngb = sockaddr6_to_neighbor(client);
+				print_addr(ngb.ip);
 				print_msg(msg);
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
@@ -83,17 +85,20 @@ int main(int argc, char *argv[]){
 					msg.magic=93;
 					msg.version=2;
 					msg.body_length=htons(tmp);
-					int nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
+					nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
 					printf("Envoie data a %d \n", nb);
 				}
 			}
 		}
 		if(get_seconds()>=NEXTHELLO){
-			int nb = send_hello_everyone(soc,NEIGHBORS);
-			printf("J'ecrit hello a %d\n",nb);
+			nb = send_hello_everyone(soc,NEIGHBORS);
 			nb=send_symetrical_everyone(soc,NEIGHBORS);
-			printf("J'envoie symétriques a %d\n",nb );
-			NEXTHELLO=get_seconds()+10;
+			NEXTHELLO=get_seconds()+TIMEHELLO;
+			if(NB_SYMETRICAL<=MIN_SYM){
+				nb = send_shorthello_everyone(soc,POTENTIAL);
+				printf("Envoie hello court à %d\n",nb);
+				print_tree(POTENTIAL);
+			}
 		}
 
 	}

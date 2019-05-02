@@ -36,11 +36,7 @@ int send_first_message(int soc, char *addr, char *port){
 	struct message_h msg = {0};
 	msg.magic = 93;
 	msg.version = 2;
-	msg.body_length  = 10;
-	msg.body_length = htons(msg.body_length);
-	msg.body[0]=2;
-	msg.body[1]=8;
-	memcpy((msg.body)+2,&ID,8);
+	msg.body_length = htons(tlv_short_hello(msg.body,MAX_SIZE,ID));
 
 	rc = getaddrinfo(addr, port, &h, &r);
 
@@ -114,7 +110,6 @@ int send_symetrical_everyone(int fd, tree *people){
 	int res =0;
 	int count = 0;
 	for(struct list_entry *tmp = sym;tmp;tmp=tmp->next){
-		printf("J'ai %d voisin sym\n",++count );
 		if(tlv_neighbour(msg.body+size,PMTU-4-size,*(tmp->sym))<0){
 			msg.body_length=htons(size);
 			res = send_to_everyone(fd,&msg,size+4,people);
@@ -122,13 +117,25 @@ int send_symetrical_everyone(int fd, tree *people){
 			tlv_neighbour(msg.body+size,PMTU-4-size,*(tmp->sym));
 		}
 		size+=20;
+		count++;
 	}
+	NB_SYMETRICAL=count;
+
 
 	if(size>0){
 		msg.body_length=htons(size);
 		res = send_to_everyone(fd,&msg,size+4,people);
 	}
 	return res;
+}
+
+int send_shorthello_everyone(int fd, tree *people){
+	struct message_h msg;
+	msg.magic = 93;
+	msg.version = 2;
+	int nb = tlv_short_hello(msg.body,MAX_SIZE,ID);
+	msg.body_length = htons(nb);
+	return send_to_everyone(fd,&msg,nb+4,POTENTIAL);
 }
 
 //On récupère le message
