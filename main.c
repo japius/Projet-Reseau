@@ -45,6 +45,7 @@ int main(int argc, char *argv[]){
 		nb = send_first_message(soc,argv[2],argv[3]);
 	else
 		nb = send_first_message(soc,"jch.irif.fr","1212");
+	printf("hello envoyé a %d\n",nb );
 
 	struct message_h msg;
 	struct sockaddr_in6 client;
@@ -87,7 +88,6 @@ int main(int argc, char *argv[]){
 					msg.version=2;
 					msg.body_length=htons(tmp);
 					nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
-					printf("Envoie data a %d \n", nb);
 				}
 			}
 		}
@@ -97,6 +97,8 @@ int main(int argc, char *argv[]){
 			nb=send_symetrical_everyone(soc,NEIGHBORS);
 			//printf("Neighbor %d\n",nb);
 			NEXTHELLO=get_seconds()+TIMEHELLO;
+			nb=send_goaway_asymetrical(soc);
+			printf("GO away %d\n",nb );
 			if(NB_SYMETRICAL<=MIN_SYM){
 				nb = send_shorthello_everyone(soc,POTENTIAL);
 				printf("Hello court %d\n",nb);

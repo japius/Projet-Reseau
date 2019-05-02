@@ -131,9 +131,9 @@ int tlv_goaway(unsigned char *body,size_t bufsize, u_int8_t code,unsigned char *
 		*(body+1)=length;
 		*(body+2)=code;
 		memcpy(body+2+code_size,&msg,msg_size);
-		return 1;
+		return length+1;
 	}
-	return 0;
+	return -1;
 	
 }
 
@@ -179,16 +179,12 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	return 1;
 }
 
-static int count =0;
 int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
-	count++;
-	printf("//////Je suis a %d neighbours //////\n",count );
 	struct neighbor key;
 	memcpy(key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
 	key.port=ntohs(key.port);
 	//inserer l'adresse contenue dans le tlv à la liste des voisins potentiels
-	printf("Voisin potentiel : \n");
 	add_potential(&key,NULL);
 	return 1;
 	//return 0;
@@ -295,7 +291,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 		if(type>0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
 			if(handle_tlv[type](soc,tlv,length,rcpt)){
-
+				printf("J'ai géré un tlv %d\n",type);
 			}
 			else{
 				//perror("tlv")
@@ -303,6 +299,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 		}
 		pos+=length+2;
 	}
+	printf("Message terminé\n" );
 }
 
 

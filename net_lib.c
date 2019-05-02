@@ -91,7 +91,7 @@ int send_hello_everyone(int fd, tree *people){
 	struct message_h msg;
 	msg.magic=93;
 	msg.version=2;
-	int tmp = tlv_long_hello(msg.body,MAX_SIZE,ID,people->val->id);
+	int tmp = tlv_long_hello(msg.body,PMTU-4,ID,people->val->id);
 	msg.body_length=htons(tmp);
 	int res = (send_message(fd,&msg,tmp+4,*(people->key))>0)?1:0;
 	res += send_hello_everyone(fd,people->left);
@@ -125,6 +125,8 @@ int send_symetrical_everyone(int fd, tree *people){
 		msg.body_length=htons(size);
 		res = send_to_everyone(fd,&msg,size+4,people);
 	}
+
+	free_list(sym);
 	return res;
 }
 
@@ -132,9 +134,26 @@ int send_shorthello_everyone(int fd, tree *people){
 	struct message_h msg;
 	msg.magic = 93;
 	msg.version = 2;
-	int nb = tlv_short_hello(msg.body,MAX_SIZE,ID);
+	int nb = tlv_short_hello(msg.body,PMTU-4,ID);
 	msg.body_length = htons(nb);
 	return send_to_everyone(fd,&msg,nb+4,POTENTIAL);
+}
+
+int send_goaway_asymetrical(int fd){
+	if(!NEIGHBORS) return 0;
+	struct list_entry *sym= get_func(NEIGHBORS,isasymetrical);
+	struct message_h msg;
+	msg.magic=93;
+	msg.version=2;
+	int tmp = tlv_goaway(msg.body,PMTU-4,2,"",0);
+	msg.body_length = htons(tmp);
+	int count = 0;
+	for(struct list_entry *tmp = sym;tmp;tmp=tmp->next){
+		if(send_message(fd,&msg,tmp+4,*(tmp->sym))>0) count ++;
+		remove_neighbor(tmp->sym);
+	}
+	free_list(sym);
+	return count;
 }
 
 //On récupère le message

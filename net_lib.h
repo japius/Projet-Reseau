@@ -39,6 +39,7 @@ int send_to_everyone(int fd, void *buf, size_t length, tree *);
 int send_hello_everyone(int fd, tree *people);
 int send_symetrical_everyone(int fd, tree *people);
 int send_shorthello_everyone(int fd, tree *people);
+int send_goaway_asymetrical(int fd);
 
 int send_first_message(int soc, char *addr, char *port);
 

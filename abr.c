@@ -19,21 +19,22 @@ tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
     free(current);
     return NULL;
   }
-  if(val)memmove(current->val,val,sizeof(struct ident));
+
   current->key=malloc(sizeof(struct neighbor));
   if(!current->key){
     free(current->val);
     free(current);
     return NULL;
   }
-  if(key)memmove(current->key,key,sizeof(struct neighbor));
+
+  if(val) memmove(current->val,val,sizeof(struct ident));
+  if(key) memmove(current->key,key,sizeof(struct neighbor));
   current->left=left;
   current->right=right;
   return current;
 }
 
 short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
-  //if(t==NULL) return init(key,val,NULL,NULL);
   int comp=compare_n(t->key,key);
   if(comp>0){
     if(t->left==NULL){
@@ -49,9 +50,10 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
     }
     return add_neighbor_aux(t->right,key,val);
   }
-  printf("On me donne un potentiel existant\n");
-  t->val->last_hello=val->last_hello;
-  t->val->last_hello_long=val->last_hello_long;
+  if(val!=NULL){
+    t->val->last_hello=val->last_hello;
+    t->val->last_hello_long=val->last_hello_long;
+  }
   return 1;
 }
 
@@ -93,6 +95,10 @@ short issymmetrical(struct ident *val){
   return 0;
 }
 
+short isasymetrical(tree *t){
+  return !issymmetrical(t->val);
+}
+
 //Pour chercher tous les voisins symétriques
 struct list_entry *get_symmetrical(tree *t){
 
@@ -109,6 +115,23 @@ struct list_entry *get_symmetrical(tree *t){
     }
     return NULL;;
 }
+
+struct list_entry *get_func(tree *t, short (*func)(tree*)){
+
+    if(t!=NULL){
+        if(func(t)){
+          if(t->left==NULL && t->right==NULL) return init_list_entry(t->key,0,NULL);
+          if(t->left==NULL) return init_list_entry(t->key,0,get_func(t->right,func));
+          if(t->right==NULL) return init_list_entry(t->key,0,get_func(t->left,func));
+          struct list_entry *entry=init_list_entry(t->key,0,get_func(t->left,func));
+          //return add_node(get_symmetrical(t->right),get_last(t->left));
+          get_last(entry)->next=get_func(t->right,func);
+          return entry;
+        }
+    }
+    return NULL;;
+}
+
 
 
 /*struct list_entry *get_symmetrical(tree *t){
