@@ -13,7 +13,7 @@ int tlv_short_hello(unsigned char *body,size_t bufsize, u_int64_t id);
 
 int tlv_long_hello(unsigned char *body,size_t bufsize, u_int64_t source_id,u_int64_t dest_id);
 
-int tlv_neighbour(unsigned char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port);
+int tlv_neighbour(unsigned char *body,size_t bufsize, struct neighbor ngb);
 
 int tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size);
 

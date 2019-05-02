@@ -104,6 +104,33 @@ int send_hello_everyone(int fd, tree *people){
 	return res;
 }
 
+int send_symetrical_everyone(int fd, tree *people){
+	struct list_entry *sym= get_symmetrical(NEIGHBORS);
+	if(sym==NULL) return;
+	struct message_h msg = {0};
+	msg.magic=93;
+	msg.version=2; 
+	size_t size = 0;
+	int res =0;
+	int count = 0;
+	for(struct list_entry *tmp = sym;tmp;tmp=tmp->next){
+		printf("J'ai %d voisin sym\n",++count );
+		if(tlv_neighbour(msg.body+size,PMTU-4-size,*(tmp->sym))<0){
+			msg.body_length=htons(size);
+			res = send_to_everyone(fd,&msg,size+4,people);
+			size=0;
+			tlv_neighbour(msg.body+size,PMTU-4-size,*(tmp->sym));
+		}
+		size+=20;
+	}
+
+	if(size>0){
+		msg.body_length=htons(size);
+		res = send_to_everyone(fd,&msg,size+4,people);
+	}
+	return res;
+}
+
 //On récupère le message
 /*int get_message(int sock, struct sockaddr_in6 client,unsigned char req[4096]){
 	return recvfrom(sock,req,4096,0,&client,sizeof(client));

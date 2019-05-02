@@ -80,14 +80,13 @@ int tlv_long_hello(unsigned char *body,size_t bufsize, u_int64_t source_id,u_int
 	return -1;
 }
 
-int tlv_neighbour(unsigned char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
-	if(bufsize>17){
-		size_t ip_size=16,port_size=sizeof(port);
-		*body = 2;
+int tlv_neighbour(unsigned char *body,size_t bufsize, struct neighbor ngb){
+	if(bufsize>21){
+		*body = 3;
 		*(body+1)=18;
-		memcpy(body+2,&ip,ip_size);
-		memcpy(body+2+ip_size,&port_size,port_size);
-		return 16;
+		memcpy(body+2,&ngb.ip,sizeof(ngb.ip));
+		memcpy(body+2+sizeof(ngb.ip),&ngb.port,sizeof(ngb.port));
+		return 20;
 	}
 	return -1;
 }

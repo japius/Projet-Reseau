@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
 	struct sockaddr_in6 client;
 	socklen_t client_len;
 	fd_set fd_ens;
-	int NEXTHELLO = get_seconds()+30;
+	int NEXTHELLO = 0;
 	NEXTTIME=NEXTHELLO;
 
 	while(1){
@@ -90,14 +90,16 @@ int main(int argc, char *argv[]){
 		}
 		if(get_seconds()>=NEXTHELLO){
 			int nb = send_hello_everyone(soc,NEIGHBORS);
-			printf("Envoie hello a %d \n", nb);
-			NEXTHELLO=get_seconds()+30;
+			printf("J'ecrit hello a %d\n",nb);
+			nb=send_symetrical_everyone(soc,NEIGHBORS);
+			printf("J'envoie symétriques a %d\n",nb );
+			NEXTHELLO=get_seconds()+10;
 		}
 
 	}
 	/*Il faut:
-	-envoyer toutes les 30s des hellos long à chaque voisin
-	-envoyer souvent des tlv neighbour aux voisins pour les informer de ses voisins symétriques
+	++-envoyer toutes les 30s des hellos long à chaque voisin
+	+-envoyer souvent des tlv neighbour aux voisins pour les informer de ses voisins symétriques
 	-si moins de 8 symétriques envoyer un hello court à 1 ou plusieurs potentiels
 	-envoyer goaway puis suppression, si pas de message depuis 2 min
 	-si un voisin pas de hello long depuis 2 min, marqué comme non symétrique

@@ -12,6 +12,7 @@ tree *POTENTIAL;
 tree *NEIGHBORS;
 struct flood *DATAF;
 int NEXTTIME;
+int NB_SYMETRIQUE;
 
 /*typedef struct peer peer;
 
