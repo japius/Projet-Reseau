@@ -6,7 +6,7 @@
 struct list_entry{
 	struct neighbor *sym;
 	int times_sent;
-	struct list_entry *next;
+	//int wait_time;
 };
 
 //Un noeud de la liste d'inondations, soit un couple (ID,Nonce) et une liste de voisins à inonder
@@ -14,50 +14,35 @@ struct flood_entry{
 	struct data_index *index;
 	//A revoir, ptet autre chose que MAX_SIZE
 	char *data;
-	struct list_entry *sym_neighbors;
-	struct flood_entry *next;
+	struct list *sym_neighbors;
 };
 
 //La liste d'inondations 
 struct flood{
-	struct flood_entry *first;
-	struct flood_entry *last;
+	struct list *first;
+	struct list *last;
+
 };
 
-struct list_entry *init_list_entry(struct neighbor *peer,int times_sent,struct list_entry *next);
+struct list_entry *init_list_entry(struct neighbor *peer,int times_sent);
 
-struct flood_entry *init_flood_entry(struct data_index *,char *,struct list_entry *,struct flood_entry *);
+struct flood_entry *init_flood_entry(struct data_index *,char *,struct list *);
 
-struct flood *init_flood(struct flood_entry *,struct flood_entry *);
+struct flood *init_flood(struct list *);
 
-short add_neighbor_to_flood(struct flood_entry *flood,struct neighbor *peer);
+short add_neighbor_to_flood(struct data_index *,struct neighbor *peer);
 
-short remove_neighbor_from_flood(struct flood_entry *flood, struct neighbor *peer);
+short remove_neighbor_from_flood(struct data_index *, struct neighbor *);
 
-short add_entry(struct flood *flood, struct data_index *data,char *msg,struct list_entry *entry);
+short add_entry(struct data_index *data,char *msg,struct list *entry);
 
-short rm_entry(struct flood *flood,struct flood_entry *entry);
+short rm_entry(struct data_index *);
 
-struct flood_entry *get_flood(struct flood *,struct data_index *data);
+int compare_n_s(void *c1,void *c2);
+struct flood_entry *get_flood(struct data_index *data);
 
-
-struct list_entry *add_node(struct list_entry *,struct list_entry *);
-
-struct list_entry *get_last(struct list_entry *);
-
-struct list_entry *remove_node(struct list_entry *,struct neighbor *);
-
-
-
-struct flood *init_data();
-
-
-
-int length(struct list_entry *);
 
 void free_flood(struct flood *flood);
-
-void free_list(struct list_entry *entry);
 
 void free_entry(struct flood_entry *entry);
 

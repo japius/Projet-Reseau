@@ -2,7 +2,7 @@
 #define PEER_H
 
 #include "struct.h"
-#include "floodmap.h"
+#include "list.h"
 #include "abr.h"
 
 #define JCH 1212
@@ -13,7 +13,7 @@ tree *NEIGHBORS;
 struct flood *DATAF;
 int NEXTTIME;
 //Mettre une liste ou une struct iov
-
+int NB_SYMETRICAL;
 /*typedef struct peer peer;
 
 //rendre accessible dans tous les fichiers

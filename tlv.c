@@ -11,6 +11,7 @@
 #include "list.h"
 #include "net_lib.h"
 #include "peer.h"
+#include "genlist.h"
 #include "util.h"
 
 
@@ -40,7 +41,7 @@ int nb_tlv(){
 //Fonction pour envoyer un certain message
 
 //Fonctions pour créer les tlv avec les paramètres en argument
-short tlv_pad1(unsigned char *body,size_t bufsize){
+int tlv_pad1(unsigned char *body,size_t bufsize){
 	if(bufsize>0){
 		*body = 0;
 		return 1;
@@ -48,7 +49,7 @@ short tlv_pad1(unsigned char *body,size_t bufsize){
 	return -1;
 }
 
-short tlv_padN(unsigned char *body,size_t bufsize, u_int8_t length){
+int tlv_padN(unsigned char *body,size_t bufsize, u_int8_t length){
 	if(bufsize>length+1){
 		*body = 1;
 		*(body+1)=length;
@@ -58,7 +59,7 @@ short tlv_padN(unsigned char *body,size_t bufsize, u_int8_t length){
 	return -1;
 }
 
-short tlv_short_hello(unsigned char *body,size_t bufsize, u_int64_t id){
+int tlv_short_hello(unsigned char *body,size_t bufsize, u_int64_t id){
 	if(bufsize>9){
 		*body = 2;
 		*(body+1)=8;
@@ -68,7 +69,7 @@ short tlv_short_hello(unsigned char *body,size_t bufsize, u_int64_t id){
 	return -1;
 }
 
-short tlv_long_hello(unsigned char *body,size_t bufsize, u_int64_t source_id,u_int64_t dest_id){
+int tlv_long_hello(unsigned char *body,size_t bufsize, u_int64_t source_id,u_int64_t dest_id){
 	if(bufsize>15){
 		size_t source_size=sizeof(dest_id),dest_size=sizeof(dest_id);
 		*body = 2;
@@ -80,19 +81,18 @@ short tlv_long_hello(unsigned char *body,size_t bufsize, u_int64_t source_id,u_i
 	return -1;
 }
 
-short tlv_neighbour(unsigned char *body,size_t bufsize, u_int8_t ip[16],u_int16_t port){
-	if(bufsize>17){
-		size_t ip_size=16,port_size=sizeof(port);
-		*body = 2;
+int tlv_neighbour(unsigned char *body,size_t bufsize, struct neighbor ngb){
+	if(bufsize>21){
+		*body = 3;
 		*(body+1)=18;
-		memcpy(body+2,&ip,ip_size);
-		memcpy(body+2+ip_size,&port_size,port_size);
-		return 16;
+		memcpy(body+2,&ngb.ip,sizeof(ngb.ip));
+		memcpy(body+2+sizeof(ngb.ip),&ngb.port,sizeof(ngb.port));
+		return 20;
 	}
 	return -1;
 }
 
-short tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
+int tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
 	random_on_octets(&nonce,sizeof(u_int32_t));
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
@@ -110,7 +110,7 @@ short tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,un
 	return -1;
 }
 
-short tlv_ack(unsigned char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
+int tlv_ack(unsigned char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce);
 	u_int8_t length=id_size+nonce_size;
 	if(bufsize>length+1){
@@ -123,7 +123,7 @@ short tlv_ack(unsigned char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
 	return 0;
 }
 
-short tlv_goaway(unsigned char *body,size_t bufsize, u_int8_t code,unsigned char *msg,u_int8_t msg_size){
+int tlv_goaway(unsigned char *body,size_t bufsize, u_int8_t code,unsigned char *msg,u_int8_t msg_size){
 	size_t code_size=sizeof(code);
 	u_int8_t length=code_size+msg_size;
 	if(bufsize>length+1){
@@ -137,7 +137,7 @@ short tlv_goaway(unsigned char *body,size_t bufsize, u_int8_t code,unsigned char
 	
 }
 
-short tlv_warning(unsigned char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_size){
+int tlv_warning(unsigned char *body,size_t bufsize, unsigned char *msg,u_int8_t msg_size){
 	if(bufsize>msg_size+1){
 		*body=7;
 		*(body+1)=msg_size;
@@ -167,14 +167,14 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		memcpy(&dest_id,tlv+8,8);
 		if(dest_id==ID){
 			val.last_hello_long=current;
-			add_neighbor(NEIGHBORS,&peer,&val);
+			add_neighbor(&peer,&val);
 			printf("Nouveau voisin : \n");
 			print_tree(NEIGHBORS);
 			return 1;
 		}
 		return 1;
 	}
-	add_neighbor(NEIGHBORS,&peer,&val);
+	add_neighbor(&peer,&val);
 	print_tree(NEIGHBORS);
 	return 1;
 }
@@ -185,7 +185,7 @@ int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	memcpy(&key.port,tlv+16,2);
 	//inserer l'adresse contenue dans le tlv à la liste des voisins potentiels
 	printf("Voisin potentiel : \n");
-	add_neighbor(POTENTIAL,&key,NULL);
+	add_potential(&key,NULL);
 	return 1;
 	//return 0;
 }
@@ -220,24 +220,28 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		//exit(EXIT_FAILURE);
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get_flood(DATAF,&index);
+	struct flood_entry *flood=get_flood(&index);
 	//Si non vide
 	if(flood){
 			//retirer l'émetteur de la liste de voisins à inonder
-		remove_neighbor_from_flood(flood,&peer);
+		remove_neighbor_from_flood(&index,&peer);
 		//inonder
 	}
 	else{
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
-		struct list_entry *symmetric=get_symmetrical(NEIGHBORS);
-		symmetric=remove_node(symmetric,&peer);
+		struct list *symmetric=get_symmetrical(NEIGHBORS);
+		struct list_entry l;
+		l.sym=&peer;
+		l.times_sent=0;
+		remove_element(&symmetric,&l,compare_n_s);
+		//symmetric=remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4
 		char msg[length+2];
 		msg[0]=4;
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
-		add_entry(DATAF,&index,msg,symmetric);
+		add_entry(&index,msg,symmetric);
 	}
 	if(*(tlv+13)==0){
 		//afficher le message
@@ -251,9 +255,9 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	struct data_index index;
 	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
-	struct flood_entry *flood=get_flood(DATAF,&index);
+	struct flood_entry *flood=get_flood(&index);
 	if(flood){
-		remove_neighbor_from_flood(flood,&peer);
+		remove_neighbor_from_flood(&index,&peer);
 		return 1;
 	}
 	//pas sur

@@ -19,7 +19,9 @@ typedef struct tree{
 tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right);
 
 //Pour ajouter un voisin s'il n"existe pas et le mettre à jour sinon
-short add_neighbor(tree *t,struct neighbor *key,struct ident *val);
+short add_neighbor(struct neighbor *key,struct ident *val);
+
+short add_potential(struct neighbor *key,struct ident *val);
 
 //Pour chercher un certain voisin
 struct ident *get_ident(tree *t,struct neighbor *key);
@@ -27,7 +29,7 @@ struct ident *get_ident(tree *t,struct neighbor *key);
 //A modifier
 short issymmetrical(struct ident *val);
 
-struct list_entry *get_symmetrical(tree *t);
+struct list *get_symmetrical(tree *t);
 
 short  remove_neighbor(struct neighbor *key);
 

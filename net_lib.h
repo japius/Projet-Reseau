@@ -35,10 +35,13 @@ struct sockaddr_in6 neighbor_to_sockaddr6(struct neighbor);
 void print_addr(u_int8_t *ip);
 
 int send_to_everyone(int fd, void *buf, size_t length, tree *);
+int send_hello_everyone(int fd, tree *people);
+int send_symetrical_everyone(int fd, tree *people);
+int send_shorthello_everyone(int fd, tree *people);
 
 int send_first_message(int soc, char *addr, char *port);
 
 void print_msg(struct message_h msg);
-
+void print_sockaddr(struct sockaddr_in6);
 int print_tlv(unsigned char *buf);
 #endif

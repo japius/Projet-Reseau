@@ -6,10 +6,8 @@
 #include "abr.h"
 #include "tlv.h"
 #include "net_lib.h"
-#include "sortedlist.h"
 #include <string.h>
 #include "util.h"
-#include "sortedlist.h"
 #include "genlist.h"
 #include "list.h"
 
@@ -66,22 +64,18 @@ struct neighbor_and_wait make(struct neighbor *n,int *times_sent){
 	return id;
 }
 
-struct wait_list *get_wait_time(struct flood_entry *flood){
+struct list *get_wait_list(struct flood_entry *flood){
 	struct list *tmp=flood->sym_neighbors;
-	struct wait_list *list=malloc(sizeof(struct wait_list));
+	struct list *list=malloc(sizeof(struct list));
 	while(tmp){
-		//if(tmp->times_sent==5) handle_inactive();
-		//else{
-			struct neighbor_and_wait id=make(tmp->sym,&(tmp->times_sent));
-			int i=add_element(list,&id);
-			if(i==0) return NULL;
-		}
+		struct list_entry *l=(struct list_entry *)tmp->content;
+		struct neighbor_and_wait id=make(l->sym,&(l->times_sent));
+		int i=add_element(&list,&id,sizeof(struct neighbor_and_wait),compare_w);
+		if(i==0) return NULL;
 		tmp=tmp->next;
-	//}
+	}
 	return list;
 }
-
-
 
 int send_data(int soc, char *tlv,struct neighbor *key){
 	char *body;
@@ -94,24 +88,20 @@ int send_data(int soc, char *tlv,struct neighbor *key){
 	return send_message(soc,&msg,msg_length,*key);
 }
 
-
-void flood_message(int soc, struct flood_entry *flood){
-
-}
-
 void flood_message(int soc,struct flood_entry *flood){
 	int current_time=get_seconds();
 	//struct list *entry;
-	struct wait_list *list=get_wait_time(flood);
+	struct list *list=get_wait_list(flood);
 	if(list==NULL) return;
-	struct wait_node *tmp=list->node;
+	struct list *tmp=list;
 	again:
 		while(tmp){
-			if(*(tmp->nw->times_sent)==5){
-				handle_inactive(soc,flood,tmp->nw->neighbor);
+			struct neighbor_and_wait *nw=(struct neighbor_and_wait *)tmp->content;
+			if(*(nw->times_sent)==5){
+				handle_inactive(soc,flood,nw->neighbor);
 				//A revoir ici, ne pas réutiliser un pointeur qu'on a free
-				struct wait_node *tmp2=tmp->next;
-				int i=remove_element(list,tmp->nw);
+				struct list *tmp2=tmp->next;
+				int i=remove_element(&list,nw,compare_w);
 				if(i==0){
 					perror("remove");
 					return;
@@ -119,21 +109,21 @@ void flood_message(int soc,struct flood_entry *flood){
 				tmp=tmp2;
 				continue;
 			}
-			if(current_time>=tmp->nw->wait_time){
+			if(current_time>=nw->wait_time){
 				//verifier le retour de send_message
-				int i=send_data(soc,flood->data,tmp->nw->neighbor);
+				int i=send_data(soc,flood->data,nw->neighbor);
 				if(i==0){
 					perror("send_data");
 					return;
 				}
-				struct wait_node *tmp2=tmp->next;
-				i=move_element(list,tmp->nw,wait_time(*(tmp->nw->times_sent)),1);
+				struct list *tmp2=tmp->next;
+				//i=move_element(list,nw,wait_time(*(nw->times_sent)),1);
 				if(i==0) return;
 				//pas sur
 				tmp=tmp2;
 			}
 			else{
-				NEXTTIME=min(NEXTTIME,tmp->nw->wait_time);
+				NEXTTIME=min(NEXTTIME,nw->wait_time);
 				goto again;
 				break;
 				//on recommce, faire un goto ou une boucle dans une fonction séparée
@@ -173,6 +163,12 @@ int compare_n(struct neighbor *key1,struct neighbor *key2){
 	if(key1->port < key2->port) return -1;
 	if(key1->port > key2->port) return 1;
 	return 0;
+}
+
+int compare_w(void *nw, void *nw2){
+	struct neighbor_and_wait *n1=(struct neighbor_and_wait *)nw;
+	struct neighbor_and_wait *n2=(struct neighbor_and_wait *)nw2;
+	return compare_n(n1->neighbor,n2->neighbor);
 }
 
 int max(int x,int y){

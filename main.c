@@ -16,7 +16,9 @@
 #include "abr.h"
 #include "list.h"
 #include "util.h"
-#define PORT 8080
+#define PORT 1212
+#define TIMEHELLO 10
+#define MIN_SYM 10
 
 
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
@@ -48,7 +50,8 @@ int main(int argc, char *argv[]){
 	struct sockaddr_in6 client;
 	socklen_t client_len;
 	fd_set fd_ens;
-	NEXTTIME = get_seconds()+30;
+	int NEXTHELLO = 0;
+	NEXTTIME=NEXTHELLO;
 
 	while(1){
 		//---- gere les réceptions de messages
@@ -59,41 +62,50 @@ int main(int argc, char *argv[]){
 				nb = send_first_message(soc,argv[1],argv[2]);
 			else
 				nb = send_first_message(soc,"jch.irif.fr","1212");
-			printf("J'ai envoye hello a %d adresse(s)\n", nb);
 		}
 
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);
 		FD_SET(0,&fd_ens);
+		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
 		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
-		NEXTTIME = get_seconds()+30;
 		if(select(soc+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
 				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 				struct neighbor ngb = sockaddr6_to_neighbor(client);
+				print_addr(ngb.ip);
 				print_msg(msg);
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(0,&fd_ens)){
-				//if faut retirer les 15 octets d'infos sur le data
-				//et 48 octets pour l'entete IPV6 et la charge du datagramme udp
-				unsigned char buf[PMTU-63];
-				int tmp=read(0,buf,PMTU-63);
+				unsigned char buf[PMTU-14];
+				int tmp=read(0,buf,PMTU-14)-1;
 				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
 				if(tmp>0){
 					msg.magic=93;
 					msg.version=2;
-					msg.body_length=tmp;
-					printf("envoie a %d\n",send_to_everyone(soc,&soc,tmp+4,NEIGHBORS));
+					msg.body_length=htons(tmp);
+					nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
+					printf("Envoie data a %d \n", nb);
 				}
+			}
+		}
+		if(get_seconds()>=NEXTHELLO){
+			nb = send_hello_everyone(soc,NEIGHBORS);
+			nb=send_symetrical_everyone(soc,NEIGHBORS);
+			NEXTHELLO=get_seconds()+TIMEHELLO;
+			if(NB_SYMETRICAL<=MIN_SYM){
+				nb = send_shorthello_everyone(soc,POTENTIAL);
+				printf("Envoie hello court à %d\n",nb);
+				print_tree(POTENTIAL);
 			}
 		}
 
 	}
 	/*Il faut:
-	-envoyer toutes les 30s des hellos long à chaque voisin
-	-envoyer souvent des tlv neighbour aux voisins pour les informer de ses voisins symétriques
+	++-envoyer toutes les 30s des hellos long à chaque voisin
+	+-envoyer souvent des tlv neighbour aux voisins pour les informer de ses voisins symétriques
 	-si moins de 8 symétriques envoyer un hello court à 1 ou plusieurs potentiels
 	-envoyer goaway puis suppression, si pas de message depuis 2 min
 	-si un voisin pas de hello long depuis 2 min, marqué comme non symétrique
