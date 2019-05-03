@@ -21,6 +21,7 @@
 #define MIN_SYM 10
 
 
+//pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
 	//u_int64_t ID;
 	//initialisation du pair
@@ -69,7 +70,8 @@ int main(int argc, char *argv[]){
 		FD_SET(soc,&fd_ens);
 		FD_SET(0,&fd_ens);
 		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
-		struct timeval timeout = {20,0};//{(max(0,NEXTTIME-get_seconds())),0};
+		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
+		NEXTTIME=NEXTHELLO;
 		if(select(soc+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	

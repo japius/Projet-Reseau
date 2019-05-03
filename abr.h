@@ -30,10 +30,14 @@ struct ident *get_ident(tree *t,struct neighbor *key);
 short issymmetrical(struct ident *val);
 short isasymetrical(tree *t);
 
-struct list_entry *get_symmetrical(tree *t);
-struct list_entry *get_func(tree *t, short (*func)(tree*));
+
+struct list *get_func(tree *t, short (*func)(tree*));
+
+struct list *get_symmetrical(tree *t);
+
 
 short  remove_neighbor(struct neighbor *key);
+
 short  remove_potential(struct neighbor *key);
 
 void clean(tree *t);

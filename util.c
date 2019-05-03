@@ -1,58 +1,140 @@
+#include <math.h>
+#include <time.h>
 #include "struct.h"
 #include "peer.h"
 #include "list.h"
 #include "abr.h"
-#include <time.h>
 #include "tlv.h"
 #include "net_lib.h"
+#include <string.h>
+#include "util.h"
+#include "genlist.h"
+#include "list.h"
 
-void flood_message_to_neighbour(int soc,struct flood_entry *flood,struct data_index *index, char *tlv,struct list_entry *list){
-	// On doit =
-	//-si times_sent=5, envoyer un go_away
-	//-sinon:
-	//-tirer un nombre aleatoire entre 2 times sent-1 et +1
-	//-faire +1 sur times sent
-	//-envoyer un data qui contient data, ID nonce 
-	
-	if(list->times_sent==5){
-		//Send go_away;
-		char goaway[26]="Wesh, t'es où ? Bref,bye";
-		char tlv2[26+3];
+
+int rand_a_b(int a,int b){
+	return rand()%(b-a) +a;
+}
+
+
+void handle_inactive(int soc,struct flood_entry *flood,struct neighbor  *sym){
+	//Send go_away;
+	char goaway[26]="Wesh, t'es où ? Bref,bye";
+	char tlv2[26+3];
 		//Supprimer de la liste des voisins
-		int tmp=tlv_goaway(tlv2,28,2,goaway,25);
-		struct message_h msg;
-		msg.magic=93;
-		msg.version=2;
-		msg.body_length=tmp;
-		send_message(soc,&msg,tmp+4,*list->sym);
+	int tmp=tlv_goaway(tlv2,28,2,goaway,25);
+	struct message_h msg;
+	msg.magic=93;
+	msg.version=2;
+	msg.body_length=tmp;
+	send_message(soc,&msg,tmp+4,*sym);
 		//ici le sendto
-		remove_neighbor(list->sym);
-		remove_neighbor_from_flood(flood,list->sym);
+	remove_neighbor(sym);
+	remove_neighbor_from_flood(flood,sym);
+}
+
+
+int wait_time(int times_sent){
+	return get_seconds()+rand_a_b((int)pow(2.0,times_sent-1),(int)pow(2.0,times_sent));
+}
+
+struct neighbor_and_wait make(struct neighbor *n,int *times_sent){
+	struct neighbor_and_wait id;
+	id.neighbor=n;
+	//pas sure que ca marche
+	id.times_sent=times_sent;
+	id.wait_time=wait_time(*times_sent);
+	return id;
+}
+
+struct list *get_wait_list(struct flood_entry *flood){
+	struct list *tmp=flood->sym_neighbors;
+	struct list *list=malloc(sizeof(struct list));
+	while(tmp){
+		struct list_entry *l=(struct list_entry *)tmp->content;
+		struct neighbor_and_wait id=make(l->sym,&(l->times_sent));
+		int i=add_element(&list,&id,sizeof(struct neighbor_and_wait),compare_w);
+		if(i==0) return NULL;
+		tmp=tmp->next;
 	}
+	return list;
+}
+
+int send_data(int soc, char *tlv,struct neighbor *key){
 	char *body;
-	int wait;
-	//wait=rand(pow(2,times_sent-1),pow(2,times_sent));
-	// a revoir
-	//htons ?
-	//send le tlv après wait secondes;
-	//struct sockaddr_in6=neighbor_to_sockaddr6(*list->sym);
+	struct message_h msg;
+	msg.magic=93;
+	msg.version=2;
 	int body_length=tlv[1],msg_length=body_length+4;
-	//create_message, sendto
-	list->times_sent++;
+	memcpy(&msg.body_length,&body_length,2);
+	memcpy(msg.body,tlv,body_length);
+	return send_message(soc,&msg,msg_length,*key);
+}
+
+void flood_message(int soc,struct flood_entry *flood){
+	int current_time=get_seconds();
+	//struct list *entry;
+	struct list *list=get_wait_list(flood);
+	if(list==NULL) return;
+	struct list *tmp=list;
+	again:
+		while(tmp){
+			struct neighbor_and_wait *nw=(struct neighbor_and_wait *)tmp->content;
+			if(*(nw->times_sent)==5){
+				handle_inactive(soc,flood,nw->neighbor);
+				//A revoir ici, ne pas réutiliser un pointeur qu'on a free
+				struct list *tmp2=tmp->next;
+				int i=remove_element(&list,nw,compare_w);
+				if(i==0){
+					perror("remove");
+					return;
+				}
+				tmp=tmp2;
+				continue;
+			}
+			if(current_time>=nw->wait_time){
+				//verifier le retour de send_message
+				int i=send_data(soc,flood->data,nw->neighbor);
+				if(i==0){
+					perror("send_data");
+					return;
+				}
+				struct list *tmp2=tmp->next;
+				//i=move_element(list,nw,wait_time(*(nw->times_sent)),1);
+				if(i==0) return;
+				//pas sur
+				tmp=tmp2;
+			}
+			else{
+				NEXTTIME=min(NEXTTIME,nw->wait_time);
+				goto again;
+				break;
+				//on recommce, faire un goto ou une boucle dans une fonction séparée
+			}
+		}
+}
+
+
+/*void flood_message(int soc,struct flood_entry *flood){
+	struct wait_list *list=get_wait_time(flood);
+	flood_message_to_neighbour(soc,)
+
 }
 
 
 void flood_message(int soc,struct flood_entry *flood){
 	//faire un fork pour leur envoyer en même temps ? ou select c'est suffisant ?
-	for(struct list_entry *list=flood->sym_neighbors;!list;list=list->next){
-		flood_message_to_neighbour(soc,flood,flood->index,flood->data,list);
+	int *length=&length(flood->sym_neighbors);
+	struct neighbor_and_wait nw[]=get_wait_time(flood,flood->sym_neighbors,length);
+	for(struct list *list=flood->sym_neighbors;!list;list=list->next){
+		flood_message_to_neighbour(soc,flood->data,nw,*length);
 	}
-}
+}*/
 
 
 
 int compare_d(struct data_index *data,struct data_index *data2){
-	return !(data->id==data2->id && data->nonce==data2->nonce);
+	return (data->id==data2->id && data->nonce==data2->nonce);
 }
 
 int compare_n(struct neighbor *key1,struct neighbor *key2){
@@ -66,8 +148,18 @@ int compare_n(struct neighbor *key1,struct neighbor *key2){
 	return 0;
 }
 
+int compare_w(void *nw, void *nw2){
+	struct neighbor_and_wait *n1=(struct neighbor_and_wait *)nw;
+	struct neighbor_and_wait *n2=(struct neighbor_and_wait *)nw2;
+	return compare_n(n1->neighbor,n2->neighbor);
+}
+
 int max(int x,int y){
   return (x<=y)?y:x;
+}
+
+int min(int x,int y){
+	return (x<=y)?x:y;
 }
 
 int get_seconds(){

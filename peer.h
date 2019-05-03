@@ -12,14 +12,14 @@ tree *POTENTIAL;
 tree *NEIGHBORS;
 struct flood *DATAF;
 int NEXTTIME;
+//Mettre une liste ou une struct iov
 int NB_SYMETRICAL;
-
 /*typedef struct peer peer;
 
 //rendre accessible dans tous les fichiers
 struct peer{
 	u_int64_t ID;
-	hashmap *POTENTIAL,*NEIGHBORS,*data;
+	flood *POTENTIAL,*NEIGHBORS,*data;
 	//map des données
 };*/
 

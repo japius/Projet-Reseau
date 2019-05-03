@@ -3,7 +3,7 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 #define MAX_SIZE 4096
-#define PMTU 1280
+#define PMTU 1232
 
 
 struct message_h{
@@ -31,6 +31,11 @@ struct data_index{
 	u_int32_t nonce;
 };
 
+struct neighbor_and_wait{
+	struct neighbor *neighbor;
+	int wait_time;
+	int *times_sent;
+};
 //pour la fragmentation des données, il faudra une hashmap ?
 //un hashcode pour le nonce
 

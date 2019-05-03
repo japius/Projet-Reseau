@@ -11,6 +11,7 @@
 #include "list.h"
 #include "net_lib.h"
 #include "peer.h"
+#include "genlist.h"
 #include "util.h"
 
 
@@ -220,24 +221,28 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		//exit(EXIT_FAILURE);
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get_flood(DATAF,&index);
+	struct flood_entry *flood=get_flood(&index);
 	//Si non vide
 	if(flood){
 			//retirer l'émetteur de la liste de voisins à inonder
-		remove_neighbor_from_flood(flood,&peer);
+		remove_neighbor_from_flood(&index,&peer);
 		//inonder
 	}
 	else{
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
-		struct list_entry *symmetric=get_symmetrical(NEIGHBORS);
-		symmetric=remove_node(symmetric,&peer);
+		struct list *symmetric=get_symmetrical(NEIGHBORS);
+		struct list_entry l;
+		l.sym=&peer;
+		l.times_sent=0;
+		remove_element(&symmetric,&l,compare_n_s);
+		//symmetric=remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4
 		char msg[length+2];
 		msg[0]=4;
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
-		add_entry(DATAF,&index,msg,symmetric);
+		add_entry(&index,msg,symmetric);
 	}
 	if(*(tlv+13)==0){
 		//afficher le message
@@ -251,9 +256,9 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	struct data_index index;
 	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
-	struct flood_entry *flood=get_flood(DATAF,&index);
+	struct flood_entry *flood=get_flood(&index);
 	if(flood){
-		remove_neighbor_from_flood(flood,&peer);
+		remove_neighbor_from_flood(&index,&peer);
 		return 1;
 	}
 	//pas sur
@@ -279,6 +284,7 @@ int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor rcpt){
 	int pos=0;
+	if(msg->magic!=93 || msg->version!=2) return ;
 	u_int16_t body_length=ntohs(msg->body_length);
 	char tlv[MAX_SIZE];
 	while(pos<body_length){
@@ -288,6 +294,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 			continue;
 		}
 		u_int8_t length=(u_int8_t)msg->body[pos+1];
+		if(length>buf_t-pos) return;
 		if(type>0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
 			if(handle_tlv[type](soc,tlv,length,rcpt)){

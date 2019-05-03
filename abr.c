@@ -4,7 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "struct.h"
-#include "list.h"
+#include "genlist.h"
 #include "abr.h"
 #include "peer.h"
 #include "util.h"
@@ -43,7 +43,7 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
     }
     return add_neighbor_aux(t->left,key,val);
   }
-  else if(comp<0){
+  if(comp<0){
     if(t->right==NULL){
       t->right=init(key,val,NULL,NULL);
       return t->right != NULL;
@@ -100,14 +100,17 @@ short isasymetrical(tree *t){
 }
 
 //Pour chercher tous les voisins symétriques
-struct list_entry *get_symmetrical(tree *t){
+struct list *get_symmetrical(tree *t){
 
     if(t!=NULL){
         if(issymmetrical(t->val)){
-          if(t->left==NULL && t->right==NULL) return init_list_entry(t->key,0,NULL);
-          if(t->left==NULL) return init_list_entry(t->key,0,get_symmetrical(t->right));
-          if(t->right==NULL) return init_list_entry(t->key,0,get_symmetrical(t->left));
-          struct list_entry *entry=init_list_entry(t->key,0,get_symmetrical(t->left));
+          struct list_entry l;
+          l.sym=t->key;
+          l.times_sent=0;
+          if(t->left==NULL && t->right==NULL) return init_list(&l,sizeof(struct list_entry),NULL);
+          if(t->left==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->right));
+          if(t->right==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
+          struct list *entry=init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
           //return add_node(get_symmetrical(t->right),get_last(t->left));
           get_last(entry)->next=get_symmetrical(t->right);
           return entry;
@@ -116,14 +119,17 @@ struct list_entry *get_symmetrical(tree *t){
     return NULL;;
 }
 
-struct list_entry *get_func(tree *t, short (*func)(tree*)){
+struct list *get_func(tree *t, short (*func)(tree*)){
 
     if(t!=NULL){
         if(func(t)){
-          if(t->left==NULL && t->right==NULL) return init_list_entry(t->key,0,NULL);
-          if(t->left==NULL) return init_list_entry(t->key,0,get_func(t->right,func));
-          if(t->right==NULL) return init_list_entry(t->key,0,get_func(t->left,func));
-          struct list_entry *entry=init_list_entry(t->key,0,get_func(t->left,func));
+          struct list_entry l;
+          l.sym=t->key;
+          l.times_sent=0;
+          if(t->left==NULL && t->right==NULL) return init_list(&l,sizeof(struct list_entry),NULL);
+          if(t->left==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->right));
+          if(t->right==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
+          struct list *entry=init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
           //return add_node(get_symmetrical(t->right),get_last(t->left));
           get_last(entry)->next=get_func(t->right,func);
           return entry;
@@ -183,7 +189,7 @@ int number_of_neighbors(tree *t){
 
 //Le nombre de voisins symétriques
 int number_of_symmetrical(tree *t){
-  struct list_entry *list=get_symmetrical(t);
+  struct list *list=get_symmetrical(t);
   return length(list);
 }
 
