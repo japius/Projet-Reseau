@@ -8,8 +8,9 @@
 #include "net_lib.h"
 #include <string.h>
 #include "util.h"
-
+#include "genlist.h"
 #include "list.h"
+#include <arpa/inet.h>
 
 
 int rand_a_b(int a,int b){
@@ -17,7 +18,7 @@ int rand_a_b(int a,int b){
 }
 
 
-void handle_inactive(int soc,struct flood_entry *flood,struct neighbor  *sym){
+void handle_inactive(int soc,struct data_index *data,struct neighbor  *sym){
 	//Send go_away;
 	char goaway[26]="Wesh, t'es où ? Bref,bye";
 	char tlv2[26+3];
@@ -30,7 +31,7 @@ void handle_inactive(int soc,struct flood_entry *flood,struct neighbor  *sym){
 	send_message(soc,&msg,tmp+4,*sym);
 		//ici le sendto
 	remove_neighbor(sym);
-	remove_neighbor_from_flood(flood,sym);
+	remove_neighbor_from_flood(data,sym);
 }
 
 
@@ -48,31 +49,36 @@ struct neighbor_and_wait make(struct neighbor *n,int *times_sent){
 }
 
 struct list *get_wait_list(struct flood_entry *flood){
-	struct list *tmp=flood->sym_neighbors;
+	struct list_entry *tmp=flood->sym_neighbors->first;
 	struct list *list=malloc(sizeof(struct list));
+	init_list(list,compare_w,sizeof(struct neighbor_and_wait));
 	while(tmp){
-		struct list_entry *l=(struct list_entry *)tmp->content;
+		struct ngb_entry *l=(struct ngb_entry *)tmp->content;
+		//faire un malloc pour 
 		struct neighbor_and_wait id=make(l->sym,&(l->times_sent));
-		int i=add_element(&list,&id,sizeof(struct neighbor_and_wait),compare_w);
-		if(i==0) return NULL;
+		short i=add_elem(list,&id);
+		if(i==0){
+			free(list);
+			return NULL;
+		}
 		tmp=tmp->next;
 	}
 	return list;
 }
 
 int send_data(int soc, char *tlv,struct neighbor *key){
-	char *body;
+	int body_length=tlv[1],msg_length=body_length+4;
 	struct message_h msg;
 	msg.magic=93;
 	msg.version=2;
-	int body_length=tlv[1],msg_length=body_length+4;
-	memcpy(&msg.body_length,&body_length,2);
+	msg.body_length=htons(msg_length);
 	memcpy(msg.body,tlv,body_length);
 	return send_message(soc,&msg,msg_length,*key);
 }
 
 int add_to_neighbor_message(char *tlv,struct neighbor *key){
-	if(get_message(key)==NULL){
+	return 0;
+	/*if(get_message(key)==NULL){
 		char *body;
 		struct message_h msg;
 		msg.magic=93;
@@ -84,10 +90,55 @@ int add_to_neighbor_message(char *tlv,struct neighbor *key){
 	}
 	//sinon
 	//juste rajouter le tlv si pas de problème avec le PMTU
-	return 1;
+	return 1;*/
 }
 
-void flood_message(int soc,struct flood_entry *flood){
+void flood_message_to_neighbours(int soc,struct flood_entry *flood){
+	int current_time=get_seconds();
+	list l=get_wait_list(flood);
+	if(l==NULL) return ;
+	struct list_entry *tmp=l->first;
+	while(tmp){
+		struct neighbor_and_wait *nw=(struct neighbor_and_wait *)tmp->content;
+		if(*(nw->times_sent)==5){
+			struct list_entry *tmp2=tmp->next;
+			handle_inactive(soc,flood->index,nw->neighbor);
+			tmp=tmp2;
+			continue;
+
+		}
+		if(current_time>=nw->wait_time){
+			int i=send_data(soc,flood->data,nw->neighbor);
+			if(i==0){
+				perror("send");
+				return ;
+			}
+			struct list_entry *tmp2=tmp->next;
+			void *tmp=remove_elem(l,nw);
+			if(tmp){
+				//surement inutile en fait car stocké nulle part
+				struct neighbor_and_wait *n=(struct neighbor_and_wait *)tmp;
+				*(n->times_sent)=*(n->times_sent)+1;
+				n->wait_time=wait_time(*(nw->times_sent));
+				int i=add_elem(l,n);
+				if(i==0) return ;
+				tmp=tmp2;
+			}
+			//Pb, pas normal
+		}
+		else{
+			NEXTTIME=min(NEXTTIME,nw->wait_time);
+			break;
+		}
+
+	}
+}
+
+void flood_message(int soc,list flood){
+	for(struct list_entry *list=flood->first;!list;list=list->next){
+		struct flood_entry *f=(struct flood_entry *)list->content;
+		flood_message_to_neighbours(soc,f);
+	}
 
 }
 
@@ -110,11 +161,11 @@ void flood_message(int soc,struct flood_entry *flood){
 
 
 
-int compare_d(struct data_index *data,struct data_index *data2){
+short compare_d(struct data_index *data,struct data_index *data2){
 	return (data->id==data2->id && data->nonce==data2->nonce);
 }
 
-int compare_n(struct neighbor *key1,struct neighbor *key2){
+short compare_n(struct neighbor *key1,struct neighbor *key2){
 	for(int i = 0;i<16;i++){
 		if(key1->ip[i] < key2->ip[i]) return -1;
 		if(key1->ip[i] > key2->ip[i]) return 1;
@@ -125,7 +176,7 @@ int compare_n(struct neighbor *key1,struct neighbor *key2){
 	return 0;
 }
 
-int compare_w(void *nw, void *nw2){
+short compare_w(void *nw, void *nw2){
 	struct neighbor_and_wait *n1=(struct neighbor_and_wait *)nw;
 	struct neighbor_and_wait *n2=(struct neighbor_and_wait *)nw2;
 	return compare_n(n1->neighbor,n2->neighbor);

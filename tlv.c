@@ -11,7 +11,7 @@
 #include "list.h"
 #include "net_lib.h"
 #include "peer.h"
-
+#include "genlist.h"
 #include "util.h"
 
 
@@ -221,7 +221,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		//exit(EXIT_FAILURE);
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get_flood(&index);
+	struct flood_entry *flood=get(DATAF,&index);
 	//Si non vide
 	if(flood){
 			//retirer l'émetteur de la liste de voisins à inonder
@@ -230,20 +230,25 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	}
 	else{
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
-		struct list symmetric=get_symmetrical(NEIGHBORS);
+		list symmetric=get_symmetrical(NEIGHBORS);
 		struct ngb_entry ngb_ent;
 		ngb_ent.sym=&peer;
 		void *tmp=remove_elem(symmetric,&ngb_ent);
 		if(tmp!=NULL) free(tmp);
-		free(ngb_ent);
 		//symmetric=remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4
-		char msg[length+2];
+		char msg[PMTU];
 		msg[0]=4;
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
-		add_entry(&index,msg,symmetric);
+		struct flood_entry flood;
+		flood.index=&index;
+		flood.data=msg;
+		flood.sym_neighbors=symmetric;
+		if(!add_elem(DATAF,&flood)){
+			return 0;
+		}
 	}
 	if(*(tlv+13)==0){
 		//afficher le message
@@ -257,12 +262,9 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	struct data_index index;
 	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
-	struct flood_entry *flood=get_flood(&index);
-	if(flood){
-		remove_neighbor_from_flood(&index,&peer);
-		return 1;
-	}
-	//pas sur
+	//struct flood_entry *flood=get_flood(&index);
+	//if(flood){
+	remove_neighbor_from_flood(&index,&peer);
 	return 1;
 }
 

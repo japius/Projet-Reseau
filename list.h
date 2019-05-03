@@ -3,6 +3,7 @@
 #define NBDATA 10
 
 #include "struct.h"
+#include "genlist.h"
 
 
 struct ngb_entry{
@@ -20,7 +21,7 @@ struct flood_entry{
 };
 
 
-struct list_entry *init_list_entry(struct neighbor *peer,int times_sent);
+struct ngb_entry *init_ngb_entry(struct neighbor *peer,int times_sent);
 
 struct flood_entry *init_flood_entry(struct data_index *,char *,struct list *);
 
@@ -30,11 +31,8 @@ short add_neighbor_to_flood(struct data_index *,struct neighbor *peer);
 
 short remove_neighbor_from_flood(struct data_index *, struct neighbor *);
 
-short add_entry(struct data_index *data,char *msg,struct list *entry);
+short compare_n_s(void *c1,void *c2);
 
-short rm_entry(struct data_index *);
-
-int compare_n_s(void *c1,void *c2);
 struct flood_entry *get_flood(struct data_index *data);
 
 

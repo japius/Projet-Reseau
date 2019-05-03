@@ -10,7 +10,7 @@
 u_int64_t ID;
 tree *POTENTIAL;
 tree *NEIGHBORS;
-struct flood *DATAF;
+list DATAF;
 int NEXTTIME;
 //Mettre une liste ou une struct iov
 int NB_SYMETRICAL;

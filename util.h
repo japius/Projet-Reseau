@@ -5,11 +5,11 @@
 #include "peer.h"
 
 
-int compare_n(struct neighbor *key1,struct neighbor *key2);
+short compare_n(struct neighbor *key1,struct neighbor *key2);
 
-int compare_d(struct data_index *data,struct data_index *data2);
+short compare_d(struct data_index *data,struct data_index *data2);
 
-int compare_w(void *, void *);
+short compare_w(void *, void *);
 
 //MULTICAST LOCAL IPV6
 void discover_neighbors();

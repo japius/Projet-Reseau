@@ -100,7 +100,7 @@ short isasymetrical(tree *t){
   return !issymmetrical(t);
 }
 
-list get_symetrical(tree *t){
+list get_symmetrical(tree *t){
   return find_by(t,issymmetrical);
 }
 
@@ -122,6 +122,7 @@ list find_by(tree *t,  short (*func)(tree*)){
   if(!res) return 0;
   init_list(res,compare_n_s,sizeof(struct ngb_entry));
   find_by_aux(t, func, res);
+  return res;
 }
 
 

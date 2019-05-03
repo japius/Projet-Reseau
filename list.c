@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "util.h"
+#include "genlist.h"
 
 //Initialiser la liste de voisins à inonder
 struct  ngb_entry *init_ngb_entry(struct neighbor *peer,int times_sent){
@@ -39,21 +40,18 @@ struct flood_entry *init_flood_entry(struct data_index *index, char *data,struct
 
 //Ajouter un voisin dans une liste donnnée de personnes à inonder
 short add_neighbor_to_flood(struct data_index *index,struct neighbor *peer){
-	struct flood_entry *flood=get_flood(index);
+	struct flood_entry *flood=(struct flood_entry *)get(DATAF,index);
 	if(flood==NULL){
 		return 0;
 	}
 	struct ngb_entry l;
 	l.sym=peer;
 	l.times_sent=0;
-	struct list *entry=init_list(&l,sizeof(struct ngb_entry),flood->sym_neighbors);
-	if(entry==NULL) return 0;
-	flood->sym_neighbors=entry;
-	return 1;
+	return addLast(flood->sym_neighbors,&l);
 }
 
 
-int compare_n_s(void *c1,void *c2){
+short compare_n_s(void *c1,void *c2){
 	struct ngb_entry *n1=(struct ngb_entry *)c1;
 	struct ngb_entry *n2=(struct ngb_entry *)c2;
 	return compare_n(n1->sym,n2->sym);
@@ -61,14 +59,15 @@ int compare_n_s(void *c1,void *c2){
 
 //Retirer un voisin d'une liste de voisins à inonder
 short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
-	struct flood_entry *flood=get_flood(data);
-	if(flood==NULL) return 1;
-	struct list *entry=flood->sym_neighbors;
-	int i=0;
-	i=remove_element(&entry,peer,compare_n_s);
-}
-
-
-struct flood *init_data(){
-	return init_flood(NULL);
+	struct flood_entry *flood=(struct flood_entry *)get(DATAF,index);
+	if(flood==NULL){
+		return 0;
+	}
+	struct ngb_entry l;
+	l.sym=peer;
+	l.times_sent=0;
+	void *tmp=remove_elem(flood->sym_neighbors,&l);	
+	if(tmp) free(tmp);
+	//je suis pas sure de s'il faut free, vu que c'est la même adresse partout pour le voisin;
+	return 1;
 }

@@ -3,7 +3,7 @@ FLAGS= -Wall
 LDLIBS=-lm 
 #a changer
 NAME=main
-FILES = genlist.c net_lib.c list.c abr.c util.c tlv.c main.c#$(shell find $(SRCIDR) -name '')
+FILES = genlist.c list.c abr.c net_lib.c util.c tlv.c main.c#$(shell find $(SRCIDR) -name '')
 OBJ = $(FILES:%.c=%.o)
 
 ALL=$(NAME) clean
