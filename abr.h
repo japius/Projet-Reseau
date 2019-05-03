@@ -27,11 +27,11 @@ short add_potential(struct neighbor *key,struct ident *val);
 struct ident *get_ident(tree *t,struct neighbor *key);
 
 //A modifier
-short issymmetrical(struct ident *val);
+short issymmetrical(tree *t);
 short isasymetrical(tree *t);
 
 
-struct list *get_func(tree *t, short (*func)(tree*));
+struct list *find_by(tree *t, short (*func)(tree*));
 
 struct list *get_symmetrical(tree *t);
 

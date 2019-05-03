@@ -11,7 +11,7 @@
 #include "list.h"
 #include "net_lib.h"
 #include "peer.h"
-#include "genlist.h"
+
 #include "util.h"
 
 
@@ -230,11 +230,12 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	}
 	else{
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
-		struct list *symmetric=get_symmetrical(NEIGHBORS);
-		struct list_entry l;
-		l.sym=&peer;
-		l.times_sent=0;
-		remove_element(&symmetric,&l,compare_n_s);
+		struct list symmetric=get_symmetrical(NEIGHBORS);
+		struct ngb_entry ngb_ent;
+		ngb_ent.sym=&peer;
+		void *tmp=remove_elem(symmetric,&ngb_ent);
+		if(tmp!=NULL) free(tmp);
+		free(ngb_ent);
 		//symmetric=remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4

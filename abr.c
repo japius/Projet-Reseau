@@ -4,10 +4,11 @@
 #include <string.h>
 #include <unistd.h>
 #include "struct.h"
-#include "genlist.h"
 #include "abr.h"
 #include "peer.h"
 #include "util.h"
+#include "genlist.h"
+#include "list.h"
 #include "net_lib.h"
 
 
@@ -89,79 +90,65 @@ struct ident *get_ident(tree *t,struct neighbor *key){
 }
 
 //A modifier
-short issymmetrical(struct ident *val){
+short issymmetrical(tree *t){
   int now=get_seconds();
-  if(now-val->last_hello_long<120) return 1;
+  if(now-t->val->last_hello_long<120) return 1;
   return 0;
 }
 
 short isasymetrical(tree *t){
-  return !issymmetrical(t->val);
+  return !issymmetrical(t);
 }
 
-//Pour chercher tous les voisins symétriques
-struct list *get_symmetrical(tree *t){
-
-    if(t!=NULL){
-        if(issymmetrical(t->val)){
-          struct list_entry l;
-          l.sym=t->key;
-          l.times_sent=0;
-          if(t->left==NULL && t->right==NULL) return init_list(&l,sizeof(struct list_entry),NULL);
-          if(t->left==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->right));
-          if(t->right==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
-          struct list *entry=init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
-          //return add_node(get_symmetrical(t->right),get_last(t->left));
-          get_last(entry)->next=get_symmetrical(t->right);
-          return entry;
-        }
-    }
-    return NULL;;
+list get_symetrical(tree *t){
+  return find_by(t,issymmetrical);
 }
 
-struct list *get_func(tree *t, short (*func)(tree*)){
 
+void find_by_aux(tree *t, short (*func)(tree*), list l){
     if(t!=NULL){
+        if(t->left !=NULL) find_by_aux(t->left,func,l);
         if(func(t)){
-          struct list_entry l;
-          l.sym=t->key;
-          l.times_sent=0;
-          if(t->left==NULL && t->right==NULL) return init_list(&l,sizeof(struct list_entry),NULL);
-          if(t->left==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->right));
-          if(t->right==NULL) return init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
-          struct list *entry=init_list(&l,sizeof(struct list_entry),get_symmetrical(t->left));
-          //return add_node(get_symmetrical(t->right),get_last(t->left));
-          get_last(entry)->next=get_func(t->right,func);
-          return entry;
+          struct ngb_entry *ent = init_ngb_entry(t->key,0);
+          if(l!=NULL) addLast(l,ent);
         }
+        if(t->right !=NULL) find_by_aux(t->right,func,l);
     }
-    return NULL;;
+}
+
+list find_by(tree *t,  short (*func)(tree*)){
+  if(!t) return 0;
+  list res = malloc(sizeof(struct list));
+  if(!res) return 0;
+  init_list(res,compare_n_s,sizeof(struct ngb_entry));
+  find_by_aux(t, func, res);
 }
 
 
 
-/*struct list_entry *get_symmetrical(tree *t){
+
+/*struct ngb_entry *get_symmetrical(tree *t){
   if(t!=NULL){
-      struct list_entry *entry=NULL;
+      struct ngb_entry *entry=NULL;
       get_sym_aux(entry,tree);
       return entry;
   }
   return NULL;
 }
-void get_sym_aux(struct list_entry *entry,tree *t){
+void get_sym_aux(struct ngb_entry *entry,tree *t){
     if(issymmetrical(t->val)){
       if(entry==NULL){
-        entry=init_list_entry(t->key,0,NULL);
+        entry=init_ngb_entry(t->key,0,NULL);
         get_sym_aux(entry->next,)
-      else entry->next=init_list_entry(t->key,0,NULL);
+      else entry->next=init_ngb_entry(t->key,0,NULL);
     }
 }
 
-struct list_entry *get_symmetrical(tree *t){
+struct ngb_entry *get_symmetrical(tree *t){
   if(t!=NULL){
     if(issymmetrical(t->val)){
-      struct list_entry *sym=init_list_entry(t->key,0,NULL)
-      struct list_entry *sym2=get_symmetrical(t->left),*sym3=get_symmetrical(t->right);
+      struct ngb_entry *sym=init_ngb_entry(t->key,0,NULL)
+      struct ngb_entry *sym2=get_symmetrical(t->left),*sym3=get_symmetrical(t->right);
 
       if(sym2){
         sym2->next=sym;
@@ -187,11 +174,6 @@ int number_of_neighbors(tree *t){
   return 1+number_of_neighbors(t->left)+number_of_neighbors(t->right);
 }
 
-//Le nombre de voisins symétriques
-int number_of_symmetrical(tree *t){
-  struct list *list=get_symmetrical(t);
-  return length(list);
-}
 
 //Renvoie un pointeur vers le maximum du sous arbre de racine r
 tree *maxUnder(tree *r){
@@ -199,7 +181,7 @@ tree *maxUnder(tree *r){
   return maxUnder(r->right);
 }
 
-static tree *remove_min(tree *t){
+tree *remove_min(tree *t){
   if(!t->left->left){
     tree *l=t->left->left;
     tree *r=t->left->right;

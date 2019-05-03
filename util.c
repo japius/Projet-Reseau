@@ -8,7 +8,7 @@
 #include "net_lib.h"
 #include <string.h>
 #include "util.h"
-#include "genlist.h"
+
 #include "list.h"
 
 
@@ -72,46 +72,6 @@ int send_data(int soc, char *tlv,struct neighbor *key){
 }
 
 void flood_message(int soc,struct flood_entry *flood){
-	int current_time=get_seconds();
-	//struct list *entry;
-	struct list *list=get_wait_list(flood);
-	if(list==NULL) return;
-	struct list *tmp=list;
-	again:
-		while(tmp){
-			struct neighbor_and_wait *nw=(struct neighbor_and_wait *)tmp->content;
-			if(*(nw->times_sent)==5){
-				handle_inactive(soc,flood,nw->neighbor);
-				//A revoir ici, ne pas réutiliser un pointeur qu'on a free
-				struct list *tmp2=tmp->next;
-				int i=remove_element(&list,nw,compare_w);
-				if(i==0){
-					perror("remove");
-					return;
-				}
-				tmp=tmp2;
-				continue;
-			}
-			if(current_time>=nw->wait_time){
-				//verifier le retour de send_message
-				int i=send_data(soc,flood->data,nw->neighbor);
-				if(i==0){
-					perror("send_data");
-					return;
-				}
-				struct list *tmp2=tmp->next;
-				//i=move_element(list,nw,wait_time(*(nw->times_sent)),1);
-				if(i==0) return;
-				//pas sur
-				tmp=tmp2;
-			}
-			else{
-				NEXTTIME=min(NEXTTIME,nw->wait_time);
-				goto again;
-				break;
-				//on recommce, faire un goto ou une boucle dans une fonction séparée
-			}
-		}
 }
 
 

@@ -3,7 +3,7 @@
 
 #include "struct.h"
 
-struct list_entry{
+struct ngb_entry{
 	struct neighbor *sym;
 	int times_sent;
 	//int wait_time;
@@ -17,12 +17,6 @@ struct flood_entry{
 	struct list *sym_neighbors;
 };
 
-//La liste d'inondations 
-struct flood{
-	struct list *first;
-	struct list *last;
-
-};
 
 struct list_entry *init_list_entry(struct neighbor *peer,int times_sent);
 

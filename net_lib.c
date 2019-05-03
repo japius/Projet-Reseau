@@ -11,8 +11,8 @@
 #include <unistd.h>
 #include <string.h>
 #include "net_lib.h"
-#include "peer.h"
 #include "genlist.h"
+#include "peer.h"
 #include "tlv.h"
 
 int init_socket_client_udp_v2(){
@@ -79,25 +79,6 @@ int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
 	return sendto(fd,buf,taille,0,(struct sockaddr*)&server,sizeof(server));
 }
 
-/*int send_message(int fd,void *buf,size_t taille,struct neighbor rcpt){
-	struct sockaddr_in6 server;
-	//server.sin6_len = sizeof(server);
-	server.sin6_family = AF_INET6;
-	server.sin6_flowinfo = 0;
-	server.sin6_port = htons(rcpt.port);
-	struct in6_addr tmp;
-	memcpy(&tmp,&(rcpt.ip),16);
-	server.sin6_addr = tmp;
-	struct iovec iov[taille];
-	//mettrre le message et la longeur totale dans la 1ere case
-	//mettre un tlv par case restante et sa longueur
-	struct msghdr msg;
-	msg.msg_name=&server;
-	msg.msg_namelen=sizeof(server);
-	msg.msg_iov=iov;
-	msg.msg_iovlen=taille;
-	return sendmsg(fd,msg,0)
-}*/
 int send_to_everyone(int fd, void *buf, size_t length, tree *people){
 	if(!people) return 0;
 	int res = (send_message(fd,buf,length,*(people->key))>0)?1:0;
@@ -128,8 +109,7 @@ int send_symetrical_everyone(int fd, tree *people){
 	size_t size = 0;
 	int res =0;
 	int count = 0;
-	for(struct list *temp = sym;temp;temp=temp->next){
-		struct list_entry *tmp=(struct list_entry *)temp->content;
+	for(struct ngb_entry *tmp=remove_first(sym);tmp!=NULL;tmp=remove_first(sym)){
 		if(tlv_neighbour(msg.body+size,PMTU-4-size,*(tmp->sym))<0){
 			msg.body_length=htons(size);
 			res = send_to_everyone(fd,&msg,size+4,people);
@@ -138,16 +118,15 @@ int send_symetrical_everyone(int fd, tree *people){
 		}
 		size+=20;
 		count++;
+		free(tmp);
 	}
 	NB_SYMETRICAL=count;
-
 
 	if(size>0){
 		msg.body_length=htons(size);
 		res = send_to_everyone(fd,&msg,size+4,people);
 	}
-
-	free_list(sym);
+	free(sym);
 	return res;
 }
 
@@ -162,19 +141,19 @@ int send_shorthello_everyone(int fd, tree *people){
 
 int send_goaway_asymetrical(int fd){
 	if(!NEIGHBORS) return 0;
-	struct list *sym= get_func(NEIGHBORS,isasymetrical);
+	struct list *sym= find_by(NEIGHBORS,isasymetrical);
 	struct message_h msg;
 	msg.magic=93;
 	msg.version=2;
 	int tmp = tlv_goaway(msg.body,PMTU-4,2,"",0);
 	msg.body_length = htons(tmp);
 	int count = 0;
-	for(struct list *temp = sym;temp;temp=temp->next){
-		struct list_entry *tmp=(struct list_entry *)temp->content;
+	for(struct ngb_entry *tmp=remove_first(sym);tmp!=NULL;tmp=remove_first(sym)){
 		if(send_message(fd,&msg,tmp+4,*(tmp->sym))>0) count ++;
 		remove_neighbor(tmp->sym);
+		free(tmp);
 	}
-	free_list(sym);
+	free(sym);
 	return count;
 }
 

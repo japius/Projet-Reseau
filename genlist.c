@@ -1,100 +1,131 @@
-#include "genlist.h"
 #include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "genlist.h"
 
-struct list *init_list(void *content, size_t content_size,struct list *next){
-	struct list *list=malloc(sizeof(struct list));
-	if(list==NULL){
-		perror("malloc");
-		return NULL;
+void init_list(list this,short (*comp)(void *, void*), size_t cont_len){
+	this->length = 0;
+	this->first=0;
+	this->last=0;
+	this->compare_f = comp;
+	this->content_len = cont_len;
+}
+
+static list_entry *init_entry(list_entry *prev, list_entry *next, void *elem){
+	list_entry *res = malloc(sizeof(list_entry));
+	if(!res) return 0;
+	if(prev!=NULL){
+		prev->next=res;
 	}
-	list->content=malloc(content_size);
-	if(list->content==NULL){
-		free(list);
-		perror("malloc");
-		return NULL;
+	res->next=next;
+	res->content=elem;
+	return res;
+}
+
+short addLast(list this,void *elem){
+	if(!this->last){
+		this->first =init_entry(0,0,elem);
+		if(!this->first) return 0;
+		this->last=this->first;
+		this->length++;
+		return 1;
 	}
-	if(content) memmove(&list->content,&content,content_size);
-	list->next=next;
-	return list;
+	list_entry *tmp = init_entry(this->last,0,elem); 
+	if(!tmp) return 0;
+	this->last=tmp;
+	this->length++;
+	return 1;
 }
 
-void free_node(struct list *node){
-	if(node){
-		free(node->content);
-		free(node);
+short add_elem(list this, void *elem){
+	if(!this->last){
+		this->first =init_entry(0,0,elem);
+		if(!this->first) return 0;
+		this->last=this->first;
+		this->length++;
+		return 1;
 	}
-}
-
-//rajouter en parametre le free node générique
-void free_list(struct list *list){
-	if(list){
-		free_list(list->next);
-		free_node(list);
+	short dif = this->compare_f(this->first->content,elem);
+	if(dif<0){
+		list_entry *tmp = init_entry(0,this->first,elem); 
+		if(!tmp) return 0;
+		this->first = tmp;
+		this->length++;
+		return 1;
 	}
-}
-
-struct list *add_element_aux(struct list *node,void *content,size_t content_size,int (*compare)(void *content1,void *content2)){
-	int comp=compare(node->content,content);
-	if(node==NULL) return init_list(content,content_size,NULL);
-	if(comp>0){
-		return init_list(content,content_size,node);
+	if(dif==0){
+		return 2;
 	}
-	if(comp<0){
-		node->next=add_element_aux(node->next,content,content_size,compare);
-		return node;
+
+	for(list_entry *ent=this->first;!ent->next;ent=ent->next){
+		dif=this->compare_f(ent->next->content,elem);
+		if(dif<0){
+			list_entry *tmp = init_entry(ent,ent->next,elem); 
+			if(!tmp) return 0;
+			this->length++;
+			return 1;
+		}
+		if(dif==0){
+			return 2;
+		}
 	}
-	return node;
+
+	return addLast(this, elem);
 }
 
-short add_element(struct list **list,void *content,size_t content_size,int (*compare)(void *content1,void *content2)){
-	if(*list==NULL){
-		*list=init_list(content,content_size,NULL);
-		return (*list!=NULL);
+void *remove_first(list this){
+	if(!this->first)
+		return 0;
+	if(this->first==this->last)
+		this->last=NULL;
+	void *cont=this->first->content;
+	list_entry *tmp = this->first;
+	this->first=this->first->next;
+	free(tmp);
+	this->length--;
+	return cont;
+}
+
+void *remove_elem(list this, void *elem){
+	if(this->compare_f(this->first->content,elem)==0){
+		return remove_first(this);
 	}
-	(*list)->next=add_element_aux((*list)->next,content,content_size,compare);
-	return (*list)->next!=NULL;
-}
-
-void *get_element(struct list *list,void *content,int (*compare)(void *content1,void *content2)){
-	if(list==NULL) return NULL;
-	int comp=compare(list->content,content);
-	if(comp==0) return list->content;
-	if(comp<0) return NULL;
-	return get_element(list->next,content,compare);
-}
-
-struct list *remove_element_aux(struct list *node,void *content,int (*compare)(void *content1,void *content2)){
-	int comp=compare(node->content,content);
-	if(node==NULL) return NULL;
-	if(comp==0){
-		struct list *res=node->next;
-		free_node(node);
-		return res;
+	for(list_entry *ent=this->first;!ent->next;ent=ent->next){
+		if(this->compare_f(ent->next->content,elem)==0){
+			list_entry *next = ent->next->next;
+			void * cont = ent->next->content;
+			free(ent->next);
+			ent->next=next;
+			if(next==NULL){
+				this->last=ent;
+				this->length--;
+				return cont;
+			}
+		}
 	}
-	node->next=remove_element_aux(node->next,content,compare);
-	return node;
+	return 0;
 }
 
-
-short remove_element(struct list **list, void *content,int (*compare)(void *content1,void *content2)){
-	if(*list==NULL) return 1;
-	*list=remove_element_aux(*list,content,compare);
-	return (*list!=NULL);
-}
-
-struct list *get_last(struct list *node){
-	if(node){
-		if(node->next) return get_last(node->next);
-		return node;
+void *get(list this, void *elem){
+	for(list_entry *ent=this->first;!ent;ent=ent->next){
+		if(this->compare_f(ent->content,elem)!=0) return ent->content;
 	}
-	return NULL;
+	return 0;
 }
 
-
-int length(struct list *list){
-	if(list==NULL) return 0;
-	return 1+length(list->next);
+void init_compare(list this,short (*comp)(void *, void *)){
+	this->compare_f = comp;
 }
+
+void free_list(list this, void *(free_f)(void *content)){
+	for(list_entry *ent=this->first;!ent;){
+		if(free_f!=NULL){
+			free_f(ent->content);
+		}
+		list_entry *tmp = ent->next;
+		free(ent);
+		ent=tmp;
+	}
+	this->length=0;
+	this->first=NULL;
+	this->last=NULL;
+}
+
