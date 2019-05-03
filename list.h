@@ -3,6 +3,8 @@
 
 #include "struct.h"
 
+#define NBDATA 10
+
 struct list_entry{
 	struct neighbor *sym;
 	int times_sent;
@@ -21,6 +23,7 @@ struct flood_entry{
 struct flood{
 	struct list *first;
 	struct list *last;
+	int length;
 
 };
 

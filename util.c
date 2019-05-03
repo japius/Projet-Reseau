@@ -71,6 +71,22 @@ int send_data(int soc, char *tlv,struct neighbor *key){
 	return send_message(soc,&msg,msg_length,*key);
 }
 
+int add_to_neighbor_message(char *tlv,struct neighbor *key){
+	if(get_message(key)==NULL){
+		char *body;
+		struct message_h msg;
+		msg.magic=93;
+		msg.version=2;
+		int body_length=tlv[1],msg_length=body_length+4;
+		memcpy(&msg.body_length,&body_length,2);
+		memcpy(msg.body,tlv,body_length);
+		//copier dans le message à envoyer au neighbor
+	}
+	//sinon
+	//juste rajouter le tlv si pas de problème avec le PMTU
+	return 1;
+}
+
 void flood_message(int soc,struct flood_entry *flood){
 	int current_time=get_seconds();
 	//struct list *entry;
@@ -94,6 +110,9 @@ void flood_message(int soc,struct flood_entry *flood){
 			}
 			if(current_time>=nw->wait_time){
 				//verifier le retour de send_message
+				// il faudrait plutot rajouter dans la liste de messages à envoyer du voisins
+				//Si la liste est non vide on rajoute le tlv sinon le message
+				//Faudrait faire un timeout sur le moment de l'envoi aussi
 				int i=send_data(soc,flood->data,nw->neighbor);
 				if(i==0){
 					perror("send_data");

@@ -48,11 +48,13 @@ struct flood *init_flood(struct list *first){
 		perror("malloc");
 		return NULL;
 	}
+	current->length=0;
 	current->first=first;
 	if(first){
 		struct list *tmp=first;
 		while(tmp->next){
 			tmp=tmp->next;
+			current->length ++;
 		}
 		current->last=tmp;	
 		current->last->next=first;
@@ -108,6 +110,7 @@ short add_entry(struct data_index *data,char *msg,struct list *entry){
 		DATAF->last->next=init_list(&f,sizeof(struct flood_entry),DATAF->first);
 		if(DATAF->last->next==NULL) return 0;
 		DATAF->last=DATAF->last->next;
+		DATAF->length ++;
 		//DATAF->last->next=DATAF->first;
 		return 1;
 	}
@@ -125,7 +128,8 @@ short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
 	struct flood_entry *flood=get_flood(data);
 	if(flood==NULL) return 1;
 	struct list *entry=flood->sym_neighbors;
-	return remove_element(&entry,peer,compare_n_s);
+	int i=0;
+	i=remove_element(&entry,peer,compare_n_s);
 }
 
 
@@ -136,6 +140,7 @@ short rm_entry_aux(struct  list *curr,struct data_index *index){
 		if(compare_d(f->index,index)==0){
 			struct list *tmp=curr->next;
 			curr->next=curr->next->next;
+			DATAF->length=DATAF->length-1;
 			free_entry(f);
 			free(tmp);
 			return 1;
@@ -153,6 +158,7 @@ short rm_entry(struct data_index *key){
 			if(compare_d(f->index,key)==0){
 				struct list *tmp=DATAF->first;
 				DATAF->first=DATAF->first->next;
+				DATAF->length=DATAF->length-1;
 				free_entry(f);
 				free(tmp);
 				return 1;
