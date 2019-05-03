@@ -1,7 +1,9 @@
 #ifndef LIST_H
 #define LIST_H
+#define NBDATA 10
 
 #include "struct.h"
+
 
 struct ngb_entry{
 	struct neighbor *sym;

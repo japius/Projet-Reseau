@@ -52,6 +52,7 @@ short add_neighbor_to_flood(struct data_index *index,struct neighbor *peer){
 	return 1;
 }
 
+
 int compare_n_s(void *c1,void *c2){
 	struct ngb_entry *n1=(struct ngb_entry *)c1;
 	struct ngb_entry *n2=(struct ngb_entry *)c2;
@@ -63,8 +64,10 @@ short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
 	struct flood_entry *flood=get_flood(data);
 	if(flood==NULL) return 1;
 	struct list *entry=flood->sym_neighbors;
-	return remove_element(&entry,peer,compare_n_s);
+	int i=0;
+	i=remove_element(&entry,peer,compare_n_s);
 }
+
 
 struct flood *init_data(){
 	return init_flood(NULL);

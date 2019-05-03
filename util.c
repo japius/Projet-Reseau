@@ -71,7 +71,24 @@ int send_data(int soc, char *tlv,struct neighbor *key){
 	return send_message(soc,&msg,msg_length,*key);
 }
 
+int add_to_neighbor_message(char *tlv,struct neighbor *key){
+	if(get_message(key)==NULL){
+		char *body;
+		struct message_h msg;
+		msg.magic=93;
+		msg.version=2;
+		int body_length=tlv[1],msg_length=body_length+4;
+		memcpy(&msg.body_length,&body_length,2);
+		memcpy(msg.body,tlv,body_length);
+		//copier dans le message à envoyer au neighbor
+	}
+	//sinon
+	//juste rajouter le tlv si pas de problème avec le PMTU
+	return 1;
+}
+
 void flood_message(int soc,struct flood_entry *flood){
+
 }
 
 
