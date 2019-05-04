@@ -40,7 +40,7 @@ struct flood_entry *init_flood(struct data_index *index, char *data,struct list 
 
 int count;
 void free_flood(struct flood_entry *flood){
-	//free(index);
+	free(flood->index);
 	printf("//////// appelle %d //////////////////////////////////\n",++count);
 	free_list(flood->sym_neighbors,free);
 	free(flood->sym_neighbors);
@@ -67,7 +67,9 @@ short compare_n_s(void *c1,void *c2){
 	struct ngb_entry *n1=(struct ngb_entry *)c1;
 	struct ngb_entry *n2=(struct ngb_entry *)c2;
 	if(compare_n(n1->sym,n2->sym)==0) return 0;
-	return n1->wait_time-n2->wait_time;
+	int i=n1->wait_time-n2->wait_time;
+	if(i==0) return 1;
+	return i;
 	//return compare_n(n1->sym,n2->sym);
 }
 

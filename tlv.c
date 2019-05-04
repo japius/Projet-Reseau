@@ -230,10 +230,12 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	else{
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
 		list symmetric=get_symmetrical(NEIGHBORS);
+		if(!symmetric) return 0;
 		struct ngb_entry ngb_ent;
 		ngb_ent.sym=&peer;
 		void *tmp=remove_elem(symmetric,&ngb_ent);
 		if(tmp!=NULL) free(tmp);
+		//printf("un petit test : %d",ntohs(peer.port));
 		//symmetric=remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4
@@ -243,6 +245,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		memcpy(msg+2,tlv,length);
 		struct flood_entry *flood = init_flood(&index,msg,symmetric);
 		void *must_free = add_limited(&DATAF,&flood,NBDATA);
+		print_list(&DATAF);
 		if(!must_free){
 			return 0;
 		}

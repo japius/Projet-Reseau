@@ -124,16 +124,31 @@ void init_compare(list this,short (*comp)(void *, void *)){
 }
 
 void free_list(list this, void *(free_f)(void *content)){
+	if(this==NULL) printf("nulllllllllllll////////////////////////////////\n");
 	for(list_entry *ent=this->first;ent;){
+		//VALGRIND_CHECK_MEM_IS_DEFINED(ent,sizeof(struct list_entry));
 		if(free_f!=NULL){
-			free_f(ent->content);
+			printf("je suis icci/////////////////////////////////////////////////////\n");
+			//free_f(ent->content);
+			printf("ouuuuuaaaaaaaiiis////////////////////////////////////////////////////////////////\n");
 		}
+		printf("%p   /////////////////////////////////////////////////////////////////////////\n",ent);
+		printf("%p   /////////////////////////////////////////////////////////////////////////\n",ent->next);
 		list_entry *tmp = ent->next;
-		free(ent);
+		//free(ent);
 		ent=tmp;
+		printf("laaaaaaaa/////////////////////////////////////////////////////////////////\n");
 	}
+	printf("dsfgtfergtrhyyj//////////////////////////////////////////////////////////////////////\n");
 	this->length=0;
 	this->first=NULL;
 	this->last=NULL;
+}
+
+void print_list(list this){
+	if(this==NULL) printf("sorrrrrrrrrry////////////////////////////////////////////////////////////////\n");
+	for(list_entry *l=this->first;l;l=l->next){
+		printf(l->content);
+	}
 }
 
