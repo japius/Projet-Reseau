@@ -5,9 +5,10 @@
 #include "peer.h"
 
 
-short compare_n(struct neighbor *key1,struct neighbor *key2);
+short compare_n(void *,void *);
 
-short compare_d(struct data_index *data,struct data_index *data2);
+short compare_d(void *,void *);
+//struct data_index *data,struct data_index *data2);
 
 short compare_w(void *, void *);
 

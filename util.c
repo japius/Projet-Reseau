@@ -161,11 +161,15 @@ void flood_message(int soc,struct flood_entry *flood){
 
 
 
-short compare_d(struct data_index *data,struct data_index *data2){
+short compare_d(void *c1,void *c2){
+	struct data_index *data=(struct data_index *)c1;
+	struct data_index *data2=(struct data_index *)c2;
 	return (data->id==data2->id && data->nonce==data2->nonce);
 }
 
-short compare_n(struct neighbor *key1,struct neighbor *key2){
+short compare_n(void *c1,void *c2){
+	struct neighbor *key1=(struct neighbor *)c1;
+	struct neighbor *key2=(struct neighbor *)c2;
 	for(int i = 0;i<16;i++){
 		if(key1->ip[i] < key2->ip[i]) return -1;
 		if(key1->ip[i] > key2->ip[i]) return 1;
