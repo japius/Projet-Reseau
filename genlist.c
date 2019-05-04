@@ -1,6 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "genlist.h"
-#include "peer.h"
 
 void init_list(list this,short (*comp)(void *, void*), size_t cont_len){
 	this->length = 0;
@@ -144,3 +144,33 @@ void free_list(list this, void *(free_f)(void *content)){
 	}*/
 }
 
+/*short comp(void *a, void *b){
+	char n = *((char *)a);
+	char m = *((char *)b);
+	return (short)m-n;
+}
+void func_aux(list data){
+	char *str = "abcdefghijklmni";
+	init_list(data,comp,sizeof(char));
+	for(int i = 0; i< 10;i++)
+		add_elem(data,str+i);
+	printf("taille %ld\n",data->length);
+	remove_elem(data, str+5);
+	remove_elem(data, str+9);
+	remove_elem(data, str+1);
+	remove_elem(data, str+0);
+	remove_elem(data, str+5);
+	add_elem(data,str+1);
+	add_elem(data,str+3);
+	add_elem(data,str+5);
+	add_elem(data,str+9);
+}
+
+int main(int argc, char const *argv[])
+{
+	struct list data;
+	free_list(&data,0);
+	//printf("point %p",remove_first(&data));
+
+	return 0;
+}*/
