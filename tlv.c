@@ -211,7 +211,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		struct message_h msg;
 		msg.magic=93;
 		msg.version=2;
-		msg.body_length=14;
+		msg.body_length=htons(14);
 		memcpy(msg.body,body,12);
 		send_message(soc,&msg,18,peer);
 	}
