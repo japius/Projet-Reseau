@@ -56,7 +56,7 @@ short add_elem(list this, void *elem){
 		return 2;
 	}
 
-	for(list_entry *ent=this->first;!ent->next;ent=ent->next){
+	for(list_entry *ent=this->first;ent->next;ent=ent->next){
 		dif=this->compare_f(ent->next->content,elem);
 		if(dif<0){
 			list_entry *tmp = init_entry(ent,ent->next,elem); 
@@ -89,7 +89,7 @@ void *remove_elem(list this, void *elem){
 	if(this->compare_f(this->first->content,elem)==0){
 		return remove_first(this);
 	}
-	for(list_entry *ent=this->first;!ent->next;ent=ent->next){
+	for(list_entry *ent=this->first;ent->next;ent=ent->next){
 		if(this->compare_f(ent->next->content,elem)==0){
 			list_entry *next = ent->next->next;
 			void * cont = ent->next->content;
@@ -124,7 +124,7 @@ void init_compare(list this,short (*comp)(void *, void *)){
 }
 
 void free_list(list this, void *(free_f)(void *content)){
-	for(list_entry *ent=this->first;!ent;){
+	for(list_entry *ent=this->first;ent;){
 		if(free_f!=NULL){
 			free_f(ent->content);
 		}
