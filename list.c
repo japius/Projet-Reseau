@@ -19,7 +19,7 @@ struct  ngb_entry *init_ngb_entry(struct neighbor *peer,int times_sent){
 }
 
 //Initialiser la donnée à inonder et sa liste de voisins à inonder
-struct flood_entry *init_flood_entry(struct data_index *index, char *data,struct list *sym_neighbors){
+struct flood_entry *init_flood(struct data_index *index, char *data,struct list *sym_neighbors){
 	struct flood_entry *current=malloc(sizeof(struct flood_entry));
 	if(current==NULL){
 		perror("malloc");
@@ -33,14 +33,21 @@ struct flood_entry *init_flood_entry(struct data_index *index, char *data,struct
 	}
 	if(index) memmove(current->index,index,sizeof(struct data_index));
 	current->sym_neighbors=sym_neighbors;
-	current->data=data;
+	memcpy(current->data,data,data[1]+2);
 	return current;
+}
+
+void free_flood(struct flood_entry *flood){
+	free(index);
+	free_list(flood->sym_neighbors,free);
+	free(flood->sym_neighbors);
+	free(flood);
 }
 
 
 //Ajouter un voisin dans une liste donnnée de personnes à inonder
 short add_neighbor_to_flood(struct data_index *index,struct neighbor *peer){
-	struct flood_entry *flood=(struct flood_entry *)get(DATAF,index);
+	struct flood_entry *flood=(struct flood_entry *)get(&DATAF,index);
 	if(flood==NULL){
 		return 0;
 	}
@@ -59,7 +66,7 @@ short compare_n_s(void *c1,void *c2){
 
 //Retirer un voisin d'une liste de voisins à inonder
 short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
-	struct flood_entry *flood=(struct flood_entry *)get(DATAF,index);
+	struct flood_entry *flood=(struct flood_entry *)get(&DATAF,index);
 	if(flood==NULL){
 		return 0;
 	}

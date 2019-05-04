@@ -148,10 +148,10 @@ int send_goaway_asymetrical(int fd){
 	int tmp = tlv_goaway(msg.body,PMTU-4,2,"",0);
 	msg.body_length = htons(tmp);
 	int count = 0;
-	for(struct ngb_entry *tmp=remove_first(sym);tmp!=NULL;tmp=remove_first(sym)){
-		if(send_message(fd,&msg,tmp+4,*(tmp->sym))>0) count ++;
-		remove_neighbor(tmp->sym);
-		free(tmp);
+	for(struct ngb_entry *ent=remove_first(sym);ent!=NULL;ent=remove_first(sym)){
+		if(send_message(fd,&msg,tmp+4,*(ent->sym))>0) count ++;
+		remove_neighbor(ent->sym);
+		free(ent);
 	}
 	free(sym);
 	return count;

@@ -16,16 +16,14 @@ struct ngb_entry{
 struct flood_entry{
 	struct data_index *index;
 	//A revoir, ptet autre chose que MAX_SIZE
-	char *data;
+	char data[PMTU];
 	struct list *sym_neighbors;
 };
 
 
 struct ngb_entry *init_ngb_entry(struct neighbor *peer,int times_sent);
 
-struct flood_entry *init_flood_entry(struct data_index *,char *,struct list *);
-
-struct flood *init_flood(struct list *);
+struct flood_entry *init_flood(struct data_index *,char *,struct list *);
 
 short add_neighbor_to_flood(struct data_index *,struct neighbor *peer);
 
@@ -33,11 +31,8 @@ short remove_neighbor_from_flood(struct data_index *, struct neighbor *);
 
 short compare_n_s(void *c1,void *c2);
 
-struct flood_entry *get_flood(struct data_index *data);
 
+void free_flood(struct flood_entry *flood);
 
-void free_flood(struct flood *flood);
-
-void free_entry(struct flood_entry *entry);
 
 #endif

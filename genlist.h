@@ -21,6 +21,7 @@ typedef struct list* list;
 void init_list(list this,short (*comp)(void *, void*), size_t cont_len);
 short addLast(list this,void *elem);
 short add_elem(list this, void *elem);
+void *add_limited(list this, void *elem, int max_t);
 void *remove_first(list this);
 void *remove_elem(list this, void *elem);
 void *get(list this, void *elem);

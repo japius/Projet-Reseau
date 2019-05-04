@@ -221,7 +221,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		//exit(EXIT_FAILURE);
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get(DATAF,&index);
+	struct flood_entry *flood=get(&DATAF,&index);
 	//Si non vide
 	if(flood){
 			//retirer l'émetteur de la liste de voisins à inonder
@@ -242,13 +242,12 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		msg[0]=4;
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
-		struct flood_entry flood;
-		flood.index=&index;
-		flood.data=msg;
-		flood.sym_neighbors=symmetric;
-		if(!add_elem(DATAF,&flood)){
+		struct flood_entry *flood = init_flood(&index,msg,symmetric);
+		void *must_free = add_limited(&DATAF,&flood,NBDATA);
+		if(!must_free){
 			return 0;
 		}
+		free_flood(must_free);
 	}
 	if(*(tlv+13)==0){
 		//afficher le message
