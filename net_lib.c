@@ -150,7 +150,7 @@ int send_goaway_asymetrical(int fd){
 	int count = 0;
 	for(struct ngb_entry *ent=remove_first(sym);ent!=NULL;ent=remove_first(sym)){
 		if(send_message(fd,&msg,tmp+4,*(ent->sym))>0) count ++;
-		remove_neighbor(ent->sym);
+		remove_neighbor_everywhere(ent->sym);
 		free(ent);
 	}
 	free(sym);

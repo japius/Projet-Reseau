@@ -4,6 +4,7 @@
 #include "struct.h"
 #include "peer.h"
 
+void flood_messages(int soc,list flood);
 
 short compare_n(void *,void *);
 
@@ -16,6 +17,8 @@ short compare_w(void *, void *);
 void discover_neighbors();
 
 int get_seconds();
+
+int wait_time(int times_sent);
 
 int max(int x,int y);
 

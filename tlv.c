@@ -119,7 +119,7 @@ int tlv_ack(unsigned char *body,size_t bufsize, u_int64_t id,u_int32_t nonce){
 		*(body+1)=length;
 		memcpy(body+2,&id,id_size);
 		memcpy(body+2+id_size,&nonce,nonce_size);
-		return 1;
+		return id_size+nonce_size+2;
 	}
 	return 0;
 }
@@ -204,16 +204,15 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	struct data_index index;
 	memcpy(&index.id,tlv,8);
 	memcpy(&index.nonce,tlv+8,4);
-	//envoyer un acquittement
-	unsigned char body[13];
-	if(tlv_ack(body,12,index.id,index.nonce)){
+	struct message_h msg;
+	msg.magic=93;
+	msg.version=2;
+	int size=0;
+	if(size=tlv_ack(msg.body,PMTU-4,index.id,index.nonce)){
 		//créer le message_h et faire un send message_h
-		struct message_h msg;
-		msg.magic=93;
-		msg.version=2;
-		msg.body_length=htons(14);
-		memcpy(msg.body,body,12);
-		send_message(soc,&msg,18,peer);
+		msg.body_length=htons(size);
+		int i=send_message(soc,&msg,size+4,peer);
+		printf("j'ai envoyé un ack %d\n",i);
 	}
 	else{
 		perror("tlv");
@@ -249,9 +248,9 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		}
 		free_flood(must_free);
 	}
-	if(*(tlv+13)==0){
+	if(*(tlv+12)==0){
 		//afficher le message
-		write(1,tlv+14,length-13);
+		write(2,tlv+13,length);
 	}
 	return 1;
 }
@@ -269,7 +268,7 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
-	return remove_neighbor(&peer);
+	return remove_neighbor_everywhere(&peer);
 }
 
 

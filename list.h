@@ -9,7 +9,7 @@
 struct ngb_entry{
 	struct neighbor *sym;
 	int times_sent;
-	//int wait_time;
+	int wait_time;
 };
 
 //Un noeud de la liste d'inondations, soit un couple (ID,Nonce) et une liste de voisins à inonder
