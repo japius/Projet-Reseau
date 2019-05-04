@@ -124,16 +124,23 @@ void init_compare(list this,short (*comp)(void *, void *)){
 }
 
 void free_list(list this, void *(free_f)(void *content)){
+	printf("Le list vaut %p\n",this);
+	printf("Le premier eleme vaux %p\n",this->first );
 	for(list_entry *ent=this->first;ent;){
 		if(free_f!=NULL){
-			free_f(ent->content);
+			//free_f(ent->content);
 		}
+		printf("voici ent = %p\n",ent );
 		list_entry *tmp = ent->next;
-		free(ent);
+		//free(ent);
 		ent=tmp;
 	}
 	this->length=0;
 	this->first=NULL;
 	this->last=NULL;
+	/*for(void *tmp=remove_first(this);tmp;tmp=remove_first(this)){
+		if(free_f!=NULL)
+			free_f(tmp);
+	}*/
 }
 

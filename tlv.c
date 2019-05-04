@@ -230,6 +230,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	else{
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
 		list symmetric=get_symmetrical(NEIGHBORS);
+		if(!symmetric) return 0;
 		struct ngb_entry ngb_ent;
 		ngb_ent.sym=&peer;
 		void *tmp=remove_elem(symmetric,&ngb_ent);

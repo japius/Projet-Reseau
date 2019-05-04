@@ -40,7 +40,7 @@ struct flood_entry *init_flood(struct data_index *index, char *data,struct list 
 
 int count;
 void free_flood(struct flood_entry *flood){
-	//free(index);
+	free(flood->index);
 	printf("//////// appelle %d //////////////////////////////////\n",++count);
 	free_list(flood->sym_neighbors,free);
 	free(flood->sym_neighbors);
