@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "genlist.h"
+#include "peer.h"
 
 void init_list(list this,short (*comp)(void *, void*), size_t cont_len){
 	this->length = 0;
@@ -104,8 +105,15 @@ void *remove_elem(list this, void *elem){
 	return 0;
 }
 
+void *add_limited(list this, void *elem, int max_t){
+	addLast(this,elem);
+	if(this->length>max_t)
+		return remove_first(this);
+	return 0;
+}
+
 void *get(list this, void *elem){
-	for(list_entry *ent=this->first;!ent;ent=ent->next){
+	for(list_entry *ent=this->first;ent;ent=ent->next){
 		if(this->compare_f(ent->content,elem)!=0) return ent->content;
 	}
 	return 0;

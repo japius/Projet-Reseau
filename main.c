@@ -54,6 +54,7 @@ int main(int argc, char *argv[]){
 	fd_set fd_ens;
 	int NEXTHELLO = 0;
 	NEXTTIME=NEXTHELLO;
+	init_list(&DATAF,compare_d,sizeof(struct flood_entry));
 
 	while(1){
 		//---- gere les réceptions de messages
