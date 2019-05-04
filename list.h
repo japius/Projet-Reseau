@@ -16,7 +16,7 @@ struct ngb_entry{
 struct flood_entry{
 	struct data_index *index;
 	//A revoir, ptet autre chose que MAX_SIZE
-	char *data;
+	char data[PMTU];
 	struct list *sym_neighbors;
 };
 
