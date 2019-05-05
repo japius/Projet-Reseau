@@ -11,7 +11,7 @@ void init_list(list this,short (*comp)(void *, void*), size_t cont_len){
 }
 
 static list_entry *init_entry(list_entry *prev, list_entry *next, void *elem){
-	list_entry *res = malloc(sizeof(list_entry));
+	list_entry *res = calloc(sizeof(list_entry),1);
 	if(!res) return 0;
 	if(prev!=NULL){
 		prev->next=res;
@@ -113,9 +113,9 @@ void *add_limited(list this, void *elem, int max_t){
 }
 
 void *get(list this, void *elem){
-	for(list_entry *ent=this->first;ent;ent=ent->next){
+	/*for(list_entry *ent=this->first;ent;ent=ent->next){
 		if(this->compare_f(ent->content,elem)!=0) return ent->content;
-	}
+	}*/
 	return 0;
 }
 
@@ -124,7 +124,7 @@ void init_compare(list this,short (*comp)(void *, void *)){
 }
 
 void free_list(list this, void *(free_f)(void *content)){
-	printf("Le list vaut %p\n",this);
+	/*printf("Le list vaut %p\n",this);
 	printf("Le premier eleme vaux %p\n",this->first );
 	for(list_entry *ent=this->first;ent;){
 		if(free_f!=NULL){
@@ -137,11 +137,17 @@ void free_list(list this, void *(free_f)(void *content)){
 	}
 	this->length=0;
 	this->first=NULL;
-	this->last=NULL;
+	this->last=NULL;*/
 	/*for(void *tmp=remove_first(this);tmp;tmp=remove_first(this)){
 		if(free_f!=NULL)
 			free_f(tmp);
 	}*/
+
+	while(this->length>0){
+		void *tmp=remove_first(this);
+		if(free_f!=NULL)
+			free_f(tmp);
+	}
 }
 
 /*short comp(void *a, void *b){
@@ -173,4 +179,4 @@ int main(int argc, char const *argv[])
 	//printf("point %p",remove_first(&data));
 
 	return 0;
-}*/
+}*/ 

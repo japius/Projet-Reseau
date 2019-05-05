@@ -248,10 +248,10 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 			return 0;
 		}
 		free_flood(must_free);
-	}
-	if(*(tlv+12)==0){
+		if(*(tlv+12)==0){
 		//afficher le message
 		write(2,tlv+13,length);
+		}
 	}
 	return 1;
 }
