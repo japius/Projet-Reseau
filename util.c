@@ -87,8 +87,8 @@ void flood_message_to_neighbours(int soc,struct flood_entry *flood){
 				return ;
 			}
 			struct list_entry *tmp2=tmp->next;
-			void *tmp=remove_elem(l,nw);
-			if(tmp){
+			void *temp=remove_elem(l,nw);
+			if(temp){
 				//surement inutile en fait car stocké nulle part
 				struct ngb_entry *n=(struct ngb_entry *)tmp;
 				n->times_sent=n->times_sent+1;
@@ -119,7 +119,7 @@ void flood_messages(int soc,list flood){
 short compare_d(void *c1,void *c2){
 	struct data_index *data=(struct data_index *)c1;
 	struct data_index *data2=(struct data_index *)c2;
-	return (data->id==data2->id && data->nonce==data2->nonce);
+	return !(data->id==data2->id && data->nonce==data2->nonce);
 }
 
 short compare_n(void *c1,void *c2){

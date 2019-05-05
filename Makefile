@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS= -Wall
+FLAGS= -Wall -g
 LDLIBS=-lm 
 #a changer
 NAME=main

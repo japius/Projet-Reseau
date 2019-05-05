@@ -45,7 +45,7 @@ short add_elem(list this, void *elem){
 		return 1;
 	}
 	short dif = this->compare_f(this->first->content,elem);
-	if(dif<0){
+	if(dif>0){
 		list_entry *tmp = init_entry(0,this->first,elem); 
 		if(!tmp) return 0;
 		this->first = tmp;
@@ -58,7 +58,7 @@ short add_elem(list this, void *elem){
 
 	for(list_entry *ent=this->first;ent->next;ent=ent->next){
 		dif=this->compare_f(ent->next->content,elem);
-		if(dif<0){
+		if(dif>0){
 			list_entry *tmp = init_entry(ent,ent->next,elem); 
 			if(!tmp) return 0;
 			this->length++;
@@ -112,9 +112,9 @@ void *add_limited(list this, void *elem, int max_t){
 	return 0;
 }
 
-void *get(list this, void *elem){
+void *get(struct list *this, void *elem){
 	for(list_entry *ent=this->first;ent;ent=ent->next){
-		if(this->compare_f(ent->content,elem)!=0) return ent->content;
+		if(this->compare_f(ent->content,elem)==0) return ent->content;
 	}
 	return 0;
 }
@@ -124,31 +124,33 @@ void init_compare(list this,short (*comp)(void *, void *)){
 }
 
 void free_list(list this, void *(free_f)(void *content)){
-	if(this==NULL) printf("nulllllllllllll////////////////////////////////\n");
+	print_list(this);
+	//print_list(this)
 	for(list_entry *ent=this->first;ent;){
 		//VALGRIND_CHECK_MEM_IS_DEFINED(ent,sizeof(struct list_entry));
 		if(free_f!=NULL){
-			printf("je suis icci/////////////////////////////////////////////////////\n");
-			//free_f(ent->content);
-			printf("ouuuuuaaaaaaaiiis////////////////////////////////////////////////////////////////\n");
+			free_f(ent->content);
 		}
-		printf("%p   /////////////////////////////////////////////////////////////////////////\n",ent);
-		printf("%p   /////////////////////////////////////////////////////////////////////////\n",ent->next);
+		free_f(ent->content);
+		printf("voici ent = %p\n",ent );
 		list_entry *tmp = ent->next;
-		//free(ent);
+		free(ent);
 		ent=tmp;
-		printf("laaaaaaaa/////////////////////////////////////////////////////////////////\n");
 	}
-	printf("dsfgtfergtrhyyj//////////////////////////////////////////////////////////////////////\n");
 	this->length=0;
 	this->first=NULL;
 	this->last=NULL;
+	/*for(void *tmp=remove_first(this);tmp;tmp=remove_first(this)){
+		if(free_f!=NULL)
+			free_f(tmp);
+	}*/
 }
 
 void print_list(list this){
-	if(this==NULL) printf("sorrrrrrrrrry////////////////////////////////////////////////////////////////\n");
 	for(list_entry *l=this->first;l;l=l->next){
-		printf(l->content);
+		printf("La longueur de la liste : %d\n",this->length);
+		printf("Element de liste : %p\n",l);
+		printf("Content : %p\n",l->content);
 	}
 }
 

@@ -243,9 +243,10 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		msg[0]=4;
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
-		struct flood_entry *flood = init_flood(&index,msg,symmetric);
-		void *must_free = add_limited(&DATAF,&flood,NBDATA);
 		print_list(&DATAF);
+		struct flood_entry *flood = init_flood(&index,msg,symmetric);
+		void *must_free = add_limited(&DATAF,flood,NBDATA);
+		//print_list(&DATAF);
 		if(!must_free){
 			return 0;
 		}

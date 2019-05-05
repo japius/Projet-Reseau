@@ -96,9 +96,9 @@ int main(int argc, char *argv[]){
 		}
 		if(get_seconds()>=NEXTHELLO){
 			nb = send_hello_everyone(soc,NEIGHBORS);
-			//printf("Hello long %d\n",nb );
+			printf("Hello long %d\n",nb );
 			nb=send_symetrical_everyone(soc,NEIGHBORS);
-			//printf("Neighbor %d\n",nb);
+			printf("Neighbor %d\n",nb);
 			NEXTHELLO=get_seconds()+TIMEHELLO;
 			nb=send_goaway_asymetrical(soc);
 			printf("GO away %d\n",nb );
@@ -109,11 +109,12 @@ int main(int argc, char *argv[]){
 				print_tree(POTENTIAL);
 				printf("-----------------------------\n");
 			}
-		}
-
+			
 		printf("--------NEIGHBORS ----------\n");
 		print_tree(NEIGHBORS);
 		printf("-----------------------------\n");
+		}
+		//flood_messages(soc,&DATAF);
 
 	}
 	/*Il faut:
