@@ -86,6 +86,7 @@ void *remove_first(list this){
 }
 
 void *remove_elem(list this, void *elem){
+	if(!this->first) return 0;
 	if(this->compare_f(this->first->content,elem)==0){
 		return remove_first(this);
 	}

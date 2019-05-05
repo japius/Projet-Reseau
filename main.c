@@ -114,7 +114,7 @@ int main(int argc, char *argv[]){
 		print_tree(NEIGHBORS);
 		printf("-----------------------------\n");
 		}
-		//flood_messages(soc,&DATAF);
+		flood_messages(soc,&DATAF);
 
 	}
 	/*Il faut:
