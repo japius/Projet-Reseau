@@ -29,7 +29,11 @@ short add_neighbor_to_flood(struct data_index *,struct neighbor *peer);
 
 short remove_neighbor_from_flood(struct data_index *, struct neighbor *);
 
+short remove_neighbor_everywhere(struct neighbor *peer);
+
 short compare_n_s(void *c1,void *c2);
+
+short compare_n_s2(void *c1,void *c2);
 
 
 void free_flood(struct flood_entry *flood);

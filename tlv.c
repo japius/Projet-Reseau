@@ -235,6 +235,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		ngb_ent.sym=&peer;
 		void *tmp=remove_elem(symmetric,&ngb_ent);
 		if(tmp!=NULL) free(tmp);
+		//printf("un petit test : %d",ntohs(peer.port));
 		//symmetric=remove_node(symmetric,&peer);
 		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
 		//rajouter caractère de fin de ligne ? +1 pour type 4
@@ -242,14 +243,17 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		msg[0]=4;
 		msg[1]=length;
 		memcpy(msg+2,tlv,length);
+		//print_list(&DATAF);
 		struct flood_entry *flood = init_flood(&index,msg,symmetric);
-		void *must_free = add_limited(&DATAF,&flood,NBDATA);
+		void *must_free = add_limited(&DATAF,flood,NBDATA);
+		//print_list(&DATAF);
 		if(!must_free){
 			return 0;
 		}
 		free_flood(must_free);
 		if(*(tlv+12)==0){
 		//afficher le message
+		dprintf(2,"Nouveau message ///////////\n");
 		write(2,tlv+13,length);
 		}
 	}

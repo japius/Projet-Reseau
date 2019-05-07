@@ -41,7 +41,6 @@ struct flood_entry *init_flood(struct data_index *index, char *data,struct list 
 int count;
 void free_flood(struct flood_entry *flood){
 	free(flood->index);
-	printf("//////// appelle %d //////////////////////////////////\n",++count);
 	free_list(flood->sym_neighbors,free);
 	free(flood->sym_neighbors);
 	free(flood);
@@ -59,7 +58,7 @@ short add_neighbor_to_flood(struct data_index *index,struct neighbor *peer){
 	l.sym=peer;
 	l.times_sent=0;
 	//ici tirer un temps aléatoire*/
-	return addLast(flood->sym_neighbors,&l);
+	return addLast(flood->sym_neighbors,l);
 }
 
 
@@ -67,7 +66,17 @@ short compare_n_s(void *c1,void *c2){
 	struct ngb_entry *n1=(struct ngb_entry *)c1;
 	struct ngb_entry *n2=(struct ngb_entry *)c2;
 	if(compare_n(n1->sym,n2->sym)==0) return 0;
-	return n1->wait_time-n2->wait_time;
+	int i=n1->wait_time-n2->wait_time;
+	if(i==0) return 1;
+	return i;
+	//return compare_n(n1->sym,n2->sym);
+}
+
+
+short compare_n_s2(void *c1,void *c2){
+	struct ngb_entry *n1=(struct ngb_entry *)c1;
+	struct ngb_entry *n2=(struct ngb_entry *)c2;
+	return compare_n(n1->sym,n2->sym)==0;
 	//return compare_n(n1->sym,n2->sym);
 }
 
@@ -80,12 +89,14 @@ short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
 	struct ngb_entry l;
 	l.sym=peer;
 	l.times_sent=0;
+	//init_compare(flood->sym,compare_n_s2);
 	void *tmp=remove_elem(flood->sym_neighbors,&l);	
 	if(tmp) free(tmp);
-	if(flood->sym_neighbors->length==0){
+	//init_compare(flood->sym,compare_n_s);
+	/*if(flood->sym_neighbors->length==0){
 		void *tmp=remove_elem(&DATAF,&flood);
 		if(tmp) free_flood(&flood);
-	}
+	}*/
 	//je suis pas sure de s'il faut free, vu que c'est la même adresse partout pour le voisin;
 	return 1;
 }
@@ -93,7 +104,7 @@ short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
 short remove_neighbor_everywhere(struct neighbor *peer){
 	for(struct list_entry *list=DATAF.first;list;list=list->next){
 		struct flood_entry *f=(struct flood_entry *)list->content;
-		remove_neighbor_from_flood(f->data,peer);
+		remove_neighbor_from_flood(f->index,peer);
 	}
 	remove_neighbor(peer);
 	return 1;

@@ -92,6 +92,7 @@ struct ident *get_ident(tree *t,struct neighbor *key){
 //A modifier
 short issymmetrical(tree *t){
   int now=get_seconds();
+  printf("Tempsactuel :::  %d   Temps de Juliusz:::::  %d\n", now,t->val->last_hello_long);
   if(now-t->val->last_hello_long<120) return 1;
   return 0;
 }
@@ -110,7 +111,7 @@ void find_by_aux(tree *t, short (*func)(tree*), list l){
         if(t->left !=NULL) find_by_aux(t->left,func,l);
         if(func(t)){
           struct ngb_entry *ent = init_ngb_entry(t->key,0);
-          if(ent!=NULL) addLast(l,ent);
+          if(l!=NULL && ent!=NULL) addLast(l,ent);
         }
         if(t->right !=NULL) find_by_aux(t->right,func,l);
     }

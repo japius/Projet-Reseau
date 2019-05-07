@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 	else if(argc==4)
 		nb = send_first_message(soc,argv[2],argv[3]);
 	else
-		nb = send_first_message(soc,"jch.irif.fr","1212");
+		//nb = send_first_message(soc,"jch.irif.fr","1212");
 	printf("hello envoyé a %d\n",nb );
 
 	struct message_h msg;
@@ -85,7 +85,8 @@ int main(int argc, char *argv[]){
 			if(FD_ISSET(0,&fd_ens)){
 				unsigned char buf[PMTU-14];
 				int tmp=read(0,buf,PMTU-14)-1;
-				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
+				//tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
+				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,"message",7);
 				if(tmp>0){
 					msg.magic=93;
 					msg.version=2;
@@ -114,6 +115,7 @@ int main(int argc, char *argv[]){
 		print_tree(NEIGHBORS);
 		printf("-----------------------------\n");
 		}
+		flood_messages(soc,&DATAF);
 
 	}
 	/*Il faut:

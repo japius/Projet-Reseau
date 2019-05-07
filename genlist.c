@@ -45,7 +45,7 @@ short add_elem(list this, void *elem){
 		return 1;
 	}
 	short dif = this->compare_f(this->first->content,elem);
-	if(dif<0){
+	if(dif>0){
 		list_entry *tmp = init_entry(0,this->first,elem); 
 		if(!tmp) return 0;
 		this->first = tmp;
@@ -58,7 +58,7 @@ short add_elem(list this, void *elem){
 
 	for(list_entry *ent=this->first;ent->next;ent=ent->next){
 		dif=this->compare_f(ent->next->content,elem);
-		if(dif<0){
+		if(dif>0){
 			list_entry *tmp = init_entry(ent,ent->next,elem); 
 			if(!tmp) return 0;
 			this->length++;
@@ -86,6 +86,7 @@ void *remove_first(list this){
 }
 
 void *remove_elem(list this, void *elem){
+	if(!this->first) return 0;
 	if(this->compare_f(this->first->content,elem)==0){
 		return remove_first(this);
 	}
@@ -112,10 +113,11 @@ void *add_limited(list this, void *elem, int max_t){
 	return 0;
 }
 
-void *get(list this, void *elem){
-	/*for(list_entry *ent=this->first;ent;ent=ent->next){
-		if(this->compare_f(ent->content,elem)!=0) return ent->content;
-	}*/
+
+void *get(struct list *this, void *elem){
+	for(list_entry *ent=this->first;ent;ent=ent->next){
+		if(this->compare_f(ent->content,elem)==0) return ent->content;
+	}
 	return 0;
 }
 
@@ -123,16 +125,20 @@ void init_compare(list this,short (*comp)(void *, void *)){
 	this->compare_f = comp;
 }
 
-void free_list(list this, void *(free_f)(void *content)){
+void free_list(list this, void (*free_f)(void *content)){
 	/*printf("Le list vaut %p\n",this);
 	printf("Le premier eleme vaux %p\n",this->first );
+	print_list(this);
+	//print_list(this)
 	for(list_entry *ent=this->first;ent;){
+		//VALGRIND_CHECK_MEM_IS_DEFINED(ent,sizeof(struct list_entry));
 		if(free_f!=NULL){
-			//free_f(ent->content);
+			free_f(ent->content);
 		}
+		free_f(ent->content);
 		printf("voici ent = %p\n",ent );
 		list_entry *tmp = ent->next;
-		//free(ent);
+		free(ent);
 		ent=tmp;
 	}
 	this->length=0;
@@ -180,3 +186,12 @@ int main(int argc, char const *argv[])
 
 	return 0;
 }*/ 
+void print_list(list this){
+	for(list_entry *l=this->first;l;l=l->next){
+		printf("La longueur de la liste : %d\n",this->length);
+		printf("Element de liste : %p\n",l);
+		printf("Content : %p\n",l->content);
+	}
+}
+
+
