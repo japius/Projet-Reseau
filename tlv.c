@@ -95,7 +95,6 @@ int tlv_neighbour(unsigned char *body,size_t bufsize, struct neighbor ngb){
 
 int tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
-	random_on_octets(&nonce,sizeof(u_int32_t));
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
 	u_int8_t length=id_size+nonce_size+type_size+msg_size;
 	if(bufsize>length+1){
@@ -105,7 +104,7 @@ int tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsi
 		memcpy(body+2,&id,id_size);
 		memcpy(body+2+id_size,&nonce,nonce_size);
 		memcpy(body+2+id_size+nonce_size,&type,type_size);
-		memcpy(body+2+id_size+nonce_size+type_size,&data,msg_size);
+		memcpy(body+2+id_size+nonce_size+type_size,data,msg_size);
 		return msg_size+15;
 	}
 	return -1;
@@ -208,7 +207,8 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	msg.magic=93;
 	msg.version=2;
 	int size=0;
-	if(size=tlv_ack(msg.body,PMTU-4,index.id,index.nonce)){
+	printf("tlv DATA ////////////////////////////////\n");
+	if(size=tlv_ack(msg.body,PMTU-4,index.id,index.nonce)>0){
 		//créer le message_h et faire un send message_h
 		msg.body_length=htons(size);
 		int i=send_message(soc,&msg,size+4,peer);
@@ -224,10 +224,21 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Si non vide
 	if(flood){
 			//retirer l'émetteur de la liste de voisins à inonder
+		printf("Je retire l'emetteur\n");
 		remove_neighbor_from_flood(&index,&peer);
 		//inonder
 	}
 	else{
+		if(*(tlv+12)==0){
+			//afficher le message
+			printf("Nouveau message ///////////\n");
+			printf("longueur du message vaut %d\n",length);
+			for(int k=0;k<length-13;k++){
+				printf("%d.",tlv[13+k]);
+			}
+			printf("////////\n");
+			write(1,tlv+13,length-13);
+		}
 		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
 		list symmetric=get_symmetrical(NEIGHBORS);
 		if(!symmetric) return 0;
@@ -251,11 +262,6 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 			return 0;
 		}
 		free_flood(must_free);
-		if(*(tlv+12)==0){
-		//afficher le message
-		dprintf(2,"Nouveau message ///////////\n");
-		write(2,tlv+13,length);
-		}
 	}
 	return 1;
 }

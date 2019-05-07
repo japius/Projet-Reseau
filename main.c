@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 	else if(argc==4)
 		nb = send_first_message(soc,argv[2],argv[3]);
 	else
-		//nb = send_first_message(soc,"jch.irif.fr","1212");
+		nb = send_first_message(soc,"jch.irif.fr","1212");
 	printf("hello envoyé a %d\n",nb );
 
 	struct message_h msg;
@@ -86,13 +86,24 @@ int main(int argc, char *argv[]){
 				unsigned char buf[PMTU-14];
 				int tmp=read(0,buf,PMTU-14)-1;
 				//tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
-				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,"message",7);
+				tmp=tlv_data(msg.body,PMTU-4,ID,0,"message",7);
 				if(tmp>0){
 					msg.magic=93;
 					msg.version=2;
 					msg.body_length=htons(tmp);
 					nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
 				}
+				if(*(msg.body+14)==0){
+					int length = msg.body[1];
+				//afficher le message
+				printf("Nouveau message ///////////\n");
+				printf("longueur du message vaut %d\n",length);
+				for(int k=0;k<length-13;k++){
+					printf("%d.",msg.body[13+k]);
+				}
+							printf("////////\n");
+				write(1,msg.body+15,length-13);
+		}
 			}
 		}
 		if(get_seconds()>=NEXTHELLO){
