@@ -1,6 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "genlist.h"
-#include "peer.h"
 
 void init_list(list this,short (*comp)(void *, void*), size_t cont_len){
 	this->length = 0;
@@ -11,7 +11,7 @@ void init_list(list this,short (*comp)(void *, void*), size_t cont_len){
 }
 
 static list_entry *init_entry(list_entry *prev, list_entry *next, void *elem){
-	list_entry *res = malloc(sizeof(list_entry));
+	list_entry *res = calloc(sizeof(list_entry),1);
 	if(!res) return 0;
 	if(prev!=NULL){
 		prev->next=res;
@@ -113,6 +113,7 @@ void *add_limited(list this, void *elem, int max_t){
 	return 0;
 }
 
+
 void *get(struct list *this, void *elem){
 	for(list_entry *ent=this->first;ent;ent=ent->next){
 		if(this->compare_f(ent->content,elem)==0) return ent->content;
@@ -124,7 +125,9 @@ void init_compare(list this,short (*comp)(void *, void *)){
 	this->compare_f = comp;
 }
 
-void free_list(list this, void *(free_f)(void *content)){
+void free_list(list this, void (*free_f)(void *content)){
+	/*printf("Le list vaut %p\n",this);
+	printf("Le premier eleme vaux %p\n",this->first );
 	print_list(this);
 	//print_list(this)
 	for(list_entry *ent=this->first;ent;){
@@ -140,13 +143,49 @@ void free_list(list this, void *(free_f)(void *content)){
 	}
 	this->length=0;
 	this->first=NULL;
-	this->last=NULL;
+	this->last=NULL;*/
 	/*for(void *tmp=remove_first(this);tmp;tmp=remove_first(this)){
 		if(free_f!=NULL)
 			free_f(tmp);
 	}*/
+
+	while(this->length>0){
+		void *tmp=remove_first(this);
+		if(free_f!=NULL)
+			free_f(tmp);
+	}
 }
 
+/*short comp(void *a, void *b){
+	char n = *((char *)a);
+	char m = *((char *)b);
+	return (short)m-n;
+}
+void func_aux(list data){
+	char *str = "abcdefghijklmni";
+	init_list(data,comp,sizeof(char));
+	for(int i = 0; i< 10;i++)
+		add_elem(data,str+i);
+	printf("taille %ld\n",data->length);
+	remove_elem(data, str+5);
+	remove_elem(data, str+9);
+	remove_elem(data, str+1);
+	remove_elem(data, str+0);
+	remove_elem(data, str+5);
+	add_elem(data,str+1);
+	add_elem(data,str+3);
+	add_elem(data,str+5);
+	add_elem(data,str+9);
+}
+
+int main(int argc, char const *argv[])
+{
+	struct list data;
+	free_list(&data,0);
+	//printf("point %p",remove_first(&data));
+
+	return 0;
+}*/ 
 void print_list(list this){
 	for(list_entry *l=this->first;l;l=l->next){
 		printf("La longueur de la liste : %d\n",this->length);
@@ -154,4 +193,5 @@ void print_list(list this){
 		printf("Content : %p\n",l->content);
 	}
 }
+
 

@@ -11,7 +11,9 @@ u_int64_t ID;
 tree *POTENTIAL;
 tree *NEIGHBORS;
 struct list DATAF;
-int NEXTTIME;
+unsigned long NEXTTIME;
+int FD_MAGIC_READ;
+int FD_MAGIC_WRITE;
 //Mettre une liste ou une struct iov
 int NB_SYMETRICAL;
 /*typedef struct peer peer;

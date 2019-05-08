@@ -48,6 +48,6 @@ struct big_data{
 	u_int16_t received_length;
 	int start_time;
 	char *message;
-}
+};
 
 #endif

@@ -95,7 +95,6 @@ int tlv_neighbour(unsigned char *body,size_t bufsize, struct neighbor ngb){
 
 int tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsigned char *data,u_int8_t msg_size){
 	u_int32_t nonce;
-	random_on_octets(&nonce,sizeof(u_int32_t));
 	size_t id_size=sizeof(id),nonce_size=sizeof(nonce),type_size=sizeof(type);
 	u_int8_t length=id_size+nonce_size+type_size+msg_size;
 	if(bufsize>length+1){
@@ -105,7 +104,7 @@ int tlv_data(unsigned char *body,size_t bufsize, u_int64_t id,u_int8_t type,unsi
 		memcpy(body+2,&id,id_size);
 		memcpy(body+2+id_size,&nonce,nonce_size);
 		memcpy(body+2+id_size+nonce_size,&type,type_size);
-		memcpy(body+2+id_size+nonce_size+type_size,&data,msg_size);
+		memcpy(body+2+id_size+nonce_size+type_size,data,msg_size);
 		return msg_size+15;
 	}
 	return -1;
@@ -131,8 +130,8 @@ int tlv_goaway(unsigned char *body,size_t bufsize, u_int8_t code,unsigned char *
 		*body=6;
 		*(body+1)=length;
 		*(body+2)=code;
-		memcpy(body+2+code_size,&msg,msg_size);
-		return length+1;
+		memcpy(body+2+code_size,msg,msg_size);
+		return length+2;
 	}
 	return -1;
 	
@@ -142,7 +141,7 @@ int tlv_warning(unsigned char *body,size_t bufsize, unsigned char *msg,u_int8_t 
 	if(bufsize>msg_size+1){
 		*body=7;
 		*(body+1)=msg_size;
-		memcpy(body+2,&msg,msg_size);
+		memcpy(body+2,msg,msg_size);
 		return 1;
 	}
 	return 0;
@@ -168,15 +167,22 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		memcpy(&dest_id,tlv+8,8);
 		if(dest_id==ID){
 			val.last_hello_long=current;
-			add_neighbor(&peer,&val);
-			printf("Nouveau voisin : \n");
+			int rc = add_neighbor(&peer,&val);
+			if(rc==1){
+				remove_potential(&peer);
+				send_hello_everyone(soc,NEIGHBORS);
+			}
+
 			//print_tree(NEIGHBORS);
 			return 1;
 		}
 		return 1;
 	}
-	add_neighbor(&peer,&val);
-	//print_tree(NEIGHBORS);
+	int rc = add_neighbor(&peer,&val);
+	if(rc==1){
+		remove_potential(&peer);
+		send_hello_everyone(soc,NEIGHBORS);
+	}
 	return 1;
 }
 
@@ -185,8 +191,11 @@ int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	memcpy(key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
 	key.port=ntohs(key.port);
+	if(get_ident(NEIGHBORS,&key)) return 1;
+	struct ident val = {0};
+	val.last_hello = get_seconds();
 	//inserer l'adresse contenue dans le tlv à la liste des voisins potentiels
-	add_potential(&key,NULL);
+	add_potential(&key,&val);
 	return 1;
 	//return 0;
 }
@@ -199,19 +208,16 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	msg.magic=93;
 	msg.version=2;
 	int size=0;
-	if(size=tlv_ack(msg.body,PMTU-4,index.id,index.nonce)){
+	size=tlv_ack(msg.body,PMTU-4,index.id,index.nonce);
+	if(size>0){
 		//créer le message_h et faire un send message_h
 		msg.body_length=htons(size);
 		int i=send_message(soc,&msg,size+4,peer);
-		printf("j'ai envoyé un ack %d\n",i);
-	}
-	else{
-		perror("tlv");
-		return 0;
-		//exit(EXIT_FAILURE);
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get(&DATAF,&index);
+	struct flood_entry fl={0};
+	fl.index=&index;
+	struct flood_entry *flood=get(&DATAF,&fl);
 	//Si non vide
 	if(flood){
 			//retirer l'émetteur de la liste de voisins à inonder
@@ -219,51 +225,30 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		//inonder
 	}
 	else{
-		//Ici il ne faut pas mettre l'émetteur dans la liste de personnes à inonder
-		list symmetric=get_symmetrical(NEIGHBORS);
-		if(!symmetric) return 0;
-		struct ngb_entry ngb_ent;
-		ngb_ent.sym=&peer;
-		void *tmp=remove_elem(symmetric,&ngb_ent);
-		if(tmp!=NULL) free(tmp);
-		//printf("un petit test : %d",ntohs(peer.port));
-		//symmetric=remove_node(symmetric,&peer);
-		//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
-		//rajouter caractère de fin de ligne ? +1 pour type 4
-		char msg[PMTU];
-		msg[0]=4;
-		msg[1]=length;
-		memcpy(msg+2,tlv,length);
-		print_list(&DATAF);
-		struct flood_entry *flood = init_flood(&index,msg,symmetric);
-		void *must_free = add_limited(&DATAF,flood,NBDATA);
-		//print_list(&DATAF);
-		if(!must_free){
-			return 0;
-		}
-		free_flood(must_free);
-	}
-	size=*(tlv+12);
-	if(size==0){
+		add_message_to_flood(tlv,length,&peer);
+		size=*(tlv+12);
+		if(size==0){
 		//afficher le message
-		write(1,tlv+13,length);
-		return 1;
+			print_on_screen(tlv+13,length-13);
+			return 1;
+		}
+		if(size==220){
+			//return bigdata(soc,tlv,u_int8_t length,&peer);
+		}
+		else if(size==2){
+			//gif
+		}
+		else if(size==3){
+			//jpeg
+		}
+		else if(size==4){
+			//png
+		}
+		else if(size==5){
+			//svg
+		}
 	}
-	if(size==220){
-		return bigdata(soc,tlv,u_int8_t length,&peer);
-	}
-	else if(size==2){
-		//gif
-	}
-	else if(size==3){
-		//jpeg
-	}
-	else if(size==4){
-		//png
-	}
-	else if(size==5){
-		//svg
-	}
+	
 	return 1;
 }
 
@@ -280,6 +265,8 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//Marquer l'émetteur comme voisin non symétrique ou le supprimer
+	printf("go away de type %d\n",tlv[0]);
+	write(1,tlv+1,length-1);
 	return remove_neighbor_everywhere(&peer);
 }
 
@@ -305,7 +292,7 @@ int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 //On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
 
 int bigdata(int soc,char *tlv,u_int8_t length,struct neighbor *peer){
-	return 0
+	return 0;
 	//metree certrains trucs dans des fonctions et créer la liste
 	//on a une liste de struct big data indexée par nonce
 	/*u_int32_t nonce=tlv[13];
@@ -364,8 +351,10 @@ int bigdata(int soc,char *tlv,u_int8_t length,struct neighbor *peer){
 
 void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor rcpt){
 	int pos=0;
+	if(buf_t<4) return;
 	if(msg->magic!=93 || msg->version!=2) return ;
 	u_int16_t body_length=ntohs(msg->body_length);
+	if(body_length+4>buf_t) return;
 	char tlv[MAX_SIZE];
 	while(pos<body_length){
 		u_int8_t type=(u_int8_t)msg->body[pos];
@@ -374,7 +363,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 			continue;
 		}
 		u_int8_t length=(u_int8_t)msg->body[pos+1];
-		if(length>buf_t-pos) return;
+		if(length>body_length-pos) return;
 		if(type>0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
 			if(handle_tlv[type](soc,tlv,length,rcpt)){

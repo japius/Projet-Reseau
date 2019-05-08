@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <libwebsockets.h>
 #include <signal.h>
+#include "peer.h"
 
 #define LWS_PLUGIN_STATIC
 
@@ -37,45 +38,35 @@ void sigint_handler(int sig)
 
 static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 		   void *user, void *in, size_t len){
+	struct timeval tv={0,0};
+	fd_set readfds;
+	FD_ZERO(&readfds);
+	FD_SET(FD_MAGIC_READ,&readfds);
+	if(select(FD_MAGIC_READ+1,&readfds,NULL,NULL,&tv)){
+		unsigned char buf[LWS_PRE+500]={0};
+		int n=read(FD_MAGIC_READ,buf+LWS_PRE,500);
+		if(n>0){
+			lws_write(wsi,buf+LWS_PRE,n,LWS_WRITE_TEXT);
+		}
+	}
 	switch(reason){
-
-		case LWS_CALLBACK_ESTABLISHED_CLIENT_HTTP:
-			printf("je suis bien passé par le formulaire \n");
-			break;
-		case LWS_CALLBACK_RECEIVE_CLIENT_HTTP_READ:
-			printf("Le formulaire a envoyé une donnée");
-			//unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
-			//memset(buf,0,LWS_PRE+len);
-			//ON va meme copy ce qu"on veut renvoyer
-			//memcpy(buf+LWS_PRE,(char *)in,len);
-			//unsigned char *msg=(char *)in;
-			//printf("Typed message : %s\n",msg);
-
-
-		/*case LWS_CALLBACK_HTTP_BODY:
-
-			break;
-		case LWS_CALLBACK_HTTP_BODY_COMPLETION:
-			break;
-		case LWS_CALLBACK_HTTP_DROP_PROTOCOL:
-			break;*/
 		case LWS_CALLBACK_ESTABLISHED:
 			printf("Connection established, with not a http ? \n");
 			break;
 
 		case LWS_CALLBACK_RECEIVE:
 			printf("Le formulaire a envoyé une donnée");
-			unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
+			/*unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
 			memset(buf,0,LWS_PRE+len);
 			memcpy(buf+LWS_PRE,(char *)in,len);
-			printf("Typed message : %s\n",buf+LWS_PRE);
-			lws_write(wsi,buf+LWS_PRE,len,LWS_WRITE_TEXT);
+			printf("Typed message : %s\n",buf+LWS_PRE);*/
+			write(FD_MAGIC_WRITE,(char *)in,len);
 
 
 			//ici il faut créer le tlv data et l'envoyer
 
 
-			
+
 			//ON va meme copy ce qu"on veut renvoyer
 			//memcpy(buf+LWS_PRE,(char *)in,len);
 			//unsigned char *msg=(char *)in;
@@ -85,6 +76,7 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 				//on envoie par le client c;
 				break;
 		default:
+
 			printf("unhandled\n");
 			break;
 	}
@@ -112,8 +104,22 @@ static struct lws_protocols protocols[] = {
 };
 
 
-int main(int argc, const char **argv)
+void handle_gui()
 {
+	int fd[2],fd2[2];
+	pipe(fd);
+	pipe(fd2);
+	if(fork()==0){
+		close(fd[0]);
+		close(fd2[1]);
+		FD_MAGIC_READ=fd2[0];
+		FD_MAGIC_WRITE=fd[1];
+		return ;
+	}
+	close(fd[1]);
+	close(fd2[0]);
+	FD_MAGIC_READ=fd[0];
+	FD_MAGIC_WRITE=fd2[1];
 	struct lws_context_creation_info info;
 	struct lws_context *context;
 	const char *p;
@@ -127,8 +133,8 @@ int main(int argc, const char **argv)
 
 	signal(SIGINT, sigint_handler);
 
-	if ((p = lws_cmdline_option(argc, argv, "-d")))
-		logs = atoi(p);
+	//if ((p = lws_cmdline_option(argc, argv, "-d")))
+	//	logs = atoi(p);
 
 	lws_set_log_level(logs, NULL);
 	lwsl_user("LWS minimal http server | visit http://localhost:7681\n");
@@ -148,7 +154,7 @@ int main(int argc, const char **argv)
 	}
 
 	while (n >= 0 && !interrupted)
-		n = lws_service(context, 1000);
+		n = lws_service_fd(context, );
 
 	lws_context_destroy(context);
 
@@ -156,48 +162,3 @@ int main(int argc, const char **argv)
 }
 
 
-
-
-
-/*int main(void){
-	//int port=9000;
-  	struct lws_context *context;
-  	// we're not using ssl
-  	// no special options
-  	int opts = 0;
-    struct lws_context_creation_info info;
-    memset(&info,0,sizeof(info));
-
-    info.port=9000;
-    //info.iface=interface;
-    info.protocols=protocols;
-    info.extensions=NULL;
-    //info.ssl_cert_filepath=cert_KLpath;
-    //info.ssl_private_key_filepath=key_path;
-    info.options=LWS_SERVER_OPTION_HTTP_HEADERS_SECURITY_BEST_PRACTICES_ENFORCE;
-
-  	// create libwebsocket context representing this server
-  	context = lws_create_context(&info);
-    
-  	if (context == NULL) {
-    	lwsl_err("libwebsocket init failed\n");
-    	return -1;
-  	}
-    
-  	printf("starting server...\n");
-    
-  	// infinite loop, to end this server send SIGTERM. (CTRL+C)
-  	while (1) {
-    	lws_service(context, 1000);
-    	// libwebsocket_service will process all waiting events with
-    	// their callback functions and then wait 50 ms.
-    	// (this is a single threaded web server and this will keep
-    	// our server from generating load while there are not
-    	// requests to process)
-  	}
-  	  
-  	lws_context_destroy(context);
-    
-  	return 0;
-}
-*/

@@ -16,6 +16,8 @@
 #include "abr.h"
 #include "list.h"
 #include "util.h"
+#include "websocket.h"
+#include <libwebsockets.h>
 #define PORT 1212
 #define TIMEHELLO 10
 #define MIN_SYM 10
@@ -23,7 +25,7 @@
 
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
-	//u_int64_t ID;
+	handle_gui();
 	//initialisation du pair
 	random_on_octets(&ID,sizeof(u_int64_t));
 	srand(time(NULL));
@@ -40,13 +42,7 @@ int main(int argc, char *argv[]){
 	}
 
 	int nb;
-	if(argc==3)
-		nb = send_first_message(soc,argv[1],argv[2]);
-	else if(argc==4)
-		nb = send_first_message(soc,argv[2],argv[3]);
-	else
-		nb = send_first_message(soc,"jch.irif.fr","1212");
-	printf("hello envoyé a %d\n",nb );
+
 
 	struct message_h msg;
 	struct sockaddr_in6 client;
@@ -54,26 +50,28 @@ int main(int argc, char *argv[]){
 	fd_set fd_ens;
 	int NEXTHELLO = 0;
 	NEXTTIME=NEXTHELLO;
-	init_list(&DATAF,compare_d,sizeof(struct flood_entry));
+	init_list(&DATAF,compare_flood,sizeof(struct flood_entry));
 
 	while(1){
 		//---- gere les réceptions de messages
 		// XXX select a ajouter
-		/*if(!NEIGHBORS){
-			printf("Aucun voisins a disposition\n");
+		if(!NEIGHBORS){
 			if(argc==3)
 				nb = send_first_message(soc,argv[1],argv[2]);
-			else;
-				nb = send_first_message(soc,"jch.irif.fr","1212");
-		}*/
+			else if(argc==4)
+				nb = send_first_message(soc,argv[2],argv[3]);
+			//else
+				//nb = send_first_message(soc,"jch.irif.fr","1212");
+		}
 
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);
-		FD_SET(0,&fd_ens);
+		FD_SET(FD_MAGIC_READ,&fd_ens);
 		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
 		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
+		printf("NEXTTIME %d\n",NEXTTIME );
 		NEXTTIME=NEXTHELLO;
-		if(select(soc+1,&fd_ens,NULL,NULL,&timeout)){
+		if(select(max(FD_MAGIC_READ,soc)+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
 				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
@@ -82,37 +80,33 @@ int main(int argc, char *argv[]){
 				print_msg(msg);
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
-			if(FD_ISSET(0,&fd_ens)){
-				unsigned char buf[PMTU-14];
-				int tmp=read(0,buf,PMTU-14)-1;
-				tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
-				if(tmp>0){
-					msg.magic=93;
-					msg.version=2;
-					msg.body_length=htons(tmp);
-					nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
-				}
+			if(FD_ISSET(FD_MAGIC_READ,&fd_ens)){
+				unsigned char buf[(1<<8)-1];
+				u_int8_t tmp=read(FD_MAGIC_READ,buf,(1<<8)-14);
+
+				unsigned char msg_to_send[(1<<8)+4];
+				tlv_data(msg_to_send,(1<<8)+4,ID,0,buf,tmp);
+				add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
+				print_on_screen(buf,tmp);
 			}
 		}
 		if(get_seconds()>=NEXTHELLO){
 			nb = send_hello_everyone(soc,NEIGHBORS);
-			printf("Hello long %d\n",nb );
 			nb=send_symetrical_everyone(soc,NEIGHBORS);
-			printf("Neighbor %d\n",nb);
 			NEXTHELLO=get_seconds()+TIMEHELLO;
 			nb=send_goaway_asymetrical(soc);
-			printf("GO away %d\n",nb );
+			remove_old_potential();
 			if(NB_SYMETRICAL<=MIN_SYM){
 				nb = send_shorthello_everyone(soc,POTENTIAL);
-				printf("Hello court %d\n",nb);
+				/*printf("Hello court %d\n",nb);
 				printf("--------POTENTIAL ----------\n");
 				print_tree(POTENTIAL);
-				printf("-----------------------------\n");
+				printf("-----------------------------\n");*/
 			}
 			
-		printf("--------NEIGHBORS ----------\n");
+		/*printf("--------NEIGHBORS ----------\n");
 		print_tree(NEIGHBORS);
-		printf("-----------------------------\n");
+		printf("-----------------------------\n");*/
 		}
 		flood_messages(soc,&DATAF);
 

@@ -26,7 +26,7 @@ void *remove_first(list this);
 void *remove_elem(list this, void *elem);
 void *get(list this, void *elem);
 void init_compare(list this,short (*comp)(void *, void *));
-void free_list(list this,void *(free_f)(void *content));
+void free_list(list this,void (*free_f)(void *content));
 void print_list(list this);
 
 
