@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 				unsigned char buf[PMTU-14];
 				int tmp=read(0,buf,PMTU-14)-1;
 				//tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
-				tmp=tlv_data(msg.body,PMTU-4,ID,0,"message",7);
+				tmp=tlv_data(msg.body,PMTU-4,ID,0,buf,tmp);
 				if(tmp>0){
 					msg.magic=93;
 					msg.version=2;
