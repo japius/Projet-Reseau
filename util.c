@@ -14,7 +14,8 @@
 
 
 int rand_a_b(int a,int b){
-	return rand()%(b-a) +a;
+	int truc = rand()%(b-a) +a;
+	return truc;
 }
 
 
@@ -35,6 +36,7 @@ void handle_inactive(int soc,struct data_index *data,struct neighbor  *sym){
 
 int wait_time(int times_sent){
 	//pas oublier de rajouter get_seconds();
+	if(times_sent==0) return 1;
 	return rand_a_b((int)pow(2.0,times_sent-1),(int)pow(2.0,times_sent));
 }
 
@@ -71,6 +73,7 @@ void flood_message_to_neighbours(int soc,struct flood_entry *flood){
 	int current_time=get_seconds();
 	list l=flood->sym_neighbors;
 	struct list_entry *tmp=l->first;
+	printf("message %d, taille %d\n",flood->index->nonce,l->length);
 	while(tmp){
 		struct ngb_entry *nw=(struct ngb_entry *)tmp->content;
 		if(nw->times_sent==5){
@@ -80,7 +83,7 @@ void flood_message_to_neighbours(int soc,struct flood_entry *flood){
 			continue;
 
 		}
-		if(current_time>=current_time+nw->wait_time){
+		if(current_time>=nw->wait_time){
 			int i=send_data(soc,flood->data,nw->sym);
 			if(i==0){
 				perror("send");
@@ -92,8 +95,8 @@ void flood_message_to_neighbours(int soc,struct flood_entry *flood){
 				//surement inutile en fait car stocké nulle part
 				struct ngb_entry *n=(struct ngb_entry *)temp;
 				n->times_sent=n->times_sent+1;
-				n->wait_time=wait_time(nw->times_sent);
-				int i=add_elem(l,n);
+				n->wait_time=wait_time(n->times_sent)+current_time;
+				i=add_elem(l,n);
 				if(i==0) return ;
 				tmp=tmp2;
 			}
@@ -108,13 +111,21 @@ void flood_message_to_neighbours(int soc,struct flood_entry *flood){
 }
 
 void flood_messages(int soc,list flood){
+	printf("--------------------------------\n");
+	printf("liste d'inondation de taille %d\n",flood->length);
 	for(struct list_entry *list=flood->first;list;list=list->next){
 		struct flood_entry *f=(struct flood_entry *)list->content;
 		flood_message_to_neighbours(soc,f);
 	}
+	printf("--------------------------------\n");
 
 }
 
+short compare_flood(void *c1, void *c2){
+	struct flood_entry *f1=(struct flood_entry *)c1;
+	struct flood_entry *f2=(struct flood_entry *)c2;
+	return compare_d(f1->index,f2->index);
+}
 
 short compare_d(void *c1,void *c2){
 	struct data_index *data=(struct data_index *)c1;

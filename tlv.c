@@ -130,8 +130,8 @@ int tlv_goaway(unsigned char *body,size_t bufsize, u_int8_t code,unsigned char *
 		*body=6;
 		*(body+1)=length;
 		*(body+2)=code;
-		memcpy(body+2+code_size,&msg,msg_size);
-		return length+1;
+		memcpy(body+2+code_size,msg,msg_size);
+		return length+2;
 	}
 	return -1;
 	
@@ -141,7 +141,7 @@ int tlv_warning(unsigned char *body,size_t bufsize, unsigned char *msg,u_int8_t 
 	if(bufsize>msg_size+1){
 		*body=7;
 		*(body+1)=msg_size;
-		memcpy(body+2,&msg,msg_size);
+		memcpy(body+2,msg,msg_size);
 		return 1;
 	}
 	return 0;
@@ -217,7 +217,6 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	msg.magic=93;
 	msg.version=2;
 	int size=0;
-	printf("tlv DATA ////////////////////////////////\n");
 	size=tlv_ack(msg.body,PMTU-4,index.id,index.nonce);
 	if(size>0){
 		//créer le message_h et faire un send message_h
@@ -225,7 +224,9 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		int i=send_message(soc,&msg,size+4,peer);
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
-	struct flood_entry *flood=get(&DATAF,&index);
+	struct flood_entry fl={0};
+	fl.index=&index;
+	struct flood_entry *flood=get(&DATAF,&fl);
 	//Si non vide
 	if(flood){
 			//retirer l'émetteur de la liste de voisins à inonder

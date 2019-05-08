@@ -8,6 +8,8 @@ void flood_messages(int soc,list flood);
 
 short compare_n(void *,void *);
 
+short compare_flood(void *, void *);
+
 short compare_d(void *,void *);
 //struct data_index *data,struct data_index *data2);
 

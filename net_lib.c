@@ -157,6 +157,16 @@ int send_goaway_asymetrical(int fd){
 	return count;
 }
 
+void remove_old_potential(){
+	if(!NEIGHBORS) return 0;
+	struct list *sym= find_by(POTENTIAL,is_old);
+	for(struct ngb_entry *ent=remove_first(sym);ent!=NULL;ent=remove_first(sym)){
+		remove_potential(ent->sym);
+		free(ent);
+	}
+	free(sym);
+}
+
 //On récupère le message
 /*int get_message(int sock, struct sockaddr_in6 client,unsigned char req[4096]){
 	return recvfrom(sock,req,4096,0,&client,sizeof(client));

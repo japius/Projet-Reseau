@@ -14,8 +14,9 @@ struct  ngb_entry *init_ngb_entry(struct neighbor *peer,int times_sent){
 		return NULL;
 	}
 	res->sym=peer;
-	res->times_sent=times_sent;
-	res->wait_time=wait_time(times_sent);
+	//res->times_sent=times_sent;
+	res->times_sent=0;
+	res->wait_time=wait_time(times_sent)+get_seconds();
 	return res;
 }
 
@@ -111,7 +112,9 @@ short compare_n_s2(void *c1,void *c2){
 
 //Retirer un voisin d'une liste de voisins à inonder
 short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
-	struct flood_entry *flood=(struct flood_entry *)get(&DATAF,index);
+	struct flood_entry fl = {0};
+	fl.index=data;
+	struct flood_entry *flood=(struct flood_entry *)get(&DATAF,&fl);
 	if(flood==NULL){
 		return 0;
 	}
