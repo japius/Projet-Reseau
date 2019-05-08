@@ -20,7 +20,7 @@ struct  ngb_entry *init_ngb_entry(struct neighbor *peer,int times_sent){
 }
 
 //Initialiser la donnée à inonder et sa liste de voisins à inonder
-struct flood_entry *init_flood(struct data_index *index, char *data,struct list *sym_neighbors){
+struct flood_entry *init_flood(struct data_index *index,unsigned char *data,struct list *sym_neighbors){
 	struct flood_entry *current=malloc(sizeof(struct flood_entry));
 	if(current==NULL){
 		perror("malloc");
@@ -34,11 +34,11 @@ struct flood_entry *init_flood(struct data_index *index, char *data,struct list 
 	}
 	if(index) memmove(current->index,index,sizeof(struct data_index));
 	current->sym_neighbors=sym_neighbors;
+	if(data[1]+2>PMTU-4) return;
 	memcpy(current->data,data,data[1]+2);
 	return current;
 }
 
-int count;
 void free_flood(struct flood_entry *flood){
 	free(flood->index);
 	free_list(flood->sym_neighbors,free);
@@ -59,6 +59,35 @@ short add_neighbor_to_flood(struct data_index *index,struct neighbor *peer){
 	l.times_sent=0;
 	//ici tirer un temps aléatoire*/
 	return addLast(flood->sym_neighbors,l);
+}
+
+void add_message_to_flood(unsigned char *msg_send, u_int8_t size_msg_send,struct neighbor *to_delete){
+	struct data_index index;
+	memcpy(&index.id,msg_send,8);
+	memcpy(&index.nonce,msg_send+8,4);
+	list symmetric=get_symmetrical(NEIGHBORS);
+	if(!symmetric) return;
+	if(to_delete!=NULL){
+		struct ngb_entry ngb_ent;
+		ngb_ent.sym=to_delete;
+		void *tmp=remove_elem(symmetric,&ngb_ent);
+		if(tmp!=NULL) free(tmp);
+	}
+	//printf("un petit test : %d",ntohs(peer.port));
+	//symmetric=remove_node(symmetric,&peer);
+	//on reconstruit le message et on le met dans la struct pour l"envoyer plus tard
+	//rajouter caractère de fin de ligne ? +1 pour type 4
+	unsigned char msg[(1<<8) + 4];
+	msg[0]=4;
+	msg[1]=size_msg_send;
+	memcpy(msg+2,msg_send,size_msg_send);
+	struct flood_entry *flood = init_flood(&index,msg,symmetric);
+	void *must_free = add_limited(&DATAF,flood,NBDATA);
+	//print_list(&DATAF);
+	if(!must_free){
+		return 0;
+	}
+	free_flood(must_free);
 }
 
 

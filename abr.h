@@ -28,7 +28,7 @@ struct ident *get_ident(tree *t,struct neighbor *key);
 
 //A modifier
 short issymmetrical(tree *t);
-short isasymetrical(tree *t);
+short is_old(tree *t);
 
 
 struct list *find_by(tree *t, short (*func)(tree*));

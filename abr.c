@@ -29,8 +29,9 @@ tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
   }
 
   if(val) memmove(current->val,val,sizeof(struct ident));
+  else memset(current->val,0,sizeof(struct ident));
   if(key) memmove(current->key,key,sizeof(struct neighbor));
-  current->val->last_hello_long = current->val->last_hello;
+  else memset(current->key,key,sizeof(struct neighbor));
   current->left=left;
   current->right=right;
   return current;
@@ -56,7 +57,7 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
     t->val->last_hello=val->last_hello;
     t->val->last_hello_long=val->last_hello_long;
   }
-  return 1;
+  return 2;
 }
 
 short add_potential(struct neighbor *key,struct ident *val){
@@ -93,13 +94,14 @@ struct ident *get_ident(tree *t,struct neighbor *key){
 //A modifier
 short issymmetrical(tree *t){
   int now=get_seconds();
-  printf("Tempsactuel :::  %d   Temps de Juliusz:::::  %d\n", now,t->val->last_hello_long);
   if(now-t->val->last_hello_long<120) return 1;
   return 0;
 }
 
-short isasymetrical(tree *t){
-  return !issymmetrical(t);
+short is_old(tree *t){
+  int now=get_seconds();
+  if(now-t->val->last_hello>120) return 1;
+  return 0;
 }
 
 list get_symmetrical(tree *t){
@@ -119,7 +121,6 @@ void find_by_aux(tree *t, short (*func)(tree*), list l){
 }
 
 list find_by(tree *t,  short (*func)(tree*)){
-  if(!t) return 0;
   list res = malloc(sizeof(struct list));
   if(!res) return 0;
   init_list(res,compare_n_s,sizeof(struct ngb_entry));
@@ -195,6 +196,7 @@ tree *remove_min(tree *t){
 }
 
 tree * remove_neighbor_aux(struct neighbor *key, tree *t){
+  if(t!=NULL) return 0;
   int comp=compare_n(t->key,key);
   if(comp==0){
     tree *l = t->left;

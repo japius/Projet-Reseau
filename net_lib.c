@@ -141,7 +141,7 @@ int send_shorthello_everyone(int fd, tree *people){
 
 int send_goaway_asymetrical(int fd){
 	if(!NEIGHBORS) return 0;
-	struct list *sym= find_by(NEIGHBORS,isasymetrical);
+	struct list *sym= find_by(NEIGHBORS,is_old);
 	struct message_h msg;
 	msg.magic=93;
 	msg.version=2;

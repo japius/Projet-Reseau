@@ -13,6 +13,8 @@ short compare_d(void *,void *);
 
 short compare_w(void *, void *);
 
+void print_on_screen(char *data, size_t data_size);
+
 //MULTICAST LOCAL IPV6
 void discover_neighbors();
 

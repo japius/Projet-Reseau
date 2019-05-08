@@ -83,34 +83,20 @@ int main(int argc, char *argv[]){
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(0,&fd_ens)){
-				unsigned char buf[PMTU-14];
-				int tmp=read(0,buf,PMTU-14)-1;
-				//tmp=tlv_data(msg.body,MAX_SIZE,ID,0,buf,tmp);
-				tmp=tlv_data(msg.body,PMTU-4,ID,0,buf,tmp);
-				if(tmp>0){
-					msg.magic=93;
-					msg.version=2;
-					msg.body_length=htons(tmp);
-					nb = send_to_everyone(soc,&msg,tmp+4,NEIGHBORS);
-				}
-				if(*(msg.body+14)==0){
-					int length = msg.body[1];
-				//afficher le message
-				printf("Nouveau message ///////////\n");
-				printf("longueur du message vaut %d\n",length);
-				for(int k=0;k<length-13;k++){
-					printf("%d.",msg.body[13+k]);
-				}
-							printf("////////\n");
-				write(1,msg.body+15,length-13);
-		}
+				unsigned char buf[(1<<8)-1];
+				u_int8_t tmp=read(0,buf,(1<<8)-14)-1;
+
+				unsigned char msg_to_send[(1<<8)+4];
+				tlv_data(msg_to_send,(1<<8)+4,ID,0,buf,tmp);
+				add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
+				print_on_screen(buf,tmp);
 			}
 		}
 		if(get_seconds()>=NEXTHELLO){
 			nb = send_hello_everyone(soc,NEIGHBORS);
 			printf("Hello long %d\n",nb );
-			nb=send_symetrical_everyone(soc,NEIGHBORS);
-			printf("Neighbor %d\n",nb);
+			//nb=send_symetrical_everyone(soc,NEIGHBORS);
+			//printf("Neighbor %d\n",nb);
 			NEXTHELLO=get_seconds()+TIMEHELLO;
 			nb=send_goaway_asymetrical(soc);
 			printf("GO away %d\n",nb );

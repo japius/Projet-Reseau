@@ -135,6 +135,14 @@ short compare_n(void *c1,void *c2){
 	return 0;
 }
 
+void print_on_screen(char *data, size_t data_size){
+	char *rouge="\033[31m";
+	char *blanc="\033[0m";
+	printf("%s\n",rouge );
+	write(1,data,data_size);
+	printf("%s\n",blanc);
+}
+
 /*short compare_w(void *nw, void *nw2){
 	struct neighbor_and_wait *n1=(struct neighbor_and_wait *)nw;
 	struct neighbor_and_wait *n2=(struct neighbor_and_wait *)nw2;
