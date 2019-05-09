@@ -187,7 +187,7 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 }
 
 int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
-	struct neighbor key;
+	struct neighbor key ={0};
 	memcpy(key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
 	key.port=ntohs(key.port);

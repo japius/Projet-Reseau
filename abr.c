@@ -61,6 +61,7 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
 }
 
 short add_potential(struct neighbor *key,struct ident *val){
+  key->msg=0;
   if(POTENTIAL==NULL){
     POTENTIAL=init(key,val,NULL,NULL);
     return POTENTIAL != 0;
@@ -70,11 +71,17 @@ short add_potential(struct neighbor *key,struct ident *val){
 
 
 short add_neighbor(struct neighbor *key,struct ident *val){
+  key->msg=malloc(sizeof(struct message_h));
   if(NEIGHBORS==NULL){
     NEIGHBORS=init(key,val,NULL,NULL);
+    if(!NEIGHBORS && key->msg) free(key->msg);
     return NEIGHBORS != 0;
   }
-  return add_neighbor_aux(NEIGHBORS,key,val);
+  int res = add_neighbor_aux(NEIGHBORS,key,val);
+  if((res==2 || res == 0) && key->msg){
+    free(key->msg);
+  }
+  return res;
 }
 
 //Pour ajouter un voisin s'il n"existe pas et le mettre à jour sinon
@@ -187,9 +194,9 @@ tree *maxUnder(tree *r){
 
 tree *remove_min(tree *t){
   if(!t->left->left){
-    tree *l=t->left->left;
+    tree *l=t->left;
     tree *r=t->left->right;
-    t->left->left=r;
+    t->left=r;
     return l;
   }
   return remove_min(t->left);
@@ -202,6 +209,7 @@ tree * remove_neighbor_aux(struct neighbor *key, tree *t){
     tree *l = t->left;
     tree *r = t->right;
     free(t->val);
+    if(t->key->msg) free(t->key->msg);
     free(t->key);
     free(t);
     if(!r) return l;

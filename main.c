@@ -22,7 +22,7 @@
 #define TIMEHELLO 30
 #define MIN_SYM 10
 
-
+#define TEST 100
 
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
@@ -73,12 +73,9 @@ int main(int argc, char *argv[]){
 		FD_SET(FD_MAGIC_READ,&fd_ens);
 		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
 		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
-		printf("NEXTTIME %d, et il est %d\n",NEXTTIME, get_seconds() );
 		NEXTTIME=NEXTHELLO;
 		if(select(max(FD_MAGIC_READ,soc)+1,&fd_ens,NULL,NULL,&timeout)){
-			printf("Je rentre dans select\n");
 			if(FD_ISSET(soc,&fd_ens)){
-				printf("Je recois dans soc\n");
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
 				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 				struct neighbor ngb = sockaddr6_to_neighbor(client);
@@ -87,12 +84,11 @@ int main(int argc, char *argv[]){
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(FD_MAGIC_READ,&fd_ens)){
-				printf("JE recois un 0\n");
 
 				unsigned char buf[(1<<8)-1] = {0};
 				u_int8_t tmp=read(FD_MAGIC_READ,buf,(1<<8)-14);
 				if(buf[tmp-1]==0) tmp--;
-				printf("mon text est '%s'\n",buf);
+				if(buf[tmp-1]=='\n') tmp--;
 
 				unsigned char msg_to_send[(1<<8)+4];
 				tlv_data(msg_to_send,(1<<8)+4,ID,0,buf,tmp);

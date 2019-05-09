@@ -16,7 +16,7 @@ struct message_h{
 struct neighbor{
 	u_int8_t ip[16];
 	u_int16_t port;
-	struct message_h msg;
+	struct message_h *msg;
 };
 
 struct ident{
