@@ -75,7 +75,23 @@ void random_on_octets(void *var, size_t octets_number){
 		*(tmp+i)=(char)rand();
 }
 
-int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt){
+int send_message(int fd,struct message_h *buf, size_t taille,struct neighbor rcpt){
+	if(!rcpt.msg){
+		send_message_now(fd,buf,taille,rcpt);
+		return;
+	}
+	u_int16_t act_size = ntohs(rcpt.msg->body_length);
+	u_int16_t size_to_add = ntohs(buf->body_length);
+	if(act_size+size_to_add+4>PMTU) {
+		send_message_now(fd,rcpt.msg,act_size+4,rcpt);
+		act_size=0;
+	}
+	memcpy(rcpt.msg->body+act_size,buf->body,size_to_add);
+	rcpt.msg->body_length = htons(act_size+size_to_add);
+	return 1;
+}
+
+int send_message_now(int fd,void *buf, size_t taille,struct neighbor rcpt){
 	struct sockaddr_in6 server = neighbor_to_sockaddr6(rcpt);
 	return sendto(fd,buf,taille,0,(struct sockaddr*)&server,sizeof(server));
 }
@@ -85,6 +101,18 @@ int send_to_everyone(int fd, void *buf, size_t length, tree *people){
 	int res = (send_message(fd,buf,length,*(people->key))>0)?1:0;
 	res += send_to_everyone(fd,buf,length,people->left);
 	res += send_to_everyone(fd,buf,length,people->right);
+	return res;
+}
+
+int send_to_everyone_now(int fd, tree *people){
+	if(!people) return 0;
+	int res=0; 
+	if(people->key->msg && people->key->msg->body_length){
+		res = (send_message_now(fd,people->key->msg,ntohs(people->key->msg->body_length)+4,*(people->key))>0)?1:0;
+		people->key->msg->body_length=0;
+	}
+	res += send_to_everyone_now(fd,people->left);
+	res += send_to_everyone_now(fd,people->right);
 	return res;
 }
 
@@ -159,7 +187,7 @@ int send_goaway_asymetrical(int fd){
 }
 
 void remove_old_potential(){
-	if(!NEIGHBORS) return 0;
+	if(!POTENTIAL) return ;
 	struct list *sym= find_by(POTENTIAL,is_old);
 	for(struct ngb_entry *ent=remove_first(sym);ent!=NULL;ent=remove_first(sym)){
 		remove_potential(ent->sym);
@@ -179,6 +207,7 @@ struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr){
 	res.port = ntohs(saddr.sin6_port);
 	//print_addr(saddr.sin6_addr.s6_addr);
 	memcpy(res.ip,saddr.sin6_addr.s6_addr,16);
+	res.msg=0;
 	//print_addr(res.ip);
 	return res;
 }

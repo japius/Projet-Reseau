@@ -72,6 +72,11 @@ short add_potential(struct neighbor *key,struct ident *val){
 
 short add_neighbor(struct neighbor *key,struct ident *val){
   key->msg=malloc(sizeof(struct message_h));
+  if(key->msg){
+    key->msg->magic=93;
+    key->msg->version=2;
+    key->msg->body_length=0;
+  }
   if(NEIGHBORS==NULL){
     NEIGHBORS=init(key,val,NULL,NULL);
     if(!NEIGHBORS && key->msg) free(key->msg);

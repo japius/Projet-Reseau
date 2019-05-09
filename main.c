@@ -79,8 +79,8 @@ int main(int argc, char *argv[]){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
 				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 				struct neighbor ngb = sockaddr6_to_neighbor(client);
-				print_addr(ngb.ip);
-				print_msg(msg);
+				//print_addr(ngb.ip);
+				//print_msg(msg);
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(FD_MAGIC_READ,&fd_ens)){
@@ -115,6 +115,8 @@ int main(int argc, char *argv[]){
 		printf("-----------------------------\n");
 		}
 		flood_messages(soc,&DATAF);
+
+		send_to_everyone_now(soc, NEIGHBORS);
 
 	}
 	/*Il faut:

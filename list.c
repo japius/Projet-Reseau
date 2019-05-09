@@ -35,7 +35,11 @@ struct flood_entry *init_flood(struct data_index *index,unsigned char *data,stru
 	}
 	if(index) memmove(current->index,index,sizeof(struct data_index));
 	current->sym_neighbors=sym_neighbors;
-	if(data[1]+2>PMTU-4) return;
+	if(data[1]+2>PMTU-4){
+		free(current->index);
+		free(current);
+		return 0;
+	}
 	memcpy(current->data,data,data[1]+2);
 	return current;
 }
