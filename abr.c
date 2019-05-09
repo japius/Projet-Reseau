@@ -196,7 +196,7 @@ tree *remove_min(tree *t){
 }
 
 tree * remove_neighbor_aux(struct neighbor *key, tree *t){
-  if(t!=NULL) return 0;
+  if(t==NULL) return 0;
   int comp=compare_n(t->key,key);
   if(comp==0){
     tree *l = t->left;

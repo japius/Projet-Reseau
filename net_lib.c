@@ -42,6 +42,7 @@ int send_first_message(int soc, char *addr, char *port){
 	rc = getaddrinfo(addr, port, &h, &r);
 
 	if(rc < 0){
+		freeaddrinfo(r);
 		fprintf(stderr, "Erreur lors de getaddrinfo\n");
 		return -1;
 	}

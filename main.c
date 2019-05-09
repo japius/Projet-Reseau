@@ -21,6 +21,7 @@
 #define MIN_SYM 10
 
 
+
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
 	//u_int64_t ID;
@@ -41,6 +42,15 @@ int main(int argc, char *argv[]){
 
 	int nb;
 
+	if(!NEIGHBORS){
+		if(argc==3)
+			nb = send_first_message(soc,argv[1],argv[2]);
+		else if(argc==4)
+			nb = send_first_message(soc,argv[2],argv[3]);
+		else
+			nb = send_first_message(soc,"jch.irif.fr","1212");
+	}
+
 
 	struct message_h msg;
 	struct sockaddr_in6 client;
@@ -53,14 +63,6 @@ int main(int argc, char *argv[]){
 	while(1){
 		//---- gere les réceptions de messages
 		// XXX select a ajouter
-		if(!NEIGHBORS){
-			if(argc==3)
-				nb = send_first_message(soc,argv[1],argv[2]);
-			else if(argc==4)
-				nb = send_first_message(soc,argv[2],argv[3]);
-			//else
-				//nb = send_first_message(soc,"jch.irif.fr","1212");
-		}
 
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);

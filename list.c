@@ -69,7 +69,7 @@ void add_message_to_flood(unsigned char *msg_send, u_int8_t size_msg_send,struct
 	list symmetric=get_symmetrical(NEIGHBORS);
 	if(!symmetric) return;
 	if(to_delete!=NULL){
-		struct ngb_entry ngb_ent;
+		struct ngb_entry ngb_ent ={0};
 		ngb_ent.sym=to_delete;
 		void *tmp=remove_elem(symmetric,&ngb_ent);
 		if(tmp!=NULL) free(tmp);
