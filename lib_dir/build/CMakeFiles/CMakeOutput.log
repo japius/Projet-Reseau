@@ -1,0 +1,1107 @@
+The system is: Linux - 4.4.0-17134-Microsoft - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/bin/cc 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is GNU, found in "/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/3.5.1/CompilerIdC/a.out"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_51d70/fast"
+/usr/bin/make -f CMakeFiles/cmTC_51d70.dir/build.make CMakeFiles/cmTC_51d70.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_51d70.dir/testCCompiler.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_51d70.dir/testCCompiler.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_51d70
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_51d70.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_51d70.dir/testCCompiler.c.o  -o cmTC_51d70 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_79cc1/fast"
+/usr/bin/make -f CMakeFiles/cmTC_79cc1.dir/build.make CMakeFiles/cmTC_79cc1.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_79cc1
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_79cc1.dir/link.txt --verbose=1
+/usr/bin/cc      -v CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o  -o cmTC_79cc1 -rdynamic  
+Using built-in specs.
+COLLECT_GCC=/usr/bin/cc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 5.4.0-6ubuntu1~16.04.11' --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs --enable-languages=c,ada,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-5 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-5-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-5-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-5-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.11) 
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_79cc1' '-rdynamic' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLCig0E.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_79cc1 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_79cc1/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_79cc1.dir/build.make CMakeFiles/cmTC_79cc1.dir/build]
+  ignore line: [make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp']
+  ignore line: [Building C object CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc     -o CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.5/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_79cc1]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_79cc1.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc      -v CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o  -o cmTC_79cc1 -rdynamic  ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/cc]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 5.4.0-6ubuntu1~16.04.11' --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs --enable-languages=c,ada,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-5 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-5-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-5-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-5-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.11) ]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_79cc1' '-rdynamic' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLCig0E.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTC_79cc1 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccLCig0E.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [--sysroot=/] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_79cc1] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o] ==> ignore
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../..]
+    arg [CMakeFiles/cmTC_79cc1.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/crtend.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o] ==> ignore
+  remove lib [gcc]
+  remove lib [gcc_s]
+  remove lib [gcc]
+  remove lib [gcc_s]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5] ==> [/usr/lib/gcc/x86_64-linux-gnu/5]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../..] ==> [/usr/lib]
+  implicit libs: [c]
+  implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/5;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+  implicit fwks: []
+
+
+
+
+Detecting C [-std=c11] compiler features compiled with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_8808c/fast"
+/usr/bin/make -f CMakeFiles/cmTC_8808c.dir/build.make CMakeFiles/cmTC_8808c.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8808c.dir/feature_tests.c.o
+/usr/bin/cc    -std=c11 -o CMakeFiles/cmTC_8808c.dir/feature_tests.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_8808c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8808c.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_8808c.dir/feature_tests.c.o  -o cmTC_8808c -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c99] compiler features compiled with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_a593b/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a593b.dir/build.make CMakeFiles/cmTC_a593b.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a593b.dir/feature_tests.c.o
+/usr/bin/cc    -std=c99 -o CMakeFiles/cmTC_a593b.dir/feature_tests.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_a593b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a593b.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_a593b.dir/feature_tests.c.o  -o cmTC_a593b -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c90] compiler features compiled with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_fffe9/fast"
+/usr/bin/make -f CMakeFiles/cmTC_fffe9.dir/build.make CMakeFiles/cmTC_fffe9.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_fffe9.dir/feature_tests.c.o
+/usr/bin/cc    -std=c90 -o CMakeFiles/cmTC_fffe9.dir/feature_tests.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/feature_tests.c
+Linking C executable cmTC_fffe9
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fffe9.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_fffe9.dir/feature_tests.c.o  -o cmTC_fffe9 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:0c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:0c_variadic_macros
+Performing C SOURCE FILE Test LWS_HAVE_inline succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_7a211/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7a211.dir/build.make CMakeFiles/cmTC_7a211.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7a211.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=inline  -DLWS_HAVE_inline   -o CMakeFiles/cmTC_7a211.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_7a211
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7a211.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAVE_inline    CMakeFiles/cmTC_7a211.dir/src.c.o  -o cmTC_7a211 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+		#include <stdio.h>
+		static KEYWORD void a() {}
+		int main(int argc, char **argv) { a(); return 0; }
+		
+Performing C SOURCE FILE Test LWS_HAVE___inline__ succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_6d538/fast"
+/usr/bin/make -f CMakeFiles/cmTC_6d538.dir/build.make CMakeFiles/cmTC_6d538.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6d538.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline__  -DLWS_HAVE___inline__   -o CMakeFiles/cmTC_6d538.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_6d538
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6d538.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAVE___inline__    CMakeFiles/cmTC_6d538.dir/src.c.o  -o cmTC_6d538 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+		#include <stdio.h>
+		static KEYWORD void a() {}
+		int main(int argc, char **argv) { a(); return 0; }
+		
+Performing C SOURCE FILE Test LWS_HAVE___inline succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_50482/fast"
+/usr/bin/make -f CMakeFiles/cmTC_50482.dir/build.make CMakeFiles/cmTC_50482.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_50482.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DLWS_HAVE___inline   -o CMakeFiles/cmTC_50482.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_50482
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_50482.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAVE___inline    CMakeFiles/cmTC_50482.dir/src.c.o  -o cmTC_50482 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+		#include <stdio.h>
+		static KEYWORD void a() {}
+		int main(int argc, char **argv) { a(); return 0; }
+		
+Performing C SOURCE FILE Test LWS_HAVE_BZERO succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_6a0ca/fast"
+/usr/bin/make -f CMakeFiles/cmTC_6a0ca.dir/build.make CMakeFiles/cmTC_6a0ca.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6a0ca.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DLWS_HAVE_BZERO   -o CMakeFiles/cmTC_6a0ca.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_6a0ca
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6a0ca.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAVE_BZERO    CMakeFiles/cmTC_6a0ca.dir/src.c.o  -o cmTC_6a0ca -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <strings.h>
+	int main(int argc, char **argv) { char buf[100]; bzero(buf, 100); return 0; }
+	
+Performing C SOURCE FILE Test LWS_HAVE_MALLOC_TRIM succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_65704/fast"
+/usr/bin/make -f CMakeFiles/cmTC_65704.dir/build.make CMakeFiles/cmTC_65704.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_65704.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DLWS_HAVE_MALLOC_TRIM   -o CMakeFiles/cmTC_65704.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_65704
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_65704.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAVE_MALLOC_TRIM    CMakeFiles/cmTC_65704.dir/src.c.o  -o cmTC_65704 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <malloc.h>
+	int main(int argc, char **argv) { return malloc_trim(0); }
+	
+Performing C SOURCE FILE Test LWS_HAVE_MALLOC_USABLE_SIZE succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5c6d1/fast"
+/usr/bin/make -f CMakeFiles/cmTC_5c6d1.dir/build.make CMakeFiles/cmTC_5c6d1.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5c6d1.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DLWS_HAVE_MALLOC_USABLE_SIZE   -o CMakeFiles/cmTC_5c6d1.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_5c6d1
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5c6d1.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAVE_MALLOC_USABLE_SIZE    CMakeFiles/cmTC_5c6d1.dir/src.c.o  -o cmTC_5c6d1 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <malloc.h>
+	int main(int argc, char **argv) { return (int)malloc_usable_size((void *)0); }
+	
+Determining if the function fork exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_832eb/fast"
+/usr/bin/make -f CMakeFiles/cmTC_832eb.dir/build.make CMakeFiles/cmTC_832eb.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_832eb.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=fork   -o CMakeFiles/cmTC_832eb.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+<command-line>:0:23: warning: conflicting types for built-in function ‘fork’
+/usr/share/cmake-3.5/Modules/CheckFunctionExists.c:6:6: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+ char CHECK_FUNCTION_EXISTS();
+      ^
+Linking C executable cmTC_832eb
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_832eb.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=fork    CMakeFiles/cmTC_832eb.dir/CheckFunctionExists.c.o  -o cmTC_832eb -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function getenv exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_db30e/fast"
+/usr/bin/make -f CMakeFiles/cmTC_db30e.dir/build.make CMakeFiles/cmTC_db30e.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_db30e.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=getenv   -o CMakeFiles/cmTC_db30e.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_db30e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_db30e.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=getenv    CMakeFiles/cmTC_db30e.dir/CheckFunctionExists.c.o  -o cmTC_db30e -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function malloc exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2b0dd/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2b0dd.dir/build.make CMakeFiles/cmTC_2b0dd.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2b0dd.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=malloc   -o CMakeFiles/cmTC_2b0dd.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+<command-line>:0:23: warning: conflicting types for built-in function ‘malloc’
+/usr/share/cmake-3.5/Modules/CheckFunctionExists.c:6:6: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+ char CHECK_FUNCTION_EXISTS();
+      ^
+Linking C executable cmTC_2b0dd
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2b0dd.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=malloc    CMakeFiles/cmTC_2b0dd.dir/CheckFunctionExists.c.o  -o cmTC_2b0dd -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function memset exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_a4242/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a4242.dir/build.make CMakeFiles/cmTC_a4242.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a4242.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=memset   -o CMakeFiles/cmTC_a4242.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+<command-line>:0:23: warning: conflicting types for built-in function ‘memset’
+/usr/share/cmake-3.5/Modules/CheckFunctionExists.c:6:6: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+ char CHECK_FUNCTION_EXISTS();
+      ^
+Linking C executable cmTC_a4242
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a4242.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=memset    CMakeFiles/cmTC_a4242.dir/CheckFunctionExists.c.o  -o cmTC_a4242 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function realloc exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_dd165/fast"
+/usr/bin/make -f CMakeFiles/cmTC_dd165.dir/build.make CMakeFiles/cmTC_dd165.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_dd165.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=realloc   -o CMakeFiles/cmTC_dd165.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+<command-line>:0:23: warning: conflicting types for built-in function ‘realloc’
+/usr/share/cmake-3.5/Modules/CheckFunctionExists.c:6:6: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+ char CHECK_FUNCTION_EXISTS();
+      ^
+Linking C executable cmTC_dd165
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dd165.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=realloc    CMakeFiles/cmTC_dd165.dir/CheckFunctionExists.c.o  -o cmTC_dd165 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function socket exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_b9222/fast"
+/usr/bin/make -f CMakeFiles/cmTC_b9222.dir/build.make CMakeFiles/cmTC_b9222.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b9222.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=socket   -o CMakeFiles/cmTC_b9222.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_b9222
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9222.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=socket    CMakeFiles/cmTC_b9222.dir/CheckFunctionExists.c.o  -o cmTC_b9222 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function strerror exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_84115/fast"
+/usr/bin/make -f CMakeFiles/cmTC_84115.dir/build.make CMakeFiles/cmTC_84115.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_84115.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=strerror   -o CMakeFiles/cmTC_84115.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_84115
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_84115.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=strerror    CMakeFiles/cmTC_84115.dir/CheckFunctionExists.c.o  -o cmTC_84115 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function vfork exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ca064/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ca064.dir/build.make CMakeFiles/cmTC_ca064.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_ca064.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=vfork   -o CMakeFiles/cmTC_ca064.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_ca064
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ca064.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=vfork    CMakeFiles/cmTC_ca064.dir/CheckFunctionExists.c.o  -o cmTC_ca064 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function execvpe exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_42bac/fast"
+/usr/bin/make -f CMakeFiles/cmTC_42bac.dir/build.make CMakeFiles/cmTC_42bac.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_42bac.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=execvpe   -o CMakeFiles/cmTC_42bac.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_42bac
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_42bac.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=execvpe    CMakeFiles/cmTC_42bac.dir/CheckFunctionExists.c.o  -o cmTC_42bac -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function getifaddrs exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2d00a/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2d00a.dir/build.make CMakeFiles/cmTC_2d00a.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2d00a.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=getifaddrs   -o CMakeFiles/cmTC_2d00a.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_2d00a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2d00a.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=getifaddrs    CMakeFiles/cmTC_2d00a.dir/CheckFunctionExists.c.o  -o cmTC_2d00a -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function snprintf exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_c339e/fast"
+/usr/bin/make -f CMakeFiles/cmTC_c339e.dir/build.make CMakeFiles/cmTC_c339e.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c339e.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=snprintf   -o CMakeFiles/cmTC_c339e.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+<command-line>:0:23: warning: conflicting types for built-in function ‘snprintf’
+/usr/share/cmake-3.5/Modules/CheckFunctionExists.c:6:6: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+ char CHECK_FUNCTION_EXISTS();
+      ^
+Linking C executable cmTC_c339e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c339e.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=snprintf    CMakeFiles/cmTC_c339e.dir/CheckFunctionExists.c.o  -o cmTC_c339e -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function getloadavg exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_7e477/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7e477.dir/build.make CMakeFiles/cmTC_7e477.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7e477.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=getloadavg   -o CMakeFiles/cmTC_7e477.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_7e477
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7e477.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=getloadavg    CMakeFiles/cmTC_7e477.dir/CheckFunctionExists.c.o  -o cmTC_7e477 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function atoll exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_3d089/fast"
+/usr/bin/make -f CMakeFiles/cmTC_3d089.dir/build.make CMakeFiles/cmTC_3d089.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3d089.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DCHECK_FUNCTION_EXISTS=atoll   -o CMakeFiles/cmTC_3d089.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_3d089
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3d089.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=atoll    CMakeFiles/cmTC_3d089.dir/CheckFunctionExists.c.o  -o cmTC_3d089 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file dlfcn.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_0446b/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0446b.dir/build.make CMakeFiles/cmTC_0446b.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0446b.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_0446b.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_0446b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0446b.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_0446b.dir/CheckIncludeFile.c.o  -o cmTC_0446b -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file fcntl.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d1fd0/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d1fd0.dir/build.make CMakeFiles/cmTC_d1fd0.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d1fd0.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_d1fd0.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_d1fd0
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d1fd0.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_d1fd0.dir/CheckIncludeFile.c.o  -o cmTC_d1fd0 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file memory.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_1d707/fast"
+/usr/bin/make -f CMakeFiles/cmTC_1d707.dir/build.make CMakeFiles/cmTC_1d707.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1d707.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_1d707.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_1d707
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1d707.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_1d707.dir/CheckIncludeFile.c.o  -o cmTC_1d707 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file netinet/in.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_c4ba3/fast"
+/usr/bin/make -f CMakeFiles/cmTC_c4ba3.dir/build.make CMakeFiles/cmTC_c4ba3.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c4ba3.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_c4ba3.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_c4ba3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c4ba3.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_c4ba3.dir/CheckIncludeFile.c.o  -o cmTC_c4ba3 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file stdint.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_b7591/fast"
+/usr/bin/make -f CMakeFiles/cmTC_b7591.dir/build.make CMakeFiles/cmTC_b7591.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b7591.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_b7591.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_b7591
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b7591.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_b7591.dir/CheckIncludeFile.c.o  -o cmTC_b7591 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file stdlib.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_046d4/fast"
+/usr/bin/make -f CMakeFiles/cmTC_046d4.dir/build.make CMakeFiles/cmTC_046d4.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_046d4.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_046d4.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_046d4
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_046d4.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_046d4.dir/CheckIncludeFile.c.o  -o cmTC_046d4 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file strings.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d7ebe/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d7ebe.dir/build.make CMakeFiles/cmTC_d7ebe.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d7ebe.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_d7ebe.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_d7ebe
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d7ebe.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_d7ebe.dir/CheckIncludeFile.c.o  -o cmTC_d7ebe -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file string.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_8066d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_8066d.dir/build.make CMakeFiles/cmTC_8066d.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8066d.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_8066d.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_8066d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8066d.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_8066d.dir/CheckIncludeFile.c.o  -o cmTC_8066d -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file sys/prctl.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_e7fcc/fast"
+/usr/bin/make -f CMakeFiles/cmTC_e7fcc.dir/build.make CMakeFiles/cmTC_e7fcc.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e7fcc.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_e7fcc.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_e7fcc
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e7fcc.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_e7fcc.dir/CheckIncludeFile.c.o  -o cmTC_e7fcc -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file sys/socket.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_37ad6/fast"
+/usr/bin/make -f CMakeFiles/cmTC_37ad6.dir/build.make CMakeFiles/cmTC_37ad6.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_37ad6.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_37ad6.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_37ad6
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_37ad6.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_37ad6.dir/CheckIncludeFile.c.o  -o cmTC_37ad6 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file sys/stat.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_0619f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0619f.dir/build.make CMakeFiles/cmTC_0619f.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0619f.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_0619f.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_0619f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0619f.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_0619f.dir/CheckIncludeFile.c.o  -o cmTC_0619f -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file sys/types.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d6b4d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d6b4d.dir/build.make CMakeFiles/cmTC_d6b4d.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d6b4d.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_d6b4d.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_d6b4d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d6b4d.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_d6b4d.dir/CheckIncludeFile.c.o  -o cmTC_d6b4d -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file unistd.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_37327/fast"
+/usr/bin/make -f CMakeFiles/cmTC_37327.dir/build.make CMakeFiles/cmTC_37327.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_37327.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_37327.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_37327
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_37327.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_37327.dir/CheckIncludeFile.c.o  -o cmTC_37327 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file malloc.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_3408a/fast"
+/usr/bin/make -f CMakeFiles/cmTC_3408a.dir/build.make CMakeFiles/cmTC_3408a.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3408a.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_3408a.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_3408a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3408a.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_3408a.dir/CheckIncludeFile.c.o  -o cmTC_3408a -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_a1618/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a1618.dir/build.make CMakeFiles/cmTC_a1618.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a1618.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_a1618.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_a1618
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a1618.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_a1618.dir/CheckIncludeFile.c.o  -o cmTC_a1618 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if files stdlib.h;stdarg.h;string.h;float.h exist passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_c775e/fast"
+/usr/bin/make -f CMakeFiles/cmTC_c775e.dir/build.make CMakeFiles/cmTC_c775e.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c775e.dir/CheckIncludeFiles.c.o
+/usr/bin/cc  -DKEYWORD=__inline   -o CMakeFiles/cmTC_c775e.dir/CheckIncludeFiles.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTC_c775e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c775e.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_c775e.dir/CheckIncludeFiles.c.o  -o cmTC_c775e -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Performing C SOURCE FILE Test LWS_HAS_INTPTR_T succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_320f9/fast"
+/usr/bin/make -f CMakeFiles/cmTC_320f9.dir/build.make CMakeFiles/cmTC_320f9.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_320f9.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DLWS_HAS_INTPTR_T   -o CMakeFiles/cmTC_320f9.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_320f9
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_320f9.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAS_INTPTR_T    CMakeFiles/cmTC_320f9.dir/src.c.o  -o cmTC_320f9 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <stdint.h> 
+	int main(void) {
+		intptr_t test = 1;
+		return 0;
+	}
+Performing C SOURCE FILE Test LWS_HAS_PTHREAD_SETNAME_NP succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_0b2af/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0b2af.dir/build.make CMakeFiles/cmTC_0b2af.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0b2af.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DLWS_HAS_PTHREAD_SETNAME_NP -pthread   -o CMakeFiles/cmTC_0b2af.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c:5:3: warning: null argument where non-null required (argument 2) [-Wnonnull]
+   pthread_setname_np(th, NULL);
+   ^
+Linking C executable cmTC_0b2af
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0b2af.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAS_PTHREAD_SETNAME_NP -pthread    CMakeFiles/cmTC_0b2af.dir/src.c.o  -o cmTC_0b2af -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#define _GNU_SOURCE 
+	#include <pthread.h> 
+	int main(void) { 
+		pthread_t th = 0;
+		pthread_setname_np(th, NULL);
+		return 0;
+	}
+Performing C SOURCE FILE Test LWS_HAS_GETOPT_LONG succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_6877f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_6877f.dir/build.make CMakeFiles/cmTC_6877f.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6877f.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -DLWS_HAS_GETOPT_LONG -pthread   -o CMakeFiles/cmTC_6877f.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_6877f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6877f.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAS_GETOPT_LONG -pthread    CMakeFiles/cmTC_6877f.dir/src.c.o  -o cmTC_6877f -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <stddef.h>
+	#include <getopt.h> 
+	int main(void) { 
+		void *p = (void *)getopt_long;
+		return p != NULL;
+	}
+Performing C SOURCE FILE Test LWS_HAVE_VISIBILITY succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2e861/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2e861.dir/build.make CMakeFiles/cmTC_2e861.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2e861.dir/src.c.o
+/usr/bin/cc    -DLWS_HAVE_VISIBILITY -pthread   -fvisibility=hidden -o CMakeFiles/cmTC_2e861.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_2e861
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2e861.dir/link.txt --verbose=1
+/usr/bin/cc   -DLWS_HAVE_VISIBILITY -pthread    CMakeFiles/cmTC_2e861.dir/src.c.o  -o cmTC_2e861 -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main(void) { return 0; }
+Determining if the include file openssl/ecdh.h exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_dea0a/fast"
+/usr/bin/make -f CMakeFiles/cmTC_dea0a.dir/build.make CMakeFiles/cmTC_dea0a.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_dea0a.dir/CheckIncludeFile.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -pthread   -o CMakeFiles/cmTC_dea0a.dir/CheckIncludeFile.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_dea0a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dea0a.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -pthread    CMakeFiles/cmTC_dea0a.dir/CheckIncludeFile.c.o  -o cmTC_dea0a -rdynamic 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function SSL_CTX_set1_param exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_fba33/fast"
+/usr/bin/make -f CMakeFiles/cmTC_fba33.dir/build.make CMakeFiles/cmTC_fba33.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_fba33.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_CTX_set1_param -pthread   -o CMakeFiles/cmTC_fba33.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_fba33
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fba33.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_CTX_set1_param -pthread    CMakeFiles/cmTC_fba33.dir/CheckFunctionExists.c.o  -o cmTC_fba33 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function SSL_set_info_callback exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_6e33a/fast"
+/usr/bin/make -f CMakeFiles/cmTC_6e33a.dir/build.make CMakeFiles/cmTC_6e33a.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6e33a.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_set_info_callback -pthread   -o CMakeFiles/cmTC_6e33a.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_6e33a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6e33a.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_set_info_callback -pthread    CMakeFiles/cmTC_6e33a.dir/CheckFunctionExists.c.o  -o cmTC_6e33a -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function X509_VERIFY_PARAM_set1_host exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_00570/fast"
+/usr/bin/make -f CMakeFiles/cmTC_00570.dir/build.make CMakeFiles/cmTC_00570.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_00570.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=X509_VERIFY_PARAM_set1_host -pthread   -o CMakeFiles/cmTC_00570.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_00570
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_00570.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=X509_VERIFY_PARAM_set1_host -pthread    CMakeFiles/cmTC_00570.dir/CheckFunctionExists.c.o  -o cmTC_00570 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function RSA_set0_key exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_c406f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_c406f.dir/build.make CMakeFiles/cmTC_c406f.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c406f.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=RSA_set0_key -pthread   -o CMakeFiles/cmTC_c406f.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_c406f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c406f.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=RSA_set0_key -pthread    CMakeFiles/cmTC_c406f.dir/CheckFunctionExists.c.o  -o cmTC_c406f -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function X509_get_key_usage exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_55a92/fast"
+/usr/bin/make -f CMakeFiles/cmTC_55a92.dir/build.make CMakeFiles/cmTC_55a92.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_55a92.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=X509_get_key_usage -pthread   -o CMakeFiles/cmTC_55a92.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_55a92
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_55a92.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=X509_get_key_usage -pthread    CMakeFiles/cmTC_55a92.dir/CheckFunctionExists.c.o  -o cmTC_55a92 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function SSL_CTX_get0_certificate exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_43d53/fast"
+/usr/bin/make -f CMakeFiles/cmTC_43d53.dir/build.make CMakeFiles/cmTC_43d53.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_43d53.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_CTX_get0_certificate -pthread   -o CMakeFiles/cmTC_43d53.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_43d53
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_43d53.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_CTX_get0_certificate -pthread    CMakeFiles/cmTC_43d53.dir/CheckFunctionExists.c.o  -o cmTC_43d53 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function SSL_get0_alpn_selected exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_b3388/fast"
+/usr/bin/make -f CMakeFiles/cmTC_b3388.dir/build.make CMakeFiles/cmTC_b3388.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b3388.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_get0_alpn_selected -pthread   -o CMakeFiles/cmTC_b3388.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_b3388
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b3388.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_get0_alpn_selected -pthread    CMakeFiles/cmTC_b3388.dir/CheckFunctionExists.c.o  -o cmTC_b3388 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function SSL_set_alpn_protos exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_05777/fast"
+/usr/bin/make -f CMakeFiles/cmTC_05777.dir/build.make CMakeFiles/cmTC_05777.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_05777.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_set_alpn_protos -pthread   -o CMakeFiles/cmTC_05777.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_05777
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_05777.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_set_alpn_protos -pthread    CMakeFiles/cmTC_05777.dir/CheckFunctionExists.c.o  -o cmTC_05777 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function SSL_CTX_set_ciphersuites exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_8cb9f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_8cb9f.dir/build.make CMakeFiles/cmTC_8cb9f.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8cb9f.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_CTX_set_ciphersuites -pthread   -o CMakeFiles/cmTC_8cb9f.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_8cb9f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8cb9f.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=SSL_CTX_set_ciphersuites -pthread    CMakeFiles/cmTC_8cb9f.dir/CheckFunctionExists.c.o  -o cmTC_8cb9f -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Performing C SOURCE FILE Test LWS_HAVE_SSL_EXTRA_CHAIN_CERTS succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_3fd60/fast"
+/usr/bin/make -f CMakeFiles/cmTC_3fd60.dir/build.make CMakeFiles/cmTC_3fd60.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3fd60.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_SSL_EXTRA_CHAIN_CERTS -pthread   -o CMakeFiles/cmTC_3fd60.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_3fd60
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3fd60.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_SSL_EXTRA_CHAIN_CERTS -pthread    CMakeFiles/cmTC_3fd60.dir/src.c.o  -o cmTC_3fd60 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <openssl/ssl.h>
+int main(void) { STACK_OF(X509) *c = NULL; SSL_CTX *ctx = NULL; return (int)SSL_CTX_get_extra_chain_certs_only(ctx, &c); }
+
+Performing C SOURCE FILE Test LWS_HAVE_EVP_MD_CTX_free succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_30e16/fast"
+/usr/bin/make -f CMakeFiles/cmTC_30e16.dir/build.make CMakeFiles/cmTC_30e16.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_30e16.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_EVP_MD_CTX_free -pthread   -o CMakeFiles/cmTC_30e16.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_30e16
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_30e16.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_EVP_MD_CTX_free -pthread    CMakeFiles/cmTC_30e16.dir/src.c.o  -o cmTC_30e16 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <openssl/ssl.h>
+int main(void) { EVP_MD_CTX *md_ctx = NULL; EVP_MD_CTX_free(md_ctx); return 0; }
+
+Determining if the function ECDSA_SIG_set0 exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_a11fc/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a11fc.dir/build.make CMakeFiles/cmTC_a11fc.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a11fc.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=ECDSA_SIG_set0 -pthread   -o CMakeFiles/cmTC_a11fc.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_a11fc
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a11fc.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=ECDSA_SIG_set0 -pthread    CMakeFiles/cmTC_a11fc.dir/CheckFunctionExists.c.o  -o cmTC_a11fc -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function BN_bn2binpad exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2763e/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2763e.dir/build.make CMakeFiles/cmTC_2763e.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2763e.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=BN_bn2binpad -pthread   -o CMakeFiles/cmTC_2763e.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_2763e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2763e.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=BN_bn2binpad -pthread    CMakeFiles/cmTC_2763e.dir/CheckFunctionExists.c.o  -o cmTC_2763e -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function EVP_aes_128_wrap exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_e3a48/fast"
+/usr/bin/make -f CMakeFiles/cmTC_e3a48.dir/build.make CMakeFiles/cmTC_e3a48.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e3a48.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=EVP_aes_128_wrap -pthread   -o CMakeFiles/cmTC_e3a48.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_e3a48
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e3a48.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=EVP_aes_128_wrap -pthread    CMakeFiles/cmTC_e3a48.dir/CheckFunctionExists.c.o  -o cmTC_e3a48 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function EC_POINT_get_affine_coordinates exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_8a8d2/fast"
+/usr/bin/make -f CMakeFiles/cmTC_8a8d2.dir/build.make CMakeFiles/cmTC_8a8d2.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8a8d2.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=EC_POINT_get_affine_coordinates -pthread   -o CMakeFiles/cmTC_8a8d2.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_8a8d2
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8a8d2.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=EC_POINT_get_affine_coordinates -pthread    CMakeFiles/cmTC_8a8d2.dir/CheckFunctionExists.c.o  -o cmTC_8a8d2 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function TLS_client_method exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5cdc5/fast"
+/usr/bin/make -f CMakeFiles/cmTC_5cdc5.dir/build.make CMakeFiles/cmTC_5cdc5.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5cdc5.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=TLS_client_method -pthread   -o CMakeFiles/cmTC_5cdc5.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_5cdc5
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5cdc5.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=TLS_client_method -pthread    CMakeFiles/cmTC_5cdc5.dir/CheckFunctionExists.c.o  -o cmTC_5cdc5 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function TLSv1_2_client_method exists passed with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2eb2f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2eb2f.dir/build.make CMakeFiles/cmTC_2eb2f.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2eb2f.dir/CheckFunctionExists.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=TLSv1_2_client_method -pthread   -o CMakeFiles/cmTC_2eb2f.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_2eb2f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2eb2f.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DCHECK_FUNCTION_EXISTS=TLSv1_2_client_method -pthread    CMakeFiles/cmTC_2eb2f.dir/CheckFunctionExists.c.o  -o cmTC_2eb2f -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+
+Performing C SOURCE FILE Test LWS_HAVE_PIPE2 succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_8507e/fast"
+/usr/bin/make -f CMakeFiles/cmTC_8507e.dir/build.make CMakeFiles/cmTC_8507e.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8507e.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_PIPE2 -pthread   -o CMakeFiles/cmTC_8507e.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_8507e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8507e.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_PIPE2 -pthread    CMakeFiles/cmTC_8507e.dir/src.c.o  -o cmTC_8507e -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#define _GNU_SOURCE
+#include <unistd.h>
+int main(void) {int fd[2];
+ return pipe2(fd, 0);
+}
+
+Performing C SOURCE FILE Test LWS_HAVE_TCP_USER_TIMEOUT succeeded with the following output:
+Change Dir: /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_1c454/fast"
+/usr/bin/make -f CMakeFiles/cmTC_1c454.dir/build.make CMakeFiles/cmTC_1c454.dir/build
+make[1]: Entering directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1c454.dir/src.c.o
+/usr/bin/cc  -DKEYWORD=__inline  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_TCP_USER_TIMEOUT -pthread   -o CMakeFiles/cmTC_1c454.dir/src.c.o   -c /home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_1c454
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1c454.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -DLWS_HAVE_TCP_USER_TIMEOUT -pthread    CMakeFiles/cmTC_1c454.dir/src.c.o  -o cmTC_1c454 -rdynamic /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so -lm 
+make[1]: Leaving directory '/mnt/c/Users/farid/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include <netinet/tcp.h>
+int main(void) { return TCP_USER_TIMEOUT; }
+

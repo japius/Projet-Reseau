@@ -1,0 +1,1 @@
+/usr/bin/cc  -Wall -Wsign-compare -Wignored-qualifiers -Wtype-limits -Wuninitialized -Werror -fvisibility=hidden -Wundef    -pthread -O3 -DNDEBUG   CMakeFiles/test-client.dir/test-apps/test-client.c.o  -o bin/libwebsockets-test-client -rdynamic lib/libwebsockets.a -lssl -lcrypto -lm 

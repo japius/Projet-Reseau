@@ -1,6 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
-#define NBDATA 10
+#define NBDATA 100
 
 #include "struct.h"
 #include "genlist.h"

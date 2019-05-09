@@ -1,42 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+	<meta charset="utf-8" http-equiv="Content-Language">
 	<link rel="stylesheet" type="text/css" href="test.css">
+	<script src="jquery.js"></script>
+	<script src="chat.js"></script>
 	<title>Chat</title>
 </head>
 <body>
 	<div id="main">
+		<p id="connection"></p>
 		<p id="nick"><label for="nn">Nickname : </label>
 		<input type="text" name="pseudo" id="nn"></p>	
 		<div id="container">
 		<div id="conv">
 		</div>
 		</div>
-		<form method="post">
-			<input type="text" name="msg" id="msg" placeholder="Type a message ...">
-			<input type="submit" value="Send">
+		<form method="post" id="test">
+			<input type="text" name="msg" id="msg" placeholder="Type a message ..." required>
+			<input type="submit" value="Send" name="send">
+		</form>
+		<form method="post" enctype="multipart/form-data" id="file">
+			<input type="file" id="file" name="fupl" accept="image/png,image/gif,image/jpeg,image/svg">
+			<input type="submit" value="+">
 		</form>
 	</div>
 </body>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>
-	$(document).ready(function(){
-		//clear();
 
-		$('form').submit(function(event){
-			event.preventDefault();
-			console.log($("#nn").val());
-			var msg="<p>"+$("#nn").val()+" : "+$("#msg").val()+"<p>";
-			$("#conv").append(msg);
-			clear();
-			//window.location.reload();
-		});
-
-		function clear(){
-			$("#msg").val('');
-			$("#msg").focus();
-		}
-	});
-</script>
 </html>

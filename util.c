@@ -52,21 +52,17 @@ int send_data(int soc, char *tlv,struct neighbor *key){
 	return send_message(soc,&msg,msg_length,*key);
 }
 
-int add_to_neighbor_message(char *tlv,struct neighbor *key){
+int add_to_neighbor_message(int soc,char *tlv,int length,struct neighbor *key){
 	return 0;
-	/*if(get_message(key)==NULL){
-		char *body;
-		struct message_h msg;
-		msg.magic=93;
-		msg.version=2;
-		int body_length=tlv[1],msg_length=body_length+4;
-		memcpy(&msg.body_length,&body_length,2);
-		memcpy(msg.body,tlv,body_length);
-		//copier dans le message à envoyer au neighbor
+	/*struct message_h *msg=key->msg;
+	if(msg->body_length+4+length>=PMTU){
+		send_message(soc,&msg,msg->body_length+4,*key);
+		//retirer l'ancien message
+		msg->body_length=0;
 	}
-	//sinon
-	//juste rajouter le tlv si pas de problème avec le PMTU
-	return 1;*/
+	memcpy(msg->body+body_length,tlv,length);
+	msg->body_length+=length;
+	return 0;*/
 }
 
 void flood_message_to_neighbours(int soc,struct flood_entry *flood){
@@ -146,11 +142,13 @@ short compare_n(void *c1,void *c2){
 	return 0;
 }
 
+
 void print_on_screen(char *data, size_t data_size){
 	char *rouge="\033[31m";
 	char *blanc="\033[0m";
 	printf("%s\n",rouge );
 	write(1,data,data_size);
+	write(FD_MAGIC_WRITE,data,data_size);
 	printf("%s\n",blanc);
 }
 
@@ -183,12 +181,20 @@ void discover_neighbors(){
 
 //MULTICAST
 /*void hello_multicast_local(){
+	struct message_h msg,msg_hello;
 	int rc=0;
 	int sock=socket(AF_INET6,SOCK_DGRAM,0);
 	if(sock<0){
 		perror("sock");
 		exit(EXIT_FAILURE);
 	}
+	struct sockaddr_in6 sin6;
+	struct ipv6_mreq mreq;
+	memset(&sin6,O,sizeof(sin6));
+	memset(&mreq,O,sizeof(mreq));
+	sin6.sin6_family=AF_INET6;
+	sin6.sin6_port=htons(1212);
+
 	int val=1,val2=0;
 	if(setsockopt(sock,SOL_SOCKET,SO_REUSEADDR,&val,sizeof(val))<0){
 			perror("REUSE_ADDR");
@@ -210,26 +216,58 @@ void discover_neighbors(){
 			perror("MUTLICAST_HOPS");
 			exit(EXIT_FAILURE)
 	}
-	if(setsockopt(sock,IPPROTO_IPV6,IPV6_JOIN_GROUP,&mreq,sizeof(mreq))<0){
-			perror("JOIN_GROUP");
-			exit(EXIT_FAILURE)
-	}
-	struct sockaddr_in6 sin6;
-	sin6.sin6_family=AF_INET6;
-	sin6.sin6_port=htons(1212);
 	rc=inet_pton(AF_INET6,"ff12:b456:dad4:cee1:4589:71de:a2ec:e66",&sin6.sin6_addr);
-	//pas sur ptet faire un recvfrom de cette adresse et verifier le champ
-	//donc s'abonner au groupe de multicast
-	sin6.sin6_scope_id=if_nametoindex("eth0");
-	//send un hello court à cette interface
-	rc = sendto(sock, req, req_len, 0, (struct sockaddr *)&sin6, client_len);
-					if(rc < 0) {
-						perror("sendto");
-						exit(EXIT_FAILURE);
+	if(rc < 0){
+			fprintf(stderr, "Erreur lors de la conversion\n");
+			return -1;
 	}
 
-}*/
+	struct ifaddrs *ifaddr,*ifa;
+	if(getifaddrs(ifaddr)==-1){
+		perror("getifaddr");
+		return 0;
+	}
+	//On rejoint le groupe sur toutes les interfaces accessibles et actives
+	for(ifa=ifaddr;ifa!=NULL;ifa=ifa->ifa_next){
+		if(ifa->ifa_addr==NULL) continue;
+		if(ioctl(sock,SIOCGIFFLAGES,ifaddr)>0){
+			perror("ioctl");
+			return 0;
+		}
+		if((ifa.ifa_flags & IFF_UP & IFF_RUNNING) && !(ifa.ifa_name[0]=='l' && ifa.ifa_name[1]='o')){
+			struct ipv6_mreq mreq;
+			memset(&sin6,O,sizeof(sin6));
+			memcpy(&mreq.ipv6mr_multiaddr,&sin6.sin6_addr,sizeof(sin6.sin6_addr));
+			mreq.ipv6mr_interface=if_nametoindex(ifa.ifa_name);
+			if(setsockopt(sock,IPPROTO_IPV6,IPV6_JOIN_GROUP,&mreq,sizeof(mreq))<0){
+				perror("JOIN_GROUP");
+				exit(EXIT_FAILURE)
+			}
+		}
+	}
+	//ON fait le receivfrim d'abord et ensuite le sendto ?
+	struct sockaddr_in6 client;
+	memset(&client,O,sizeof(client));
+	struct message_h msg;
+	rc=recvfrom(sock,&msg,sizeof(msg),0,&client,sizeof(client))
+	//faire le sendto sur l'interface de la réponse;
+	if(rc<0){
 
+	}
+	msg_hello.magic=93;
+	msg_hello.version=2;
+	int nb = tlv_short_hello(msg.body,PMTU-4,ID);
+	msg.body_length = htons(nb);
+	return send_to_everyone(fd,&msg,nb+4,POTENTIAL);
+	//envoyer au client ou plutot, set le scope_id de sin6 à celui de client et send
+	sin6.sin6_scope_id=client.sin6_scope_id;
+	rc=sendto(sock,&msg,sizeof(msg),0,(struct sockaddr *)&sin6,sizeof(sin6));
+	if(rc<0){
+
+	}
+
+}
+*/
 
 //LOL, IL TROLLE JULIUS
 void hello_multicast_global(){

@@ -1,9 +1,9 @@
 CC=gcc
-FLAGS= -Wall -g
-LDLIBS=-lm 
+FLAGS= -Wall -g 
+LDLIBS=-lm -I /usr/local/include/ -l websockets -L /usr/local/lib/
 #a changer
 NAME=main
-FILES = genlist.c list.c abr.c net_lib.c util.c tlv.c main.c#$(shell find $(SRCIDR) -name '')
+FILES = genlist.c list.c abr.c net_lib.c util.c tlv.c websocket.c main.c#$(shell find $(SRCIDR) -name '')
 OBJ = $(FILES:%.c=%.o)
 
 ALL=$(NAME) clean

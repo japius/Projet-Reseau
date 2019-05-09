@@ -200,15 +200,6 @@ int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 	//return 0;
 }
 
-//si le type est 220, le truc de Alexandre et tristan, on sait que c'est un sous message, 
-	//On crée une liste pour les messages, et chacun est un tableau de char *, on vérifie s'il est deja dans la liste, on le rajoute dans le tableau, sinon on crée un nouveau noeud,
-	//type:220, nonce du message global sur 4 octets, type de la donnée sur un octet,taille du message en octet N sur 2 octet, position du messsage sur un octet, 
-	//ptet une hashmap ouais, ID le nonce vu qu'il est unique, on devra tjrs juste récupérer le message à l'ordre truc, quand on le recoit on doit augmenter le compteur de nombre de messages restants et si on atteint la taille du t
-	//map.get(nonce)[indice]=le nouveau message, ou on met a jour le nombre ?, ah la valeur va etre le tableau de messages et le nombre de messages lus
-	//jeter les messages incomplets depuis trop longtemps aussi, stocker date de début de réception du message, si plus de 2/5 minutes, erreur et suppression
-	//en vrai peut etre que juste un char * serait suffisant, vu qu'on a le numero de l'octet , suffit de faire un memset à partir de cet octet
-	//taille du sous message: tlv.length-13 (ID sur 8 octets+ nonce sur 4 +type ) -9(4 nonce+ 1 type+ 2 +2)
-//On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
 int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	struct data_index index;
 	memcpy(&index.id,tlv,8);
@@ -234,11 +225,30 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		//inonder
 	}
 	else{
-		if(*(tlv+12)==0){
-			print_on_screen(tlv+13,length-13);
-		}
 		add_message_to_flood(tlv,length,&peer);
+		size=*(tlv+12);
+		if(size==0){
+		//afficher le message
+			print_on_screen(tlv+13,length-13);
+			return 1;
+		}
+		if(size==220){
+			//return bigdata(soc,tlv,u_int8_t length,&peer);
+		}
+		else if(size==2){
+			//gif
+		}
+		else if(size==3){
+			//jpeg
+		}
+		else if(size==4){
+			//png
+		}
+		else if(size==5){
+			//svg
+		}
 	}
+	
 	return 1;
 }
 
@@ -268,6 +278,73 @@ int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	tlv[length]=0; 
 	printf("Warning: %s\n", buf);
 	return 1;
+}
+
+//si le type est 220, le truc de Alexandre et tristan, on sait que c'est un sous message, 
+	//On crée une liste pour les messages, et chacun est un tableau de char *, on vérifie s'il est deja dans la liste, on le rajoute dans le tableau, sinon on crée un nouveau noeud,
+	//type:220, nonce du message global sur 4 octets, type de la donnée sur un octet,taille du message en octet N sur 2 octet, position du messsage sur un octet, 
+	//ptet une hashmap ouais, ID le nonce vu qu'il est unique, on devra tjrs juste récupérer le message à l'ordre truc, 
+//quand on le recoit on doit augmenter le compteur de nombre de messages restants et si on atteint la taille du t
+	//map.get(nonce)[indice]=le nouveau message, ou on met a jour le nombre ?, ah la valeur va etre le tableau de messages et le nombre de messages lus
+	//jeter les messages incomplets depuis trop longtemps aussi, stocker date de début de réception du message, si plus de 2/5 minutes, erreur et suppression
+	//en vrai peut etre que juste un char * serait suffisant, vu qu'on a le numero de l'octet , suffit de faire un memset à partir de cet octet
+	//taille du sous message: tlv.length-13 (ID sur 8 octets+ nonce sur 4 +type ) -9(4 nonce+ 1 type+ 2 +2)
+//On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
+
+int bigdata(int soc,char *tlv,u_int8_t length,struct neighbor *peer){
+	return 0;
+	//metree certrains trucs dans des fonctions et créer la liste
+	//on a une liste de struct big data indexée par nonce
+	/*u_int32_t nonce=tlv[13];
+	struct big_data *bg=get(data_list,&nonce);
+	if(bg==NULL){
+		//on crée et on rajoute dans la liste
+		bg=malloc(sizeof(struct big_data));
+		if(bg==NULL){
+			perror("malloc");
+			return 0;
+		}
+		bg->global_nonce=nonce;
+		bg->total_length=tlv[18];
+		bg->received_length=length-22;
+		bg->start_time=get_seconds();
+		bg->message=malloc(total_length);
+		memcpy(bg->message,tlv+22,length-22);
+		//ajouter à la listre
+		return add_elem(data_list,bg);
+	}
+	else{
+		if(get_seconds()-bg->start_time>=300){
+			//Si on a attendu plus de trois secondes et le data est tjrs pas la, on le vire
+			//envoyer un wzrning, trop lent ?
+			void *tmp=remove_elem(data_list,bg);
+			if(tmp){
+				struct big_data *b=(struct big_data *)tmp;
+				free(b->message);
+				free(bg);
+			}
+			return 1;
+		}
+		if(bg->received_length+length-22>total_length){
+			//il a pas respcté les critères 
+			//envoyer un warnng par exemple;
+			return 0;
+		}
+		memcpy(bg->message+received_length,tlv+22,length-22);
+		bg->received_length+=length-22;
+		if(bg->received_length==bg->total_length){
+			//o a recu le msg totral, on peut l"afficher et le supprimer
+			write(1,bg->message,total_length);
+			void *tmp=remove_elem(data_list,bg);
+			if(tmp){
+				struct big_data *b=(struct big_data *)tmp;
+				free(b->message);
+				free(bg);
+			}
+			return 1;
+		}
+	}*/
+
 }
 
 

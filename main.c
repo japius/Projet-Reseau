@@ -16,6 +16,8 @@
 #include "abr.h"
 #include "list.h"
 #include "util.h"
+#include "websocket.h"
+#include <libwebsockets.h>
 #define PORT 1212
 #define TIMEHELLO 10
 #define MIN_SYM 10
@@ -24,7 +26,7 @@
 
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
-	//u_int64_t ID;
+	handle_gui();
 	//initialisation du pair
 	random_on_octets(&ID,sizeof(u_int64_t));
 	srand(time(NULL));
@@ -66,12 +68,12 @@ int main(int argc, char *argv[]){
 
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);
-		FD_SET(0,&fd_ens);
+		FD_SET(FD_MAGIC_READ,&fd_ens);
 		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
 		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
 		printf("NEXTTIME %d\n",NEXTTIME );
 		NEXTTIME=NEXTHELLO;
-		if(select(soc+1,&fd_ens,NULL,NULL,&timeout)){
+		if(select(max(FD_MAGIC_READ,soc)+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
 				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
@@ -80,9 +82,9 @@ int main(int argc, char *argv[]){
 				print_msg(msg);
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
-			if(FD_ISSET(0,&fd_ens)){
+			if(FD_ISSET(FD_MAGIC_READ,&fd_ens)){
 				unsigned char buf[(1<<8)-1];
-				u_int8_t tmp=read(0,buf,(1<<8)-14)-1;
+				u_int8_t tmp=read(FD_MAGIC_READ,buf,(1<<8)-14);
 
 				unsigned char msg_to_send[(1<<8)+4];
 				tlv_data(msg_to_send,(1<<8)+4,ID,0,buf,tmp);

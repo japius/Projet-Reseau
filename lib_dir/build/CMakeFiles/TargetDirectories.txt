@@ -1,0 +1,15 @@
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/package_source.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/package.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/test-server-extpoll.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/test-server.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/edit_cache.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/websockets_shared.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/websockets.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/install.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/test-lejp.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/rebuild_cache.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/test-client.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/list_install_components.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/install/strip.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/dist.dir
+/home/faridah/real/Desktop/Trd_Year/PR6/marron_et_vert_c_marron_qui_gagne/lib_dir/build/CMakeFiles/install/local.dir
