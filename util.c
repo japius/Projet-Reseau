@@ -149,6 +149,10 @@ void print_on_screen(char *data, size_t data_size){
 	printf("%s\n",rouge );
 	write(1,data,data_size);
 	write(FD_MAGIC_WRITE,data,data_size);
+	if(data[data_size-1]!='\n'){
+		write(1,"\n",1);
+		write(FD_MAGIC_WRITE,"\n",1);
+	}
 	printf("%s\n",blanc);
 }
 

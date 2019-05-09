@@ -131,7 +131,7 @@ void handle_gui()
 			/* | LLL_EXT */ /* | LLL_CLIENT */ /* | LLL_LATENCY */
 			///* | LLL_DEBUG */;
 
-	signal(SIGINT, sigint_handler);
+	//signal(SIGINT, sigint_handler);
 
 	//if ((p = lws_cmdline_option(argc, argv, "-d")))
 	//	logs = atoi(p);
@@ -154,7 +154,7 @@ void handle_gui()
 	}
 
 	while (n >= 0 && !interrupted)
-		n = lws_service_fd(context, );
+		n = lws_service(context,1000 );
 
 	lws_context_destroy(context);
 

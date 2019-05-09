@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS= -Wall -g 
+FLAGS= -Wall -g
 LDLIBS=-lm -I /usr/local/include/ -l websockets -L /usr/local/lib/
 #a changer
 NAME=main
