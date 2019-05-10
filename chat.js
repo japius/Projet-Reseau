@@ -50,10 +50,14 @@ $(document).ready(function(){
         console.log($(event.target).get(0))
         console.log(($(event.target).find("input[type=file]"))[0].files[0])
         var file=($(event.target).find("input[type=file]"))[0].files[0];
+        	if(file.size>(1<<16)){
+        		//mettre fichier trop grand
+        	}
+        	else ws.send(file);
         /*for(var i=0;i<files.length;i++){
             var file=files[i]*/
             console.log(file);
-            data.append('imgUploader',file,file.name)
+            //data.append('imgUploader',file,file.name)
 	})
 });
 

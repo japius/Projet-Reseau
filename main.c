@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
 		FD_SET(FD_MAGIC_READ,&fd_ens);
 		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
 		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
-		printf("NEXTTIME %d\n",NEXTTIME );
+		//printf("NEXTTIME %d\n",NEXTTIME );
 		NEXTTIME=NEXTHELLO;
 		if(select(max(FD_MAGIC_READ,soc)+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){

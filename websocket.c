@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <libwebsockets.h>
 #include <signal.h>
+#include <fcntl.h>
 #include "peer.h"
 
 #define LWS_PLUGIN_STATIC
@@ -30,6 +31,10 @@ static const struct lws_http_mount mount = {
 	/* .basic_auth_login_file */	NULL,
 };
 
+struct myupd_fd{
+	int filefd;
+};
+
 
 void sigint_handler(int sig)
 {
@@ -38,43 +43,63 @@ void sigint_handler(int sig)
 
 static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 		   void *user, void *in, size_t len){
-	struct timeval tv={0,0};
-	fd_set readfds;
-	FD_ZERO(&readfds);
-	FD_SET(FD_MAGIC_READ,&readfds);
-	if(select(FD_MAGIC_READ+1,&readfds,NULL,NULL,&tv)){
-		unsigned char buf[LWS_PRE+500]={0};
-		int n=read(FD_MAGIC_READ,buf+LWS_PRE,500);
-		if(n>0){
-			lws_write(wsi,buf+LWS_PRE,n,LWS_WRITE_TEXT);
-		}
-	}
+	unsigned char buffer[LWS_PRE+500];
+	struct myupd_fd *vhd=(struct myupd_fd *)lws_protocol_vh_priv_get(lws_get_vhost(wsi),lws_get_protocol(wsi));
+	lws_sock_file_fd_type u;
 	switch(reason){
 		case LWS_CALLBACK_ESTABLISHED:
+			vhd=lws_protocol_vh_priv_zalloc(lws_get_vhost(wsi),lws_get_protocol(wsi),sizeof(struct myupd_fd));
+			vhd->filefd=FD_MAGIC_READ;
+			u.filefd=(lws_filefd_type)(long long)vhd->filefd;
+			if (!lws_adopt_descriptor_vhost(lws_get_vhost(wsi),LWS_ADOPT_RAW_FILE_DESC, u,
+						"chat-protocol", wsi)) {
+				lwsl_err("Failed to adopt descriptor\n");
+				close(vhd->filefd);
+				vhd->filefd = -1;
+				return 1;
+			}
+			printf("%d",vhd->filefd);
 			printf("Connection established, with not a http ? \n");
-			break;
+		break;
+
 
 		case LWS_CALLBACK_RECEIVE:
-			printf("Le formulaire a envoyé une donnée");
-			/*unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
+			unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
+			if(buf==NULL){
+				return 1;
+			}
 			memset(buf,0,LWS_PRE+len);
 			memcpy(buf+LWS_PRE,(char *)in,len);
-			printf("Typed message : %s\n",buf+LWS_PRE);*/
+			free(buf);
 			write(FD_MAGIC_WRITE,(char *)in,len);
+		break;
+
+		case LWS_CALLBACK_RAW_ADOPT_FILE:
+			lwsl_notice("LWS_CALLBACK_RAW_ADOPT_FILE\n");
+		break;
+
+		//Quand on a une écriture sur FD_MAGIC_READ
+		case LWS_CALLBACK_RAW_RX_FILE:
+			memset(buffer,0,LWS_PRE+len);
+			struct lws *pwsi=lws_get_parent(wsi);
+			lwsl_notice("LWS_CALLBACK_RAW_RX_FILE\n");
+			int n=read(vhd->filefd,buffer+LWS_PRE,sizeof(buffer));
+			if(n<0){
+				lwsl_err("Reading from my fd failed\n");
+				return 1;
+			}
+			lws_write(pwsi,buffer+LWS_PRE,n,LWS_WRITE_TEXT);
+		break;
+
+		//case LWS_CALLBACK_RAW_WRITEABLE_FILE:
+		//	lwsl_notice("LWS_CALLBACK_RAW_WRITEABLE_FILE");
 
 
-			//ici il faut créer le tlv data et l'envoyer
+		/*case LWS_CALLBACK_PROTOCOL_DESTROY:
+			if (vhd && vhd->filefd != -1)
+				close(vhd->filefd);
+		break;*/
 
-
-
-			//ON va meme copy ce qu"on veut renvoyer
-			//memcpy(buf+LWS_PRE,(char *)in,len);
-			//unsigned char *msg=(char *)in;
-			
-
-
-				//on envoie par le client c;
-				break;
 		default:
 
 			printf("unhandled\n");
@@ -122,7 +147,6 @@ void handle_gui()
 	FD_MAGIC_WRITE=fd2[1];
 	struct lws_context_creation_info info;
 	struct lws_context *context;
-	const char *p;
 	int n = 0, logs = LLL_USER | LLL_ERR | LLL_WARN | LLL_NOTICE;
 			/* for LLL_ verbosity above NOTICE to be built into lws,
 			 * lws must have been configured and built with
@@ -131,16 +155,16 @@ void handle_gui()
 			/* | LLL_EXT */ /* | LLL_CLIENT */ /* | LLL_LATENCY */
 			///* | LLL_DEBUG */;
 
-	signal(SIGINT, sigint_handler);
+	//signal(SIGINT, sigint_handler);
 
 	//if ((p = lws_cmdline_option(argc, argv, "-d")))
 	//	logs = atoi(p);
 
 	lws_set_log_level(logs, NULL);
-	lwsl_user("LWS minimal http server | visit http://localhost:7681\n");
+	lwsl_user("LWS minimal http server | visit http://localhost:8080\n");
 
 	memset(&info, 0, sizeof info); /* otherwise uninitialized garbage */
-	info.port = 7681;
+	info.port = 8000;
 	info.mounts = &mount;
 	info.protocols=protocols;
 	info.vhost_name="localhost";
@@ -150,15 +174,16 @@ void handle_gui()
 	context = lws_create_context(&info);
 	if (!context) {
 		lwsl_err("lws init failed\n");
-		return 1;
+		return ;
 	}
 
-	while (n >= 0 && !interrupted)
-		n = lws_service_fd(context, );
-
+	while (n >= 0 && !interrupted){
+	//for(int i=0;i<4;i++){
+		//char test[50]="tessssttt";
+		//write(FD_MAGIC_WRITE,test,10);
+		n = lws_service(context,1000);
+	}
 	lws_context_destroy(context);
 
-	return 0;
 }
-
 

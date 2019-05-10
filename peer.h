@@ -16,6 +16,7 @@ int FD_MAGIC_READ;
 int FD_MAGIC_WRITE;
 //Mettre une liste ou une struct iov
 int NB_SYMETRICAL;
+struct lws *WSI;
 /*typedef struct peer peer;
 
 //rendre accessible dans tous les fichiers
