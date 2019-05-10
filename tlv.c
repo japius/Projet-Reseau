@@ -158,7 +158,7 @@ int padN(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 
 int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	unsigned int current=get_seconds();
-	struct ident val;
+	struct ident val = {0};
 	u_int64_t source_id,dest_id;
 	memcpy(&(source_id),tlv,8);
 	val.id=source_id;

@@ -125,6 +125,7 @@ short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
 	struct ngb_entry l;
 	l.sym=peer;
 	l.times_sent=0;
+	l.wait_time = 0;
 	//init_compare(flood->sym,compare_n_s2);
 	void *tmp=remove_elem(flood->sym_neighbors,&l);	
 	if(tmp) free(tmp);

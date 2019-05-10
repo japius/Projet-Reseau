@@ -126,7 +126,7 @@ void find_by_aux(tree *t, short (*func)(tree*), list l){
         if(t->left !=NULL) find_by_aux(t->left,func,l);
         if(func(t)){
           struct ngb_entry *ent = init_ngb_entry(t->key,0);
-          if(l!=NULL && ent!=NULL) addLast(l,ent);
+          if(ent!=NULL) addLast(l,ent);
         }
         if(t->right !=NULL) find_by_aux(t->right,func,l);
     }

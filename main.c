@@ -22,14 +22,14 @@
 #define TIMEHELLO 30
 #define MIN_SYM 10
 
-#define TEST 100
+#define TEST 30
 
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
 	//handle_gui();
 	//initialisation du pair
-	random_on_octets(&ID,sizeof(u_int64_t));
 	srand(time(NULL));
+	random_on_octets(&ID,sizeof(u_int64_t));
 	/*POTENTIAL=init_first();
 	NEIGHBORS=init_first();
 	DATAF=init_data();*/
