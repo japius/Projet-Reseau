@@ -35,7 +35,11 @@ struct flood_entry *init_flood(struct data_index *index,unsigned char *data,stru
 	}
 	if(index) memmove(current->index,index,sizeof(struct data_index));
 	current->sym_neighbors=sym_neighbors;
-	if(data[1]+2>PMTU-4) return;
+	if(data[1]+2>PMTU-4){
+		free(current->index);
+		free(current);
+		return 0;
+	}
 	memcpy(current->data,data,data[1]+2);
 	return current;
 }
@@ -69,7 +73,7 @@ void add_message_to_flood(unsigned char *msg_send, u_int8_t size_msg_send,struct
 	list symmetric=get_symmetrical(NEIGHBORS);
 	if(!symmetric) return;
 	if(to_delete!=NULL){
-		struct ngb_entry ngb_ent;
+		struct ngb_entry ngb_ent ={0};
 		ngb_ent.sym=to_delete;
 		void *tmp=remove_elem(symmetric,&ngb_ent);
 		if(tmp!=NULL) free(tmp);
@@ -121,6 +125,7 @@ short remove_neighbor_from_flood(struct data_index *data,struct neighbor *peer){
 	struct ngb_entry l;
 	l.sym=peer;
 	l.times_sent=0;
+	l.wait_time = 0;
 	//init_compare(flood->sym,compare_n_s2);
 	void *tmp=remove_elem(flood->sym_neighbors,&l);	
 	if(tmp) free(tmp);

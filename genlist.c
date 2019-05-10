@@ -99,8 +99,8 @@ void *remove_elem(list this, void *elem){
 			if(next==NULL){
 				this->last=ent;
 				this->length--;
-				return cont;
 			}
+			return cont;
 		}
 	}
 	return 0;
@@ -126,17 +126,12 @@ void init_compare(list this,short (*comp)(void *, void *)){
 }
 
 void free_list(list this, void (*free_f)(void *content)){
-	/*printf("Le list vaut %p\n",this);
-	printf("Le premier eleme vaux %p\n",this->first );
-	print_list(this);
-	//print_list(this)
+	/*//print_list(this)
 	for(list_entry *ent=this->first;ent;){
 		//VALGRIND_CHECK_MEM_IS_DEFINED(ent,sizeof(struct list_entry));
 		if(free_f!=NULL){
 			free_f(ent->content);
 		}
-		free_f(ent->content);
-		printf("voici ent = %p\n",ent );
 		list_entry *tmp = ent->next;
 		free(ent);
 		ent=tmp;
@@ -144,13 +139,7 @@ void free_list(list this, void (*free_f)(void *content)){
 	this->length=0;
 	this->first=NULL;
 	this->last=NULL;*/
-	/*for(void *tmp=remove_first(this);tmp;tmp=remove_first(this)){
-		if(free_f!=NULL)
-			free_f(tmp);
-	}*/
-
-	while(this->length>0){
-		void *tmp=remove_first(this);
+	for(void *tmp=remove_first(this);tmp;tmp=remove_first(this)){
 		if(free_f!=NULL)
 			free_f(tmp);
 	}
@@ -187,8 +176,8 @@ int main(int argc, char const *argv[])
 	return 0;
 }*/ 
 void print_list(list this){
+	printf("La longueur de la liste : %d\n",this->length);
 	for(list_entry *l=this->first;l;l=l->next){
-		printf("La longueur de la liste : %d\n",this->length);
 		printf("Element de liste : %p\n",l);
 		printf("Content : %p\n",l->content);
 	}

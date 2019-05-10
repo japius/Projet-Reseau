@@ -61,6 +61,7 @@ short add_neighbor_aux(tree *t,struct neighbor *key,struct ident *val){
 }
 
 short add_potential(struct neighbor *key,struct ident *val){
+  key->msg=0;
   if(POTENTIAL==NULL){
     POTENTIAL=init(key,val,NULL,NULL);
     return POTENTIAL != 0;
@@ -70,11 +71,22 @@ short add_potential(struct neighbor *key,struct ident *val){
 
 
 short add_neighbor(struct neighbor *key,struct ident *val){
+  key->msg=malloc(sizeof(struct message_h));
+  if(key->msg){
+    key->msg->magic=93;
+    key->msg->version=2;
+    key->msg->body_length=0;
+  }
   if(NEIGHBORS==NULL){
     NEIGHBORS=init(key,val,NULL,NULL);
+    if(!NEIGHBORS && key->msg) free(key->msg);
     return NEIGHBORS != 0;
   }
-  return add_neighbor_aux(NEIGHBORS,key,val);
+  int res = add_neighbor_aux(NEIGHBORS,key,val);
+  if((res==2 || res == 0) && key->msg){
+    free(key->msg);
+  }
+  return res;
 }
 
 //Pour ajouter un voisin s'il n"existe pas et le mettre à jour sinon
@@ -114,7 +126,7 @@ void find_by_aux(tree *t, short (*func)(tree*), list l){
         if(t->left !=NULL) find_by_aux(t->left,func,l);
         if(func(t)){
           struct ngb_entry *ent = init_ngb_entry(t->key,0);
-          if(l!=NULL && ent!=NULL) addLast(l,ent);
+          if(ent!=NULL) addLast(l,ent);
         }
         if(t->right !=NULL) find_by_aux(t->right,func,l);
     }
@@ -187,21 +199,22 @@ tree *maxUnder(tree *r){
 
 tree *remove_min(tree *t){
   if(!t->left->left){
-    tree *l=t->left->left;
+    tree *l=t->left;
     tree *r=t->left->right;
-    t->left->left=r;
+    t->left=r;
     return l;
   }
   return remove_min(t->left);
 }
 
 tree * remove_neighbor_aux(struct neighbor *key, tree *t){
-  if(t!=NULL) return 0;
+  if(t==NULL) return 0;
   int comp=compare_n(t->key,key);
   if(comp==0){
     tree *l = t->left;
     tree *r = t->right;
     free(t->val);
+    if(t->key->msg) free(t->key->msg);
     free(t->key);
     free(t);
     if(!r) return l;

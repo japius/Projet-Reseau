@@ -64,6 +64,7 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 
 
 		case LWS_CALLBACK_RECEIVE:
+			printf("");
 			unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
 			if(buf==NULL){
 				return 1;
@@ -176,13 +177,8 @@ void handle_gui()
 		lwsl_err("lws init failed\n");
 		return ;
 	}
-
-	while (n >= 0 && !interrupted){
-	//for(int i=0;i<4;i++){
-		//char test[50]="tessssttt";
-		//write(FD_MAGIC_WRITE,test,10);
-		n = lws_service(context,1000);
-	}
+	while (n >= 0 && !interrupted)
+		n = lws_service(context,1000 );
 	lws_context_destroy(context);
 
 }

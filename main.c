@@ -19,16 +19,17 @@
 #include "websocket.h"
 #include <libwebsockets.h>
 #define PORT 1212
-#define TIMEHELLO 10
+#define TIMEHELLO 30
 #define MIN_SYM 10
 
+#define TEST 30
 
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
 	handle_gui();
 	//initialisation du pair
-	random_on_octets(&ID,sizeof(u_int64_t));
 	srand(time(NULL));
+	random_on_octets(&ID,sizeof(u_int64_t));
 	/*POTENTIAL=init_first();
 	NEIGHBORS=init_first();
 	DATAF=init_data();*/
@@ -43,6 +44,17 @@ int main(int argc, char *argv[]){
 
 	int nb;
 
+	
+		if(argc==3)
+			nb = send_first_message(soc,argv[1],argv[2]);
+		else if(argc==4)
+			nb = send_first_message(soc,argv[2],argv[3]);
+		else
+			nb = send_first_message(soc,"jch.irif.fr","1212");
+	
+	//FD_MAGIC_READ = 0;
+	//FD_MAGIC_WRITE = 1;
+
 
 	struct message_h msg;
 	struct sockaddr_in6 client;
@@ -55,34 +67,28 @@ int main(int argc, char *argv[]){
 	while(1){
 		//---- gere les réceptions de messages
 		// XXX select a ajouter
-		if(!NEIGHBORS){
-			if(argc==3)
-				nb = send_first_message(soc,argv[1],argv[2]);
-			else if(argc==4)
-				nb = send_first_message(soc,argv[2],argv[3]);
-			//else
-				//nb = send_first_message(soc,"jch.irif.fr","1212");
-		}
 
 		FD_ZERO(&fd_ens);
 		FD_SET(soc,&fd_ens);
 		FD_SET(FD_MAGIC_READ,&fd_ens);
 		NEXTTIME = (NEXTTIME<NEXTHELLO)?NEXTTIME:NEXTHELLO;
 		struct timeval timeout = {(max(0,NEXTTIME-get_seconds())),0};
-		//printf("NEXTTIME %d\n",NEXTTIME );
 		NEXTTIME=NEXTHELLO;
 		if(select(max(FD_MAGIC_READ,soc)+1,&fd_ens,NULL,NULL,&timeout)){
 			if(FD_ISSET(soc,&fd_ens)){
 				socklen_t client_len = sizeof(struct sockaddr_in6);	
 				int size_msg = recvfrom(soc,&msg,sizeof(struct message_h),0,&client,&client_len);
 				struct neighbor ngb = sockaddr6_to_neighbor(client);
-				print_addr(ngb.ip);
-				print_msg(msg);
+				//print_addr(ngb.ip);
+				//print_msg(msg);
 				handle_message_h(soc,&msg,size_msg,ngb);
 			}
 			if(FD_ISSET(FD_MAGIC_READ,&fd_ens)){
-				unsigned char buf[(1<<8)-1];
+
+				unsigned char buf[(1<<8)-1] = {0};
 				u_int8_t tmp=read(FD_MAGIC_READ,buf,(1<<8)-14);
+				if(buf[tmp-1]==0) tmp--;
+				if(buf[tmp-1]=='\n') tmp--;
 
 				unsigned char msg_to_send[(1<<8)+4];
 				tlv_data(msg_to_send,(1<<8)+4,ID,0,buf,tmp);
@@ -104,11 +110,13 @@ int main(int argc, char *argv[]){
 				printf("-----------------------------\n");*/
 			}
 			
-		/*printf("--------NEIGHBORS ----------\n");
+		printf("--------NEIGHBORS ----------\n");
 		print_tree(NEIGHBORS);
-		printf("-----------------------------\n");*/
+		printf("-----------------------------\n");
 		}
 		flood_messages(soc,&DATAF);
+
+		send_to_everyone_now(soc, NEIGHBORS);
 
 	}
 	/*Il faut:

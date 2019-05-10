@@ -69,7 +69,6 @@ void flood_message_to_neighbours(int soc,struct flood_entry *flood){
 	int current_time=get_seconds();
 	list l=flood->sym_neighbors;
 	struct list_entry *tmp=l->first;
-	printf("message %d, taille %d\n",flood->index->nonce,l->length);
 	while(tmp){
 		struct ngb_entry *nw=(struct ngb_entry *)tmp->content;
 		if(nw->times_sent==5){
@@ -107,13 +106,10 @@ void flood_message_to_neighbours(int soc,struct flood_entry *flood){
 }
 
 void flood_messages(int soc,list flood){
-	printf("--------------------------------\n");
-	printf("liste d'inondation de taille %d\n",flood->length);
 	for(struct list_entry *list=flood->first;list;list=list->next){
 		struct flood_entry *f=(struct flood_entry *)list->content;
 		flood_message_to_neighbours(soc,f);
 	}
-	printf("--------------------------------\n");
 
 }
 
@@ -149,6 +145,10 @@ void print_on_screen(char *data, size_t data_size){
 	printf("%s\n",rouge );
 	write(1,data,data_size);
 	write(FD_MAGIC_WRITE,data,data_size);
+	if(data[data_size-1]!='\n'){
+		write(1,"\n",1);
+		//write(FD_MAGIC_WRITE,"\n",1);
+	}
 	printf("%s\n",blanc);
 }
 

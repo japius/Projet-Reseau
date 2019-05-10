@@ -158,7 +158,7 @@ int padN(int soc,char * tlv,u_int8_t length,struct neighbor peer){
 
 int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	unsigned int current=get_seconds();
-	struct ident val;
+	struct ident val = {0};
 	u_int64_t source_id,dest_id;
 	memcpy(&(source_id),tlv,8);
 	val.id=source_id;
@@ -187,7 +187,7 @@ int hello(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 }
 
 int neighbour(int soc,char * tlv,u_int8_t length,struct neighbor peer){
-	struct neighbor key;
+	struct neighbor key ={0};
 	memcpy(key.ip,tlv,16);
 	memcpy(&key.port,tlv+16,2);
 	key.port=ntohs(key.port);
@@ -273,9 +273,9 @@ int goaway(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 
 int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	//juste lire et passer à autre chose
-	char buf[MAX_SIZE];
+	char buf[MAX_SIZE] = {0};
 	memcpy(buf,tlv,length);
-	tlv[length]=0; 
+	buf[length]=0; 
 	printf("Warning: %s\n", buf);
 	return 1;
 }
@@ -367,7 +367,7 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 		if(type>0 && type<NB_TLV){
 			memcpy(tlv,&msg->body[pos+2],length);
 			if(handle_tlv[type](soc,tlv,length,rcpt)){
-				printf("J'ai géré un tlv %d\n",type);
+				//printf("J'ai géré un tlv %d\n",type);
 			}
 			else{
 				//perror("tlv")
@@ -375,7 +375,6 @@ void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor
 		}
 		pos+=length+2;
 	}
-	printf("Message terminé\n" );
 }
 
 

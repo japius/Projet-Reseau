@@ -26,7 +26,9 @@ int read_socket(int fd,void *buf, size_t size_buf,struct timeval *timeout);
 /*remplis les 'octets_numbers' premiers octets de var avec des valeurs aléatoires */
 void random_on_octets(void *var, size_t octets_number);
 
-int send_message(int fd,void *buf, size_t taille,struct neighbor rcpt);
+int send_message(int fd,struct message_h *buf, size_t taille,struct neighbor rcpt);
+
+int send_message_now(int fd,void *buf, size_t taille,struct neighbor rcpt);
 
 struct neighbor sockaddr6_to_neighbor(struct sockaddr_in6 saddr);
 
@@ -35,6 +37,7 @@ struct sockaddr_in6 neighbor_to_sockaddr6(struct neighbor);
 void print_addr(u_int8_t *ip);
 void print_addr2(u_int8_t *ip);
 
+int send_to_everyone_new(int fd, tree*);
 int send_to_everyone(int fd, void *buf, size_t length, tree *);
 int send_hello_everyone(int fd, tree *people);
 int send_symetrical_everyone(int fd, tree *people);
