@@ -66,13 +66,6 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 
 
 		case LWS_CALLBACK_RECEIVE:
-			//unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
-			//if(buf==NULL){
-			//	return 1;
-			//}
-			//memset(buf,0,LWS_PRE+len);
-			//memcpy(buf+LWS_PRE,(char *)in,len);
-			//free(buf);;
 			write(FD_MAGIC_WRITE,(char *)in,len);
 			printf("Voici mon fils : %d\n",lws_get_socket_fd(lws_get_child(wsi)));
 		break;
@@ -103,25 +96,17 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 				if(buffer[LWS_PRE]=='5')sprintf(img+LWS_PRE+1,"images/img%d.svg",counter);
 				if((fptr=fopen(img,"w+")) == NULL){
 					printf("Error opening file\n");
-					return 1;
 				}
-				img[LWS_PRE]=1;
-				fwrite(buffer+LWS_PRE+1,1,n-1,fptr);
-				fclose(fptr);
-				lws_write(pwsi,img+LWS_PRE,14,LWS_WRITE_TEXT);
+				else{
+					img[LWS_PRE]=1;
+					fwrite(buffer+LWS_PRE+1,1,n-1,fptr);
+					fclose(fptr);
+					lws_write(pwsi,img+LWS_PRE,14,LWS_WRITE_TEXT);
+				}	
 			}
 				printf("ca a peut etre marché\n");
 				lws_write(pwsi,buffer+LWS_PRE,n,LWS_WRITE_TEXT);
 		break;
-
-		//case LWS_CALLBACK_RAW_WRITEABLE_FILE:
-		//	lwsl_notice("LWS_CALLBACK_RAW_WRITEABLE_FILE");
-
-
-		/*case LWS_CALLBACK_PROTOCOL_DESTROY:
-			if (vhd && vhd->filefd != -1)
-				close(vhd->filefd);
-		break;*/
 
 		default:
 
