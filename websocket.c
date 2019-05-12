@@ -162,7 +162,7 @@ void handle_gui()
 	//	logs = atoi(p);
 
 	lws_set_log_level(logs, NULL);
-	lwsl_user("LWS minimal http server | visit http://localhost:8080\n");
+	lwsl_user("LWS minimal http server | visit http://localhost:8000\n");
 
 	memset(&info, 0, sizeof info); /* otherwise uninitialized garbage */
 	info.port = 8000;
