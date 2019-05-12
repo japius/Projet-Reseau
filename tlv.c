@@ -153,14 +153,14 @@ int write_big_data(unsigned char *buf,int tmp){
 	if(buf[tmp-1]==0) tmp--;
 	if(buf[tmp-1]=='\n') tmp--;
 	printf("je suis cici  \n");
-	u_int8_t type=(u_int8_t)buf[0]-'0',i=0;
+	u_int8_t type=0;
+	//u_int8_t type=(u_int8_t)buf[0]-'0',i=0;
 	printf("Le type: %d\n",type);
 	unsigned char msg_to_send[(1<<8)-1]={0};
 	if(tmp<240){
 		printf("je suis ici : %s\n",buf+1);
 		tlv_data(msg_to_send,(1<<8),ID,type,buf+1,tmp-1);
 		print_tlv(msg_to_send);
-		printf("Le message : %s",msg_to_send);
 		add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
 	}
 	else{
@@ -169,7 +169,7 @@ int write_big_data(unsigned char *buf,int tmp){
 		random_on_octets(&t,4);
 		//int nb=(tmp)/((1<<16)-24),j=(tmp)%((1<<16)-24);
 		int i=0;
-		while(i+231<tmp){
+		//while(i+231<tmp){
 			printf("IIIII :%d\n",i);
 			unsigned char body[240];
 			memcpy(body,&t,4);
@@ -183,9 +183,8 @@ int write_big_data(unsigned char *buf,int tmp){
 			int n=tlv_data(msg_to_send,(1<<8)-1,ID,220,body,240);
 			print_tlv(msg_to_send);
 			add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
-			//print_on_screen(buf,tmp);
 			i+=n-24;
-		}
+		/*}
 			unsigned char body[240];
 			memcpy(body,&t,4);
 			memcpy(body+4,&type,1);
@@ -200,8 +199,7 @@ int write_big_data(unsigned char *buf,int tmp){
 			int n=tlv_data(msg_to_send,(1<<8)-1,ID,220,body,tmp-1-i);
 			printf("Ce qui a ete ecrit: %d",n);
 			print_tlv(msg_to_send);
-			add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
-			//print_on_screen(buf,tmp);
+			add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);*/
 	}
 	return 1;
 
@@ -293,7 +291,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		if(size==220){
 			return bigdata(soc,tlv,length,&peer);
 		}
-		tlv[12]='0'+tlv[12];
+		//tlv[12]='0'+tlv[12];
 		print_on_screen(tlv+12,length-12);
 	}
 	
