@@ -143,7 +143,7 @@ void print_on_screen(char *data, size_t data_size){
 	char *rouge="\033[31m";
 	char *blanc="\033[0m";
 	printf("%s\n",rouge );
-	//write(1,data,data_size);
+	write(1,data,data_size);
 	write(FD_MAGIC_WRITE,data,data_size);
 	if(data[data_size-1]!='\n'){
 		write(1,"\n",1);

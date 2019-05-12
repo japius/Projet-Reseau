@@ -20,6 +20,7 @@ p input{
     margin-left:20%;
     margin-right: 20%;
     margin-top: 10vh;
+    overflow-y:scroll;
 }
 
 #conv{
@@ -27,6 +28,7 @@ p input{
 	height:100%;
 	margin-left:20%;
 	margin-right: 20%;
+    verflow-y:scroll;
 }
 
 form{

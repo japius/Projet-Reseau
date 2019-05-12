@@ -24,7 +24,7 @@
 
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
-	//handle_gui();
+	handle_gui();
 	//initialisation du pair
 	srand(time(NULL));
 	random_on_octets(&ID,sizeof(u_int64_t));
@@ -54,8 +54,8 @@ int main(int argc, char *argv[]){
 		else
 			nb = send_first_message(soc,"jch.irif.fr","1212");
 	
-	FD_MAGIC_READ = 0;
-	FD_MAGIC_WRITE = 1;
+	//FD_MAGIC_READ = 0;
+	//FD_MAGIC_WRITE = 1;
 
 
 	struct message_h msg;
