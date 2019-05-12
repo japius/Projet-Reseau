@@ -98,7 +98,7 @@ int main(int argc, char *argv[]){
 				unsigned char buf[(1<<16)+2] = {0};
 				u_int16_t tmp=read(FD_MAGIC_READ,buf,((1<<16)+1));
 				//printf("Test : %s\n",buf[0]);
-				printf("ce que j'ai lu : %s + taille : %d\n",buf,tmp+1);
+				printf("ce que j'ai lu : %s + taille : %d\n",buf-1,tmp+1);
 				write_big_data(buf,tmp);
 			}
 		}
