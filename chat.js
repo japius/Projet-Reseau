@@ -60,13 +60,13 @@ $(document).ready(function(){
 		ws.onmessage=function(message){
 			console.log(message.data);
 			console.log(message.data.charAt(0));
-			if(message.data.charAt(0)=='0'){
+			//if(message.data.charAt(0)=='0'){
 				console.log(message.data.substring(1));
 				$("#conv").append("<p>"+message.data.substring(1)+"</p>");
-			}
+			/*}
 			else{
 				$("#conv").append("<img src='"+message.data.substring(1)+"'>");
-			}
+			}*/
 
 		};
 		ws.onerror=console.error;
@@ -79,7 +79,8 @@ $(document).ready(function(){
 					alert("Your message is too long !");
 				}
 				else{
-					ws.send(0+msg);
+					ws.send(msg);
+					console.log(msg);
 				}
 				clear();
 				
@@ -108,7 +109,7 @@ $(document).ready(function(){
 	        	if(imgType=="jpeg") ext='3';
 	        	else if(imgType=="png") ext='4';
 	        	else if(imgType=="svg") ext='5';
-	        	ws.send(ext+file);
+	        	ws.send(ext+"/"+file.size+":"+file);
         /*for(var i=0;i<files.length;i++){
             var file=files[i]*/
             console.log(file);

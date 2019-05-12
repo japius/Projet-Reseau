@@ -66,7 +66,24 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 
 
 		case LWS_CALLBACK_RECEIVE:
-			write(FD_MAGIC_WRITE,(char *)in,len);
+		printf("La longueur : %d\n",len);
+		/*write(1,(char *)in,len);
+			char *buf=(char *)in;
+			char result[(2<<16)]={0};
+			if(buf[1]=='/' && buf[0]!='0'){
+				result[0]=buf[0];
+				char *rest=memmem(buf,len,":",1);
+				char l[10]={0};
+				memcpy(&l,buf+2,rest-buf+2);
+				printf("La longueurrrrrrrr :%s",l);
+				int length=atoi(l);
+				printf("Resultat : %d\n",length);
+				
+				memcpy(result+1,rest+1,length+1);
+				write(1,result,length+1);
+				//write(FD_MAGIC_WRITE,result,length+1);
+			}
+			else*/ write(FD_MAGIC_WRITE,(char *)in,len);
 			printf("Voici mon fils : %d\n",lws_get_socket_fd(lws_get_child(wsi)));
 		break;
 
@@ -84,10 +101,10 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 			int n=read(vhd->filefd,buffer+LWS_PRE,sizeof(buffer));
 			if(n<0){
 				lwsl_err("Reading from my fd failed\n");
-				return 1;
 			}
+			else{
 			printf("Voici ce que j'ai affiché : %s\n",buffer+LWS_PRE);
-			if(buffer[LWS_PRE]!='0'){
+			/*if(buffer[LWS_PRE]!='0'){
 				FILE *fptr;
 				unsigned char img[LWS_PRE+14];
 				if(buffer[LWS_PRE]=='2')sprintf(img+LWS_PRE+1,"images/img%d.gif",counter);
@@ -103,9 +120,10 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 					fclose(fptr);
 					lws_write(pwsi,img+LWS_PRE,14,LWS_WRITE_TEXT);
 				}	
-			}
+			}*/
 				printf("ca a peut etre marché\n");
 				lws_write(pwsi,buffer+LWS_PRE,n,LWS_WRITE_TEXT);
+			}
 		break;
 
 		default:
