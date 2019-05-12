@@ -22,8 +22,6 @@
 #define TIMEHELLO 30
 #define MIN_SYM 10
 
-#define TEST 30
-
 //pas oublier de supprimer les potentiels s'ils répondent pas depuis trop longtemps
 int main(int argc, char *argv[]){
 	//handle_gui();
@@ -41,6 +39,10 @@ int main(int argc, char *argv[]){
 		tmp.sin6_port = htons(atoi(argv[1]));
 		bind(soc,&tmp,sizeof(tmp));
 	}
+	SOCKET=soc;
+
+
+	signal(SIGINT,disconnect);
 
 	int nb;
 

@@ -152,6 +152,17 @@ void print_on_screen(char *data, size_t data_size){
 	printf("%s\n",blanc);
 }
 
+void disconnect(int sig){
+	struct message_h msg;
+	msg.magic=93;
+	msg.version=2;
+	u_int16_t size=tlv_goaway(msg.body,PMTU-4,1,"Bon j'me casse ciao!",20);;
+	msg.body_length=htons(size);
+	send_to_everyone(SOCKET,&msg,size+4,NEIGHBORS);
+	send_to_everyone_now(SOCKET,NEIGHBORS);
+	exit(sig);
+}
+
 /*short compare_w(void *nw, void *nw2){
 	struct neighbor_and_wait *n1=(struct neighbor_and_wait *)nw;
 	struct neighbor_and_wait *n2=(struct neighbor_and_wait *)nw2;
