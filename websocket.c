@@ -10,12 +10,13 @@
 
 
 static int interrupted;
+static int counter=0;
 
 static const struct lws_http_mount mount = {
 	/* .mount_next */		NULL,		/* linked-list "next" */
 	/* .mountpoint */		"/",		/* mountpoint URL */
 	/* .origin */			".", /* serve from dir */
-	/* .def */			"test.html",	/* default filename */
+	/* .def */			"chat.html",	/* default filename */
 	/* .protocol */			NULL,
 	/* .cgienv */			NULL,
 	/* .extra_mimetypes */		NULL,
@@ -43,9 +44,10 @@ void sigint_handler(int sig)
 
 static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 		   void *user, void *in, size_t len){
-	unsigned char buffer[LWS_PRE+500];
+	unsigned char buffer[LWS_PRE+(1<<16)+1];
 	struct myupd_fd *vhd=(struct myupd_fd *)lws_protocol_vh_priv_get(lws_get_vhost(wsi),lws_get_protocol(wsi));
 	lws_sock_file_fd_type u;
+	counter ++;
 	switch(reason){
 		case LWS_CALLBACK_ESTABLISHED:
 			vhd=lws_protocol_vh_priv_zalloc(lws_get_vhost(wsi),lws_get_protocol(wsi),sizeof(struct myupd_fd));
@@ -64,15 +66,15 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 
 
 		case LWS_CALLBACK_RECEIVE:
-			printf("");
-			unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
-			if(buf==NULL){
-				return 1;
-			}
-			memset(buf,0,LWS_PRE+len);
-			memcpy(buf+LWS_PRE,(char *)in,len);
-			free(buf);
+			//unsigned char *buf=(unsigned char *)malloc(LWS_PRE+len);
+			//if(buf==NULL){
+			//	return 1;
+			//}
+			//memset(buf,0,LWS_PRE+len);
+			//memcpy(buf+LWS_PRE,(char *)in,len);
+			//free(buf);;
 			write(FD_MAGIC_WRITE,(char *)in,len);
+			printf("Voici mon fils : %d\n",lws_get_socket_fd(lws_get_child(wsi)));
 		break;
 
 		case LWS_CALLBACK_RAW_ADOPT_FILE:
@@ -84,12 +86,32 @@ static int callback_chat(struct lws *wsi, enum lws_callback_reasons reason,
 			memset(buffer,0,LWS_PRE+len);
 			struct lws *pwsi=lws_get_parent(wsi);
 			lwsl_notice("LWS_CALLBACK_RAW_RX_FILE\n");
+			printf("Me voici : %d\n",lws_get_socket_fd(wsi));
+			printf("Voici mon père : %d\n",lws_get_socket_fd(lws_get_parent(wsi)));
 			int n=read(vhd->filefd,buffer+LWS_PRE,sizeof(buffer));
 			if(n<0){
 				lwsl_err("Reading from my fd failed\n");
 				return 1;
 			}
-			lws_write(pwsi,buffer+LWS_PRE,n,LWS_WRITE_TEXT);
+			printf("Voici ce que j'ai affiché : %s\n",buffer+LWS_PRE);
+			if(buffer[LWS_PRE]!='0'){
+				FILE *fptr;
+				unsigned char img[LWS_PRE+14];
+				if(buffer[LWS_PRE]=='2')sprintf(img+LWS_PRE+1,"images/img%d.gif",counter);
+				if(buffer[LWS_PRE]=='3')sprintf(img+LWS_PRE+1,"images/img%d.jpg",counter);
+				if(buffer[LWS_PRE]=='4')sprintf(img+LWS_PRE+1,"images/img%d.png",counter);
+				if(buffer[LWS_PRE]=='5')sprintf(img+LWS_PRE+1,"images/img%d.svg",counter);
+				if((fptr=fopen(img,"w+")) == NULL){
+					printf("Error opening file\n");
+					return 1;
+				}
+				img[LWS_PRE]=1;
+				fwrite(buffer+LWS_PRE+1,1,n-1,fptr);
+				fclose(fptr);
+				lws_write(pwsi,img+LWS_PRE,14,LWS_WRITE_TEXT);
+			}
+				printf("ca a peut etre marché\n");
+				lws_write(pwsi,buffer+LWS_PRE,n,LWS_WRITE_TEXT);
 		break;
 
 		//case LWS_CALLBACK_RAW_WRITEABLE_FILE:
@@ -162,7 +184,7 @@ void handle_gui()
 	//	logs = atoi(p);
 
 	lws_set_log_level(logs, NULL);
-	lwsl_user("LWS minimal http server | visit http://localhost:8080\n");
+	lwsl_user("LWS minimal http server | visit http://localhost:8000\n");
 
 	memset(&info, 0, sizeof info); /* otherwise uninitialized garbage */
 	info.port = 8000;

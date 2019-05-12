@@ -33,6 +33,9 @@ int ack(int soc,char *tlv,u_int8_t length,struct neighbor key);
 
 int goaway(int soc,char *tlv,u_int8_t length,struct neighbor key);
 int warning(int soc,char *tlv,u_int8_t length,struct neighbor key);
+int bigdata(int soc,char *tlv,u_int8_t length,struct neighbor *peer);
 
+int write_big_data(unsigned char *buf,int tmp);
 void handle_message_h(int soc,struct message_h *msg,size_t buf_t,struct neighbor rcpt);
+
 #endif

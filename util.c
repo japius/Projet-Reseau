@@ -21,7 +21,7 @@ int rand_a_b(int a,int b){
 
 void handle_inactive(int soc,struct data_index *data,struct neighbor  *sym){
 	//Send go_away;
-	char goaway[25]="Wesh, t'es où ? Bref,bye";
+	unsigned char goaway[25]="Wesh, t'es où ? Bref,bye";
 		//Supprimer de la liste des voisins
 	struct message_h msg;
 	msg.magic=93;
@@ -136,6 +136,12 @@ short compare_n(void *c1,void *c2){
 	if(key1->port < key2->port) return -1;
 	if(key1->port > key2->port) return 1;
 	return 0;
+}
+
+short compare_b(void *c1,void *c2){
+	struct big_data *b1=(struct big_data *)c1;
+	struct big_data *b2=(struct big_data *)c2;
+	return b1->global_nonce-b2->global_nonce;
 }
 
 

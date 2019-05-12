@@ -147,6 +147,66 @@ int tlv_warning(unsigned char *body,size_t bufsize, unsigned char *msg,u_int8_t 
 	return 0;
 }
 
+int write_big_data(unsigned char *buf,int tmp){
+	//unsigned char buf[(1<<16)-1]={0};
+	print_on_screen(buf,tmp);
+	if(buf[tmp-1]==0) tmp--;
+	if(buf[tmp-1]=='\n') tmp--;
+	printf("je suis cici  \n");
+	u_int8_t type=(u_int8_t)buf[0]-'0',i=0;
+	printf("Le type: %d\n",type);
+	unsigned char msg_to_send[(1<<8)-1]={0};
+	if(tmp<240){
+		printf("je suis ici : %s\n",buf+1);
+		tlv_data(msg_to_send,(1<<8),ID,type,buf+1,tmp-1);
+		print_tlv(msg_to_send);
+		printf("Le message : %s",msg_to_send);
+		add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
+	}
+	else{
+		printf("la plutot \n");
+		u_int32_t t;
+		random_on_octets(&t,4);
+		//int nb=(tmp)/((1<<16)-24),j=(tmp)%((1<<16)-24);
+		int i=0;
+		while(i+231<tmp){
+			printf("IIIII :%d\n",i);
+			unsigned char body[240];
+			memcpy(body,&t,4);
+			memcpy(body+4,&type,1);
+			printf("Size :%d\n",tmp);
+			u_int16_t temp=htons(tmp);
+			memcpy(body+5,&temp,2);
+			temp=htons(i);
+			memcpy(body+7,&temp,2);
+			memcpy(body+9,buf+i+1,231);
+			int n=tlv_data(msg_to_send,(1<<8)-1,ID,220,body,240);
+			print_tlv(msg_to_send);
+			add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
+			//print_on_screen(buf,tmp);
+			i+=n-24;
+		}
+			unsigned char body[240];
+			memcpy(body,&t,4);
+			memcpy(body+4,&type,1);
+			printf("Size :%d\n",tmp);
+			int j=tmp-i;
+			u_int16_t temp=htons(tmp);
+			memcpy(body+5,&temp,2);
+			temp=htons(j);
+			memcpy(body+7,&temp,2);
+			memcpy(body+9,buf+i+1,231);
+			printf("A ecrire :%s\n",buf+i+1);
+			int n=tlv_data(msg_to_send,(1<<8)-1,ID,220,body,tmp-1-i);
+			printf("Ce qui a ete ecrit: %d",n);
+			print_tlv(msg_to_send);
+			add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
+			//print_on_screen(buf,tmp);
+	}
+	return 1;
+
+}
+
 //Fonctions de gestion de la réception d'un TLV
 
 int pad1(int soc,char * tlv,u_int8_t length,struct neighbor peer){
@@ -213,6 +273,9 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		//créer le message_h et faire un send message_h
 		msg.body_length=htons(size);
 		int i=send_message(soc,&msg,size+4,peer);
+		if(i<0){
+
+		}
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
 	struct flood_entry fl={0};
@@ -227,26 +290,11 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	else{
 		add_message_to_flood(tlv,length,&peer);
 		size=*(tlv+12);
-		if(size==0){
-		//afficher le message
-			print_on_screen(tlv+13,length-13);
-			return 1;
-		}
 		if(size==220){
-			//return bigdata(soc,tlv,u_int8_t length,&peer);
+			return bigdata(soc,tlv,length,&peer);
 		}
-		else if(size==2){
-			//gif
-		}
-		else if(size==3){
-			//jpeg
-		}
-		else if(size==4){
-			//png
-		}
-		else if(size==5){
-			//svg
-		}
+		tlv[12]='0'+tlv[12];
+		print_on_screen(tlv+12,length-12);
 	}
 	
 	return 1;
@@ -292,12 +340,14 @@ int warning(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 //On doit afficher les données recues dans le groupe de discussion si elles sont du bon format, juste les inonder sinon
 
 int bigdata(int soc,char *tlv,u_int8_t length,struct neighbor *peer){
-	return 0;
+	printf("je suis ici, ON DOIT faire des tests\n");
+	//return 0;
 	//metree certrains trucs dans des fonctions et créer la liste
 	//on a une liste de struct big data indexée par nonce
-	/*u_int32_t nonce=tlv[13];
-	struct big_data *bg=get(data_list,&nonce);
-	if(bg==NULL){
+	u_int32_t nonce=0;
+	memcpy(nonce,tlv+13,4);
+	struct big_data *bg=get(&BIGDATA,&nonce);
+	if(bg==NULL && tlv[17]!=220){
 		//on crée et on rajoute dans la liste
 		bg=malloc(sizeof(struct big_data));
 		if(bg==NULL){
@@ -305,37 +355,39 @@ int bigdata(int soc,char *tlv,u_int8_t length,struct neighbor *peer){
 			return 0;
 		}
 		bg->global_nonce=nonce;
-		bg->total_length=tlv[18];
+		memcpy(bg->total_length,&tlv[18],2);
+		//bg->total_length=tlv[18];
 		bg->received_length=length-22;
 		bg->start_time=get_seconds();
-		bg->message=malloc(total_length);
+		bg->type=tlv[17];
+		bg->message=malloc(bg->total_length);
 		memcpy(bg->message,tlv+22,length-22);
 		//ajouter à la listre
-		return add_elem(data_list,bg);
+		printf("ca a marhccchhhéééé \n");
+		return add_elem(&BIGDATA,bg);
 	}
 	else{
-		if(get_seconds()-bg->start_time>=300){
+		if(get_seconds()-bg->start_time>=180 || tlv[17]!=bg->type || bg->received_length+length-22>bg->total_length){
 			//Si on a attendu plus de trois secondes et le data est tjrs pas la, on le vire
 			//envoyer un wzrning, trop lent ?
-			void *tmp=remove_elem(data_list,bg);
+			void *tmp=remove_elem(&BIGDATA,bg);
 			if(tmp){
 				struct big_data *b=(struct big_data *)tmp;
 				free(b->message);
 				free(bg);
 			}
-			return 1;
-		}
-		if(bg->received_length+length-22>total_length){
-			//il a pas respcté les critères 
-			//envoyer un warnng par exemple;
 			return 0;
 		}
-		memcpy(bg->message+received_length,tlv+22,length-22);
+		memcpy(bg->message+bg->received_length,tlv+22,length-22);
 		bg->received_length+=length-22;
 		if(bg->received_length==bg->total_length){
-			//o a recu le msg totral, on peut l"afficher et le supprimer
-			write(1,bg->message,total_length);
-			void *tmp=remove_elem(data_list,bg);
+			//o a recu le msg total, on peut l"afficher et le supprimer
+			char buf[(1<<16)+1];
+			buf[0]=bg->type;
+			memcpy(buf,bg->message,bg->total_length);
+			print_on_screen(buf,bg->total_length);
+			//write(1,bg->message,total_length);
+			void *tmp=remove_elem(&BIGDATA,bg);
 			if(tmp){
 				struct big_data *b=(struct big_data *)tmp;
 				free(b->message);
@@ -343,7 +395,8 @@ int bigdata(int soc,char *tlv,u_int8_t length,struct neighbor *peer){
 			}
 			return 1;
 		}
-	}*/
+	}
+	return 1;
 
 }
 
