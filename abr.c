@@ -31,7 +31,7 @@ tree *init(struct neighbor *key,struct ident *val,tree *left,tree *right){
   if(val) memmove(current->val,val,sizeof(struct ident));
   else memset(current->val,0,sizeof(struct ident));
   if(key) memmove(current->key,key,sizeof(struct neighbor));
-  else memset(current->key,key,sizeof(struct neighbor));
+  else memset(current->key,0,sizeof(struct neighbor));
   current->left=left;
   current->right=right;
   return current;

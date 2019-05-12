@@ -37,7 +37,7 @@ struct sockaddr_in6 neighbor_to_sockaddr6(struct neighbor);
 void print_addr(u_int8_t *ip);
 void print_addr2(u_int8_t *ip);
 
-int send_to_everyone_new(int fd, tree*);
+int send_to_everyone_now(int fd, tree*);
 int send_to_everyone(int fd, void *buf, size_t length, tree *);
 int send_hello_everyone(int fd, tree *people);
 int send_symetrical_everyone(int fd, tree *people);

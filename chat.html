@@ -1,42 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8" http-equiv="Content-Language">
+	<link rel="stylesheet" type="text/css" href="chat.css">
+	<script src="jquery.js"></script>
+	<script src="chat.js"></script>
 	<title>Chat</title>
-	<meta charset="utf-8">
 </head>
 <body>
 	<div id="main">
-		<div id="conv"></div>
-		<form method="post" action="send">
-			<label for="nn" value="Nickname : ">
-			<input type="text" value="pseudo" id="nn">
-			</label>
-			<input type="text" value="msg" id="msg">
-			<input type="submit" value="Send">
+		<p id="connection"></p>
+		<p id="nick"><label for="nn">Nickname : </label>
+		<input type="text" name="pseudo" id="nn" maxlength=65536></p>	
+		<div id="container">
+		<div id="conv">
+		</div>
+		</div>
+		<form method="post" id="test">
+			<input type="text" name="msg" id="msg" maxlength=65536 placeholder="Type a message ..." required>
+			<input type="submit" value="Send" name="send">
+		</form>
+		<form method="post" enctype="multipart/form-data" id="file">
+			<input type="file" id="fupl" name="fupl" accept="image/png,image/gif,image/jpeg,image/svg">
+			<input type="submit" value="+">
 		</form>
 	</div>
 </body>
+
 </html>
-
-<script>
-	$(document).ready({
-		printConv();
-
-		$('form').submit(function(event){
-			event.preventDefault();
-			var data=$(event.target).serialize();
-			$.post('',
-				data:data).done(function(data){
-					printConv();
-				});
-			});
-
-		function printConv(){
-			$("#msg").val('');
-			$('#msg').focus;
-
-		}
-
-		setInterval(printConv, 4000);
-	});
-</script>

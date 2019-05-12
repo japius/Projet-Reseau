@@ -90,7 +90,7 @@ void add_message_to_flood(unsigned char *msg_send, u_int8_t size_msg_send,struct
 	void *must_free = add_limited(&DATAF,flood,NBDATA);
 	//print_list(&DATAF);
 	if(!must_free){
-		return 0;
+		return ;
 	}
 	free_flood(must_free);
 }

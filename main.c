@@ -46,7 +46,6 @@ int main(int argc, char *argv[]){
 
 	int nb;
 
-	
 		if(argc==3)
 			nb = send_first_message(soc,argv[1],argv[2]);
 		else if(argc==4)
@@ -60,11 +59,11 @@ int main(int argc, char *argv[]){
 
 	struct message_h msg;
 	struct sockaddr_in6 client;
-	socklen_t client_len;
 	fd_set fd_ens;
 	int NEXTHELLO = 0;
 	NEXTTIME=NEXTHELLO;
 	init_list(&DATAF,compare_flood,sizeof(struct flood_entry));
+	init_list(&BIGDATA,compare_b,sizeof(struct big_data));
 
 	while(1){
 		//---- gere les réceptions de messages
@@ -87,7 +86,7 @@ int main(int argc, char *argv[]){
 			}
 			if(FD_ISSET(FD_MAGIC_READ,&fd_ens)){
 
-				unsigned char buf[(1<<8)-1] = {0};
+				/*unsigned char buf[(1<<8)-1] = {0};
 				u_int8_t tmp=read(FD_MAGIC_READ,buf,(1<<8)-14);
 				if(buf[tmp-1]==0) tmp--;
 				if(buf[tmp-1]=='\n') tmp--;
@@ -95,7 +94,12 @@ int main(int argc, char *argv[]){
 				unsigned char msg_to_send[(1<<8)+4];
 				tlv_data(msg_to_send,(1<<8)+4,ID,0,buf,tmp);
 				add_message_to_flood(msg_to_send+2,msg_to_send[1],NULL);
-				print_on_screen(buf,tmp);
+				print_on_screen(buf,tmp);*/
+				unsigned char buf[(1<<16)+2] = {0};
+				u_int16_t tmp=read(FD_MAGIC_READ,buf,((1<<16)+1));
+				//printf("Test : %s\n",buf[0]);
+				printf("ce que j'ai lu : %s + taille : %d\n",buf,tmp);
+				write_big_data(buf,tmp);
 			}
 		}
 		if(get_seconds()>=NEXTHELLO){

@@ -47,6 +47,7 @@ struct big_data{
 	u_int16_t total_length;
 	u_int16_t received_length;
 	int start_time;
+	int type;
 	char *message;
 };
 

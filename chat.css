@@ -20,15 +20,14 @@ p input{
     margin-left:20%;
     margin-right: 20%;
     margin-top: 10vh;
-    overflow-y:scroll;
 }
 
 #conv{
 	border:solid 1px black;
 	height:100%;
-	margin-left:20%;
-	margin-right: 20%;
-    verflow-y:scroll;
+	margin-left:10%;
+	margin-right: 10%;
+    overflow-y:scroll;
 }
 
 form{

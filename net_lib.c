@@ -78,7 +78,7 @@ void random_on_octets(void *var, size_t octets_number){
 int send_message(int fd,struct message_h *buf, size_t taille,struct neighbor rcpt){
 	if(!rcpt.msg){
 		send_message_now(fd,buf,taille,rcpt);
-		return;
+		return 1;
 	}
 	u_int16_t act_size = ntohs(rcpt.msg->body_length);
 	u_int16_t size_to_add = ntohs(buf->body_length);
@@ -90,6 +90,7 @@ int send_message(int fd,struct message_h *buf, size_t taille,struct neighbor rcp
 	rcpt.msg->body_length = htons(act_size+size_to_add);
 	return 1;
 }
+
 
 int send_message_now(int fd,void *buf, size_t taille,struct neighbor rcpt){
 	struct sockaddr_in6 server = neighbor_to_sockaddr6(rcpt);
@@ -174,7 +175,7 @@ int send_goaway_asymetrical(int fd){
 	struct message_h msg;
 	msg.magic=93;
 	msg.version=2;
-	int tmp = tlv_goaway(msg.body,PMTU-4,2,"",0);
+	int tmp = tlv_goaway((unsigned char *)msg.body,PMTU-4,2,"",0);
 	msg.body_length = htons(tmp);
 	int count = 0;
 	for(struct ngb_entry *ent=remove_first(sym);ent!=NULL;ent=remove_first(sym)){

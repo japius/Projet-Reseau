@@ -11,6 +11,8 @@ short compare_n(void *,void *);
 short compare_flood(void *, void *);
 
 short compare_d(void *,void *);
+
+short compare_b(void*,void *);
 //struct data_index *data,struct data_index *data2);
 
 short compare_w(void *, void *);

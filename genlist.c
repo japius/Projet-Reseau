@@ -126,57 +126,15 @@ void init_compare(list this,short (*comp)(void *, void *)){
 }
 
 void free_list(list this, void (*free_f)(void *content)){
-	/*//print_list(this)
-	for(list_entry *ent=this->first;ent;){
-		//VALGRIND_CHECK_MEM_IS_DEFINED(ent,sizeof(struct list_entry));
-		if(free_f!=NULL){
-			free_f(ent->content);
-		}
-		list_entry *tmp = ent->next;
-		free(ent);
-		ent=tmp;
-	}
-	this->length=0;
-	this->first=NULL;
-	this->last=NULL;*/
 	for(void *tmp=remove_first(this);tmp;tmp=remove_first(this)){
 		if(free_f!=NULL)
 			free_f(tmp);
 	}
 }
 
-/*short comp(void *a, void *b){
-	char n = *((char *)a);
-	char m = *((char *)b);
-	return (short)m-n;
-}
-void func_aux(list data){
-	char *str = "abcdefghijklmni";
-	init_list(data,comp,sizeof(char));
-	for(int i = 0; i< 10;i++)
-		add_elem(data,str+i);
-	printf("taille %ld\n",data->length);
-	remove_elem(data, str+5);
-	remove_elem(data, str+9);
-	remove_elem(data, str+1);
-	remove_elem(data, str+0);
-	remove_elem(data, str+5);
-	add_elem(data,str+1);
-	add_elem(data,str+3);
-	add_elem(data,str+5);
-	add_elem(data,str+9);
-}
 
-int main(int argc, char const *argv[])
-{
-	struct list data;
-	free_list(&data,0);
-	//printf("point %p",remove_first(&data));
-
-	return 0;
-}*/ 
 void print_list(list this){
-	printf("La longueur de la liste : %d\n",this->length);
+	printf("La longueur de la liste : %lu\n",this->length);
 	for(list_entry *l=this->first;l;l=l->next){
 		printf("Element de liste : %p\n",l);
 		printf("Content : %p\n",l->content);

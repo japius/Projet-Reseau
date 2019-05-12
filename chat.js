@@ -18,6 +18,35 @@ function clear(){
 	$("#msg").focus();
 }
 
+function required(fields){//Checks whether every field was filled
+        var correct=true;
+        $.each(fields,function (index){
+        	var field=$(this);
+            console.log(field.val())
+            if($.trim(field.val())==""){
+                field.css({
+                    borderColor:'red',
+                    color:'black',
+                });
+                
+                /*var errfield=$("#err"+field.attr("name"));
+                errfield.html("This field is required");
+                errfield.css({
+                    display:"inline",
+                })*/
+                correct=false;
+            }
+            else{
+                field.css({
+                    borderColor:'black',
+                    borderRadius:'12%'
+                });
+            }
+            console.log(field.val())
+        });
+        return correct;
+   }
+
 $(document).ready(function(){
 	//window.WebSocket=window.WebSocket || window.MozWebSocket;
 	//var ws=nws_ws
@@ -30,14 +59,31 @@ $(document).ready(function(){
 		}
 		ws.onmessage=function(message){
 			console.log(message.data);
-			$("#conv").append($('<p>',{text:message.data}));
+			console.log(message.data.charAt(0));
+			if(message.data.charAt(0)=='0'){
+				console.log(message.data.substring(1));
+				$("#conv").append("<p>"+message.data.substring(1)+"</p>");
+			}
+			else{
+				$("#conv").append("<img src='"+message.data.substring(1)+"'>");
+			}
+
 		};
 		ws.onerror=console.error;
 
 	$('#test').submit(function(event){
 			event.preventDefault();
-			ws.send($('#msg').val());
-			clear();
+			if(required($("#msg, #nn"))){
+				var msg=$("#nn").val()+" : "+$('#msg').val();
+				if(msg.length>(1<<16)){
+					alert("Your message is too long !");
+				}
+				else{
+					ws.send(0+msg);
+				}
+				clear();
+				
+			}
 			//window.location.reload();
 		});
 
@@ -46,19 +92,30 @@ $(document).ready(function(){
 		//ws.send($("#fupl").val());
 		console.log($("#fupl").val());
 		 event.preventDefault()
-        var data=new FormData()
         console.log($(event.target).get(0))
         console.log(($(event.target).find("input[type=file]"))[0].files[0])
         var file=($(event.target).find("input[type=file]"))[0].files[0];
-        	if(file.size>(1<<16)){
+        console.log(file.size);
+        	if(file.size>(65536)){
+        		alert("Your file is too big !");
         		//mettre fichier trop grand
         	}
-        	else ws.send(file);
+        	else{
+        		imgType=file.type.split('/');
+        		imgType=imgType[imgType.length-1];
+        		console.log(imgType);
+	        	var ext='2';
+	        	if(imgType=="jpeg") ext='3';
+	        	else if(imgType=="png") ext='4';
+	        	else if(imgType=="svg") ext='5';
+	        	ws.send(ext+file);
         /*for(var i=0;i<files.length;i++){
             var file=files[i]*/
             console.log(file);
             //data.append('imgUploader',file,file.name)
-	})
+        	}
+        })
+        	
 });
 
 
