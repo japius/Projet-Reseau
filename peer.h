@@ -15,6 +15,7 @@ struct list BIGDATA;
 unsigned long NEXTTIME;
 int FD_MAGIC_READ;
 int FD_MAGIC_WRITE;
+int SOCKET;
 //Mettre une liste ou une struct iov
 int NB_SYMETRICAL;
 /*typedef struct peer peer;
