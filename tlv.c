@@ -271,7 +271,7 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 		msg.body_length=htons(size);
 		int i=send_message(soc,&msg,size+4,peer);
 		if(i<0){
-
+			printf("J'ai envoyé un ack\n");
 		}
 	}
 	//On récupère la liste des voisins à inonder associée à la donnée
@@ -287,11 +287,13 @@ int data(int soc,char *tlv,u_int8_t length,struct neighbor peer){
 	else{
 		add_message_to_flood(tlv,length,&peer);
 		size=*(tlv+12);
-		if(size==220){
+		/*if(size==220){
 			return bigdata(soc,tlv,length,&peer);
-		}
+		}*/
 		//tlv[12]='0'+tlv[12];
-		print_on_screen(tlv+12,length-12);
+		if(size==0){
+			print_on_screen(tlv+13,length-13);
+		}
 	}
 	
 	return 1;
